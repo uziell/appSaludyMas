@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:salud_y_mas/src/models/modelo_medicos_especialidad.dart';
+import 'package:salud_y_mas/src/pages/informacionClientes.dart';
 
 class MedicosEspecialidad extends StatefulWidget {
 
@@ -20,20 +21,22 @@ class _MedicosEspecialidadState extends State<MedicosEspecialidad> {
 
  String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
   List<ModeloMedicosEspecialidad> medicosEspe = [];
+   String imagenNombre='';
+   String ima='';
   @override
 initState() {
   super.initState();
 
   consultarMedicos(widget.nameEdo,widget.nameCd,widget.idCategoria,widget.idEspecialidad).then((value) {
     setState(() {
-      
+
     });
   });
+
+  print("tiene: "+imagenNombre);
 }
  Future consultarMedicos(String nEdo, String nCd, String idCate, String idEspe)async{
-  //  print('Esto tiene el nombre: '+nombreEstado+"ciudad: "+ nombreCiudad+ "idCate: "+idCategoria);
     medicosEspe.clear();
-    //"https://www.salumas.com/Salud_Y_Mas_Api/consultas_clientesDespecialidad?nameEdo=CHIAPAS&nameCd=TUXTLA%20GUTI%C3%89RREZ&idCat=2&idEspec=5"
     final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultas_clientesDespecialidad?nameEdo="+nEdo+"&nameCd="+nCd+"&idCat="+idCate+"&idEspec="+idEspe);
     var response = await http.get(urlApi);
     var jsonBody =   json.decode(response.body);
@@ -43,8 +46,7 @@ initState() {
       data['especialidad_idespecialidad'],data['cliente_idcliente'],data['ciudad_has_categoria_ciudad_idciudad'],
       data['ciudad_has_categoria_ciudad_estado_idestado'],data['ciudad_has_categoria_categoria_idcategoria'])); 
     } 
-    medicosEspe.forEach((someData)=>print('Name : ${someData.imagenName}'));
-     
+    medicosEspe.forEach((someData)=>print('Name : ${someData.imagenName}'));     
   }
   @override
   Widget build(BuildContext context) {
@@ -75,17 +77,17 @@ initState() {
                    children: [
                      GestureDetector(
                        onTap: (){
-                       /*  Navigator.of(context).push(MaterialPageRoute<Null>(
+                        Navigator.of(context).push(MaterialPageRoute<Null>(
                            builder:  (BuildContext context){
 
-                            String nameEspecialidad = espe.nombre;
-                            String nameEdo = widget.nombreEstado;
+                            String nombreMEdico = medicos.nombre;
+                            /*String nameEdo = widget.nombreEstado;
                             String nameCd = widget.nombreCiudad;
                             String idCategoria = widget.idCategoria;
-                            String idEspeciliad = espe.idespecialidad;
-                             return MedicosEspecialidad(nameEspecialidad,nameEdo,nameCd,idCategoria,idEspeciliad);
+                            String idEspeciliad = espe.idespecialidad;*/
+                             return InformacionMedico(nombreMEdico);
                            }
-                         ));*/
+                         ));
                        },
                        child: Card(
                          child: Row(
@@ -93,8 +95,8 @@ initState() {
                             Container(
                             width: 30.0,
                             height: 40.0,
-                           /* child:
-                             new Image.network(urlApi+'images/'+medicos.imagenName),*/
+                            //child:
+                             //new Image.network(urlApi+'images/'+medicos.imagenName),
                           ),
                           SizedBox(
                         width: 2.5,
