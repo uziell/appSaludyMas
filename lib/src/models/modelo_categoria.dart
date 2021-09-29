@@ -1,6 +1,5 @@
 class MyModel {
 
-
   final String idcategoria;
   final String nombrecategoria, descripccion, imagen,imagenGeneral;
 

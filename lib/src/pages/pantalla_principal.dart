@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:salud_y_mas/src/models/modelo_categoria.dart';
+import 'package:salud_y_mas/src/pages/mostrarClientes.dart';
+
 
 
 
@@ -20,7 +21,6 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   String vista = 'Seleccione';
   String vistaCiudad = "Seleccione una ciudad";
 
-
   Future consultarImagenes() async {
     final url = Uri.parse(urlApi+'consultas_carrusel.php');
     var response = await http.get(url);
@@ -28,7 +28,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     for (var valor in respuestaImagen) {
       imagenes.add((valor['imagen']).toString());
     }
-     print('Esto tiene imagenes: '+ imagenes.toString());
+    // print('Esto tiene imagenes: '+ imagenes.toString());
   }
   llenarCarrucel(List<String> lista) {
     print('Esto tiene lista:'+lista.toString());
@@ -58,7 +58,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     for (var valor in respuesta) {
       ciudadesConsulta.add((valor['nombre'])); 
     }
-     print('item: '+ciudadesConsulta.toString());
+    // print('item: '+ciudadesConsulta.toString());
     if(ciudadesConsulta.isEmpty){
       return;
     }
@@ -73,55 +73,44 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
        
     });
     consultarAPIEstados().then((resultado) {
-      setState(() {
-       // _dropDownMenuEstados = contruirDropEstados();
-       // _estadoActual = _dropDownMenuEstados[0].value.toString();
-        
-        
+      setState(() {   
       });
     });
+    //
   }
   
   Future consultarCategorias(String actualStado, String actualCiudad)async{
+    print('Esto tiene '+ actualStado +'y ciudad '+ actualCiudad);
     myData.clear();
-    print('Esto tiene ciudadActual '+ actualCiudad);
     final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultas_categorias?nameEdo="+actualStado+"&nameCd="+actualCiudad);
-    print(urlApi);
     var response = await http.get(urlApi);
-    if(response.statusCode == 200){
-      String responseBody = response.body;
-      var jsonBody =   json.decode(responseBody);
-      for (var data in jsonBody) {
-        myData.add(new MyModel(data['idcategoria'], data['nombrecategoria'],data['descripccion'],data['imagen'].toString(),data['imagen_general'].toString())); 
-      }
-      /*setState(() {
-      });*/
-      myData.forEach((someData)=>print('Name : ${someData.imagen}'));
-    }else {
-      print('Error lo siento');
-    }
-
+    var jsonBody =   json.decode(response.body);
+     print(urlApi);
+    for (var data in jsonBody) {
+      myData.add(new MyModel(data['idcategoria'],data['nombrecategoria'],data['descripccion'],data['imagen'].toString(),data['imagen_general'].toString())); 
+    }     
+    myData.forEach((someData)=>print('Name : ${someData.nombrecategoria}'));
+  
   }  
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+  return SafeArea(
       child: Scaffold(
-        extendBodyBehindAppBar: true,
-         appBar: AppBar(
-          title: Text('Salud y Mas'),
-
+        appBar: AppBar(
+          title: Text('Salud Y Mas'),
         ),
-        body: Column(         
-        children: [
-        Padding(padding: EdgeInsetsDirectional.all(35)),
-        llamarDropPrueba(),
-         //este es el buen carrucelPrueba
-         llenarCarrucelPrueba(),
-        
-        ],
-        ),
-            ),
-        );
+        body: ListView(
+          children: [
+            Padding(padding: EdgeInsetsDirectional.all(5)),
+            llamarDropPrueba(),
+            Divider(),
+            llenarCarrucelPrueba(),
+            Divider(),
+            _llamarCategorias(),
+          ],
+       ),
+     ),
+   );
   }
 
   llamarDropPrueba(){
@@ -132,13 +121,14 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   padding: EdgeInsets.symmetric(horizontal:12, vertical: 4),
                    decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.black,width: 2)
+                   // border: Border.all(color: Colors.black,width: 2),
+                    color:const Color(0xff00838f),
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
                       isExpanded: true,
                       iconSize: 20,
-                      icon: Icon(Icons.arrow_drop_down, color: Colors.black),
+                      icon: Icon(Icons.arrow_drop_down, color: Colors.white),
                       items: estadosConsulta.map((String estadoC) {
                         return DropdownMenuItem(
                           value: estadoC,
@@ -152,12 +142,17 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                           consultarAPICiudades(vista).then((value){
                           setState(() {
                             vistaCiudad = ciudadesConsulta[0].toString();
-                           
+
+                             consultarCategorias(vista,vistaCiudad).then((value){
+                               setState(() {
+                                 
+                               });
+                             });
                           });
                         });
                       });
                     },
-                      hint: Text(vista, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      hint: Text(vista, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                     ),
                   ),
                 ),   
@@ -169,7 +164,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   padding: EdgeInsets.symmetric(horizontal:12, vertical: 4),
                    decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.black,width: 2)
+                    //border: Border.all(color: Colors.black,width: 2)
+                    color:const Color(0xff00838f)
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
@@ -181,14 +177,20 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                       }).toList(),
                       iconSize: 20,
                       isExpanded: true,
-                      icon: Icon(Icons.arrow_drop_down, color: Colors.black),
+                      icon: Icon(Icons.arrow_drop_down, color: Colors.white),
                       onChanged: (_ciudadActual){
                         setState(() {
                           vistaCiudad = _ciudadActual.toString();
-                           _llamarCategorias(vistaCiudad);
+                          //consultarCategorias(vista,vistaCiudad);
+                          consultarCategorias(vista,vistaCiudad).then((value){
+                            setState(() {
+                              
+                            });
                           });
+                        });
+                        
                       },
-                      hint: Text(vistaCiudad,style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+                      hint: Text(vistaCiudad,style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold, fontSize: 16),),
                       ),
                   ),
                 ),
@@ -199,10 +201,12 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   }
 llenarCarrucelPrueba() {
 return Container(
+   decoration: BoxDecoration(
+  border: Border.all(color: const Color(0xff5DC1B9),width: 2),
+  ),
   width: double.infinity,
   height: 250.0,
   child: Swiper(
-    
         itemBuilder: (BuildContext context,int index){
           return new Image.network(listImagenes[index],fit: BoxFit.fill,);
         },
@@ -214,64 +218,77 @@ return Container(
 );
  
 }
-  _llamarCategorias(String nombreCiudad) {
-   final uriApss = Uri.parse(urlApi+'images/especialidades/default.png');
+  _llamarCategorias() {
     var size = MediaQuery.of(context).size;
     final double itemHeight = size.height * 15.8;
     final double itemWidth = size.width * 120;
-    return Container(
-      child: new GridView.count(
-          crossAxisCount: 2,
-          childAspectRatio: (itemWidth / itemHeight),
-          controller: new ScrollController(keepScrollOffset: false),
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          children: myData.map((var value) {
-             return new Container(
-              color: Colors.blue,
-              margin: new EdgeInsets.all(1.0),
-              child: Column(
-               children: [
-                 Card(
-                   child: Row(
-                     children: [
-                       Container(
-                      width: 30.0,
-                      height: 40.0,
-                      child: 
-                      Image.network(
-                        uriApss.toString()
-                      ),
-                    ),
-                    SizedBox(
-                  width: 2.5,
-                ),
-                Expanded(
-                  child: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children:[
-                        Text(value.nombrecategoria, style: TextStyle(
-                          fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                          ,fontSize: 9,
-
-                        ),),
-                        Text(value.descripccion, style: TextStyle(
-                          fontSize: 7,fontStyle: FontStyle.normal
-                        ),),  
-                      ],
-                    ),
+    return Card(
+       color:const Color(0xff4fb3bf),
+        child: Container(
+          child: new GridView.count(
+              crossAxisCount: 2,
+              childAspectRatio: (itemWidth / itemHeight),
+              controller: new ScrollController(keepScrollOffset: false),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              children: myData.map((value) {
+                 return new Container(
+                  margin: new EdgeInsets.all(1.0),
+                  child: Column(
+                   children: [
+                     GestureDetector(
+                       onTap: (){
+                         Navigator.of(context).push(MaterialPageRoute<Null>(
+                           builder:  (BuildContext context){
+                             String nombreCategoria =  value.nombrecategoria;
+                             String idcategoria = value.idcategoria;
+                             String nombreEdo = vista;
+                             String nombreCd = vistaCiudad;
+                             String imagenGeneral = value.imagenGeneral;
+                             return EspecialidadCategoria(nombreCategoria,idcategoria,nombreEdo,nombreCd,imagenGeneral);
+                           }
+                         ));
+                       },
+                       child: Card(
+                         child: Row(
+                           children: [
+                             Container(
+                            width: 30.0,
+                            height: 40.0,
+                            child: Image.network(urlApi+'images/'+value.imagen),
+                            
+                          ),
+                          SizedBox(
+                        width: 2.5,
+                       ),
+                        Expanded(
+                        child: Container(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children:[
+                              Text(value.nombrecategoria, style: TextStyle(
+                                fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
+                                ,fontSize: 9,
+                              ),),
+                              Text(value.descripccion, style: TextStyle(
+                                fontSize: 7,fontStyle: FontStyle.normal
+                              ),),  
+                            ],
+                            
+                          ),
+                        ),
+                        ),
+                       ],
+                        ),                 
+                       ),
+                     )
+                   ], 
                   ),
-                ),
-                     ],
-                   ),
-                 )
-               ], 
-              ),
-            );
-          }).toList(),
-        ),  
+                );
+              }).toList(),
+            ),  
+        ),
     );
     
   }
