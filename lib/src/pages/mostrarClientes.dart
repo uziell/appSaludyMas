@@ -78,7 +78,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               children: datosEspecialidad.map((espe) {
-                 print(urlApi+'images/'+espe.imagen);
+                 //print(urlApi+'images/'+espe.imagen);
                  return new Container(
                   margin: new EdgeInsets.all(1.0),
                   child: Column(
@@ -103,8 +103,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                             Container(
                             width: 30.0,
                             height: 40.0,
-                            //child:
-                            // new Image.network(urlApi+'images/'+espe.imagen),
+                            child: Image.network(urlApi+'images/'+espe.imagen.toString()),
                           ),
                           SizedBox(
                         width: 2.5,
@@ -115,7 +114,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children:[
-                              Text(espe.nombre, style: TextStyle(
+                              Text(espe.nombre.toString(), style: TextStyle(
                                 fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
                                 ,fontSize: 9,
                               ),),

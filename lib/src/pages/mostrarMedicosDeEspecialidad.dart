@@ -81,11 +81,11 @@ initState() {
                            builder:  (BuildContext context){
 
                             String nombreMEdico = medicos.nombre;
-                            /*String nameEdo = widget.nombreEstado;
-                            String nameCd = widget.nombreCiudad;
+                            String idCliente = medicos.idcliente;
+                            /*String nameCd = widget.nombreCiudad;
                             String idCategoria = widget.idCategoria;
                             String idEspeciliad = espe.idespecialidad;*/
-                             return InformacionMedico(nombreMEdico);
+                             return InformacionMedico(nombreMEdico,idCliente);
                            }
                          ));
                        },

@@ -1,6 +1,6 @@
 class ModeloInformacionMedico {
 
-  String idcliente,nombre,descripcion_espe,telefono1,telefono2,
+  String? idcliente,nombre,descripcion_espe,telefono1,telefono2,
   telefono_emergencias,facebook,instagram,twitter,e_mail,horario,whatsapp,
   pagina_web,datos_extra,estatus;
 
