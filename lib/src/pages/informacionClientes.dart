@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/retry.dart';
+import 'package:salud_y_mas/src/models/modeloCedulas.dart';
 import 'package:salud_y_mas/src/models/modeloInformacionMedico.dart';
 
 class InformacionMedico extends StatefulWidget {
@@ -15,27 +15,31 @@ class InformacionMedico extends StatefulWidget {
 
 class _InformacionMedicoState extends State<InformacionMedico> {
    String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
-  List<ModeloInformacionMedico> informacionMedico = [];
+   ModeloInformacionMedico modelo = new ModeloInformacionMedico('','','','','','','','','','','','','','','');
+   ModeloCedulas cedulas =  new ModeloCedulas('', '','', '', '', '');
   @override
-  void initState() {
+  void initState(){
     super.initState();
-    consultarInformacionMedico(widget.idCliente);
-    
+   // consultarInformacionMedico(widget.idCliente);
+    consultaInformacion(widget.idCliente);
+    consultarCedulas(widget.idCliente);
   }
-  Future consultarInformacionMedico(String idCliente) async {
-    final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_general?idCliente="+idCliente);
-    var response = await http.get(urlApi);
-    var jsonBody =   json.decode(response.body);
-    print(urlApi);
-    for (var data in jsonBody) {
-      informacionMedico.add(new ModeloInformacionMedico(data['idcliente'],data['nombre'], data['descripcion_espe'],
-      data['telefono1'], data['telefono2'], data['telefono_emergencias'], data['facebook'],data['instagram'], 
-      data['twitter'], data['e_mail'],
-      data['horario'], data['whatsapp'], data['pagina_web'],data['datos_extra'], data['estatus'])); 
-    } 
-    informacionMedico.forEach((someData)=>print('Name : ${someData.nombre}'));     
-  }
-
+   consultaInformacion(String idCliente) async {
+     final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_general?idCliente="+idCliente);
+     var response = await http.get(urlApi);
+     List<dynamic> resp = json.decode(response.body);
+     Map<String, dynamic> decodedResp = resp.first;
+     modelo =  ModeloInformacionMedico.fromJson(decodedResp);
+     print(modelo.descripcion_espe);
+   }
+   consultarCedulas(String idCliente) async {
+     final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_cedula?idCliente="+idCliente);
+     var response = await http.get(urlApi);
+     List<dynamic> resp = json.decode(response.body);
+     Map<String, dynamic> decodedResp = resp.first;
+     cedulas =  ModeloCedulas.fromJson(decodedResp);
+     print(cedulas.tipoCedula);
+   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,6 +49,8 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       body: Column(
         children: [
           imagenMedico(),
+          SizedBox(height: 10),
+          informacionPersonal(),
         ],
       )
     );
@@ -64,7 +70,12 @@ class _InformacionMedicoState extends State<InformacionMedico> {
           ),
           Container(
             padding: EdgeInsets.all(10.0),
-            child: Text(widget.nombreMedico)
+            child: Column(
+              children: [
+                Text(widget.nombreMedico),
+                Text(modelo.descripcion_espe.toString()),
+              ],
+            )
           ),
         ],
       ),
@@ -89,6 +100,23 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       ),
     );
   }
+
+  informacionPersonal() {
+    return Card(
+      color:const Color(0xff4fb3bf),
+      child: Column(
+        children: [
+          Text(modelo.descripcion_espe.toString()),
+        ],
+      ),
+    );
+  }
+
+
+
+
+
+
 
   
  

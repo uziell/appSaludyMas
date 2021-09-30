@@ -240,11 +240,11 @@ return Container(
                        onTap: (){
                          Navigator.of(context).push(MaterialPageRoute<Null>(
                            builder:  (BuildContext context){
-                             String nombreCategoria =  value.nombrecategoria;
+                             String nombreCategoria =  value.nombrecategoria.toString();
                              String idcategoria = value.idcategoria;
                              String nombreEdo = vista;
                              String nombreCd = vistaCiudad;
-                             String imagenGeneral = value.imagenGeneral;
+                             String imagenGeneral = value.imagenGeneral.toString();
                              return EspecialidadCategoria(nombreCategoria,idcategoria,nombreEdo,nombreCd,imagenGeneral);
                            }
                          ));
@@ -255,7 +255,7 @@ return Container(
                              Container(
                             width: 30.0,
                             height: 40.0,
-                            child: Image.network(urlApi+'images/'+value.imagen),
+                            child: Image.network(urlApi+'images/'+value.imagen.toString()),
                             
                           ),
                           SizedBox(
@@ -267,11 +267,11 @@ return Container(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children:[
-                              Text(value.nombrecategoria, style: TextStyle(
+                              Text(value.nombrecategoria.toString(), style: TextStyle(
                                 fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
                                 ,fontSize: 9,
                               ),),
-                              Text(value.descripccion, style: TextStyle(
+                              Text(value.descripccion.toString(), style: TextStyle(
                                 fontSize: 7,fontStyle: FontStyle.normal
                               ),),  
                             ],

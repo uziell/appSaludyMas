@@ -34,6 +34,7 @@ initState() {
   });
 
   print("tiene: "+imagenNombre);
+
 }
  Future consultarMedicos(String nEdo, String nCd, String idCate, String idEspe)async{
     medicosEspe.clear();
@@ -63,47 +64,44 @@ initState() {
     final double itemHeight = size.height * 15.8;
     final double itemWidth = size.width * 120;
     return  Container(
-          child: new GridView.count(
-              crossAxisCount: 2,
-              childAspectRatio: (itemWidth / itemHeight),
-              controller: new ScrollController(keepScrollOffset: false),
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              children: medicosEspe.map((medicos) {
-                // print(urlApi+'images/'+espe.imagen);
-                 return new Container(
-                  margin: new EdgeInsets.all(1.0),
-                  child: Column(
-                   children: [
-                     GestureDetector(
-                       onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute<Null>(
-                           builder:  (BuildContext context){
-
-                            String nombreMEdico = medicos.nombre;
-                            String idCliente = medicos.idcliente;
-                            /*String nameCd = widget.nombreCiudad;
-                            String idCategoria = widget.idCategoria;
-                            String idEspeciliad = espe.idespecialidad;*/
-                             return InformacionMedico(nombreMEdico,idCliente);
-                           }
-                         ));
-                       },
-                       child: Card(
-                         child: Row(
-                           children: [
-                            Container(
-                            width: 30.0,
-                            height: 40.0,
-                            //child:
-                             //new Image.network(urlApi+'images/'+medicos.imagenName),
-                          ),
-                          SizedBox(
-                        width: 2.5,
-                       ),
+      child: new GridView.count(
+        crossAxisCount: 2,
+        childAspectRatio: (itemWidth / itemHeight),
+        controller: new ScrollController(keepScrollOffset: false),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        children: medicosEspe.map((medicos) {
+          return new Container(
+            margin: new EdgeInsets.all(1.0),
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute<Null>(
+                        builder:  (BuildContext context){
+                          String nombreMEdico = medicos.nombre;
+                          String idCliente = medicos.idcliente;
+                          /*String nameCd = widget.nombreCiudad;
+                           String idCategoria = widget.idCategoria;
+                           String idEspeciliad = espe.idespecialidad;*/
+                          return InformacionMedico(nombreMEdico,idCliente);
+                        }));
+                    },
+                  child: Card(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 30.0,
+                          height: 40.0,
+                          child:
+                          new Image.network(urlApi+'images/'+medicos.imagenName.toString()),
+                        ),
+                        SizedBox(
+                          width: 2.5,
+                        ),
                         Expanded(
-                        child: Container(
-                          child: Column(
+                          child: Container(
+                            child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children:[
@@ -112,20 +110,18 @@ initState() {
                                 ,fontSize: 9,
                               ),),
                             ],
-                            
                           ),
                         ),
                         ),
                        ],
-                        ),                 
-                       ),
-                     )
-                   ], 
+                    ),
                   ),
-                );
-              }).toList(),
-       ),  
+                )
+              ],
+            ),
+          );
+        }).toList(),
+      ),
     );
-    
   }
 }
