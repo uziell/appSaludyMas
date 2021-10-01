@@ -6,13 +6,13 @@ class ModeloCedulas{
   final String? tipoCedula;
   final String? cedula;
   final String? escuela;
-  final String cliente_idcliente;
+  final String? cliente_idcliente;
 
 
   ModeloCedulas(this.idcliente, this.idcedula, this.tipoCedula, this.cedula,
       this.escuela, this.cliente_idcliente);
 
-  ModeloCedulas.fromJson(Map<String, dynamic> json)
+  /*ModeloCedulas.fromJson(Map<String, dynamic> json)
       : idcliente = json['idcliente'],
         idcedula = json['idcedula'],
         tipoCedula = json['tipoCedula'],
@@ -31,5 +31,5 @@ class ModeloCedulas{
 
 
     return data;
-  }
+  }*/
 }
