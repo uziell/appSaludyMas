@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:salud_y_mas/src/models/modeloFormasPago.dart';
 import 'package:salud_y_mas/src/models/modeloInformacionMedico.dart';
 import 'package:salud_y_mas/src/models/modeloServicios.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/link.dart';
+
 
 class InformacionMedico extends StatefulWidget {
   String nombreMedico;
@@ -32,13 +33,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
    List<String> listaFomasPago = [];
    String resFp="";
 
-   Future<void>_makePhoneCall(String url)async{
-       if(await canLaunch(url)){
-         await launch(url);
-       }else{
-         throw 'Could not lounch $url';
-       }
-   }
+
   @override
   void initState()
   {
@@ -239,7 +234,9 @@ class _InformacionMedicoState extends State<InformacionMedico> {
   direccion() {
     return GestureDetector(
       onTap: (){
-
+        setState(() {
+          googleMaps('comgooglemaps://?center='+modeloDireccion.direccion.toString());
+        });
       },
       child: Column(
           children: [
@@ -281,7 +278,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     return GestureDetector(
       onTap: (){
         setState(() {
-          _makePhoneCall('tel:9613590328');
+          _makePhoneCall('tel: '+modelo.telefono1.toString());
         });
 
       },
@@ -304,7 +301,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        const Text('Make phone call'),
+                        const Text('Telefono (Agendar Cita)'),
 
                       ],
                     ),
@@ -318,173 +315,198 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     );
   }
   telefono2() {
-    return Column(
-      children: [
-        Card(
-          child: Row(
-            children: [
-              Container(
-                width: 30.0,
-                height: 40.0,
-                child: Image.asset('assets/telefono.png'),
-              ),
-              SizedBox(
-                width: 2.5,
-              ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:[
-                      Text(modelo.telefono2.toString(), style: TextStyle(
-                          fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                          ,fontSize: 9)
-                      ),
-                    ],
+    return GestureDetector(
+      onTap: (){
+        _makePhoneCall('tel: '+modelo.telefono2.toString());
+      },
+      child: Column(
+        children: [
+          Card(
+            child: Row(
+              children: [
+                Container(
+                  width: 30.0,
+                  height: 40.0,
+                  child: Image.asset('assets/telefono.png'),
+                ),
+                SizedBox(
+                  width: 2.5,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:[
+                        Text('Telefono'),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
   telEmergencia() {
-    return Column(
-      children: [
-        Card(
-          child: Row(
-            children: [
-              Container(
-                width: 30.0,
-                height: 40.0,
-                child: Image.asset('assets/llamada-de-emergencia.png'),
-              ),
-              SizedBox(
-                width: 2.5,
-              ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:[
-                      Text(modelo.telefono_emergencias.toString(), style: TextStyle(
-                          fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                          ,fontSize: 9)
-                      ),
-                    ],
+    return GestureDetector(
+      onTap: (){
+        _makePhoneCall('tel: '+modelo.telefono_emergencias.toString());
+      },
+      child: Column(
+        children: [
+          Card(
+            child: Row(
+              children: [
+                Container(
+                  width: 30.0,
+                  height: 40.0,
+                  child: Image.asset('assets/llamada-de-emergencia.png'),
+                ),
+                SizedBox(
+                  width: 2.5,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:[
+                        Text('Telefono Emergencia'),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
   whatSapp() {
-    return Column(
-      children: [
-        Card(
-          child: Row(
-            children: [
-              Container(
-                width: 30.0,
-                height: 40.0,
-                child: Image.asset('assets/whatsapp.png'),
-              ),
-              SizedBox(
-                width: 2.5,
-              ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:[
-                      Text(modelo.whatsapp.toString(), style: TextStyle(
-                          fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                          ,fontSize: 9)
-                      ),
-                    ],
+    return GestureDetector(
+      onTap: (){
+        setState((){
+           launchWhatsApp("+52"+modelo.whatsapp.toString());
+        });
+      },
+      child: Column(
+        children: [
+          Card(
+            child: Row(
+              children: [
+                Container(
+                  width: 30.0,
+                  height: 40.0,
+                  child: Image.asset('assets/whatsapp.png'),
+                ),
+                SizedBox(
+                  width: 2.5,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:[
+                        Text(modelo.whatsapp.toString(), style: TextStyle(
+                            fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
+                            ,fontSize: 9)
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
   facebook() {
-    return Column(
-      children: [
-        Card(
-          child: Row(
-            children: [
-              Container(
-                width: 30.0,
-                height: 40.0,
-                child: Image.asset('assets/facebook.png'),
-              ),
-              SizedBox(
-                width: 2.5,
-              ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:[
-                      Text(modelo.facebook.toString(), style: TextStyle(
-                          fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                          ,fontSize: 9)
-                      ),
-                    ],
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+          _facebook('https://www.facebook.com/'+modelo.facebook.toString());
+        });
+      },
+      child: Column(
+        children: [
+          Card(
+            child: Row(
+              children: [
+                Container(
+                  width: 30.0,
+                  height: 40.0,
+                  child: Image.asset('assets/facebook.png'),
+                ),
+                SizedBox(
+                  width: 2.5,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:[
+                        Text(modelo.facebook.toString(), style: TextStyle(
+                            fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
+                            ,fontSize: 9)
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
   instragam() {
-    return Column(
-      children: [
-        Card(
-          child: Row(
-            children: [
-              Container(
-                width: 30.0,
-                height: 40.0,
-                child: Image.asset('assets/instagram.png'),
-              ),
-              SizedBox(
-                width: 2.5,
-              ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:[
-                      Text(modelo.instagram.toString(), style: TextStyle(
-                          fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                          ,fontSize: 9)
-                      ),
-                    ],
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+          _instagram('https://www.instagram.com/'+modelo.instagram.toString());
+        });
+      },
+      child: Column(
+        children: [
+          Card(
+            child: Row(
+              children: [
+                Container(
+                  width: 30.0,
+                  height: 40.0,
+                  child: Image.asset('assets/instagram.png'),
+                ),
+                SizedBox(
+                  width: 2.5,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:[
+                        Text(modelo.instagram.toString(), style: TextStyle(
+                            fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
+                            ,fontSize: 9)
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
   twitter() {
@@ -522,71 +544,144 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     );
   }
   paginaWeb() {
-    return Column(
-      children: [
-        Card(
-          child: Row(
-            children: [
-              Container(
-                width: 30.0,
-                height: 40.0,
-                child: Image.asset('assets/red-mundial.png'),
-              ),
-              SizedBox(
-                width: 2.5,
-              ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:[
-                      Text(modelo.pagina_web.toString(), style: TextStyle(
-                          fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                          ,fontSize: 9)
-                      ),
-                    ],
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+          ulrWeb('https://'+modelo.pagina_web.toString());
+        });
+      },
+      child: Column(
+        children: [
+          Card(
+            child: Row(
+              children: [
+                Container(
+                  width: 30.0,
+                  height: 40.0,
+                  child: Image.asset('assets/red-mundial.png'),
+                ),
+                SizedBox(
+                  width: 2.5,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:[
+                        Text(modelo.pagina_web.toString(), style: TextStyle(
+                            fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
+                            ,fontSize: 9)
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
   email() {
-    return Column(
-      children: [
-        Card(
-          child: Row(
-            children: [
-              Container(
-                width: 30.0,
-                height: 40.0,
-                child: Image.asset('assets/email.png'),
-              ),
-              SizedBox(
-                width: 2.5,
-              ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:[
-                      Text(modelo.e_mail.toString(), style: TextStyle(
-                          fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                          ,fontSize: 9)
-                      ),
-                    ],
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+          correo('mailto:'+modelo.e_mail.toString());
+        });
+      },
+      child: Column(
+        children: [
+          Card(
+            child: Row(
+              children: [
+                Container(
+                  width: 30.0,
+                  height: 40.0,
+                  child: Image.asset('assets/email.png'),
+                ),
+                SizedBox(
+                  width: 2.5,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:[
+                        Text(modelo.e_mail.toString(), style: TextStyle(
+                            fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
+                            ,fontSize: 9)
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
+
+   Future<void>_makePhoneCall(String url)async{
+     if(!await canLaunch(url)){
+       await launch(url);
+     }else{
+       throw 'Could not launch $url';
+     }
+   }
+   Future<void> ulrWeb(String url) async {
+     if (!await canLaunch(url)) {
+       await launch(url);
+     } else {
+       throw 'Could not launch $url';
+     }
+   }
+
+   Future<void> correo(String url) async {
+     if (!await canLaunch(url)) {
+       await launch(url);
+     } else {
+       throw 'Could not launch $url';
+     }
+   }
+   Future<void> googleMaps(String url) async {
+     if (!await canLaunch(url)) {
+       await launch(url);
+     } else {
+       throw 'Could not launch $url';
+     }
+   }
+
+   void launchWhatsApp(@required number) async {
+     String url() {
+       if (Platform.isAndroid) {
+         return "whatsapp://send?phone=$number";
+       } else {
+         return "whatsapp://send?phone=$number";
+       }
+     }
+     if (!await canLaunch(url())) {
+       await launch(url());
+     } else {
+       throw 'Could not launch ${url()}';
+     }
+   }
+   Future<void> _facebook(String url) async {
+     if (!await canLaunch(url)) {
+       await launch(url);
+     } else {
+       throw 'Could not launch $url';
+     }
+   }
+   Future<void> _instagram(String url) async {
+     if (!await canLaunch(url)) {
+       await launch(url);
+     } else {
+       throw 'Could not launch $url';
+     }
+   }
 }
