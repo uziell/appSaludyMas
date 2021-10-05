@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:salud_y_mas/src/pages/mostrarClientes.dart';
+import 'package:salud_y_mas/src/pages/MostrarEspecialidades.dart';
 import 'package:salud_y_mas/src/pages/pantalla_principal.dart';
 
 

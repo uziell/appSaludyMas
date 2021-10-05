@@ -87,9 +87,6 @@ class _InformacionMedicoState extends State<InformacionMedico> {
    consultarServicios(String idCliente) async {
      final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_servicios?idCliente="+idCliente);
      var response = await http.get(urlApi);
-    /* List<dynamic> resp = json.decode(response.body);
-     Map<String, dynamic> decodedResp = resp.first;
-     servicios = ModeloServicios.fromJson(decodedResp);*/
      var jsonBody =   json.decode(response.body);
      for (var data in jsonBody) {
        modeloServ.add(new ModeloServicios(data['idcliente'],data['idservicios'],data['nombre'],
@@ -106,10 +103,6 @@ class _InformacionMedicoState extends State<InformacionMedico> {
    conusultarFormasDePago(String idCliente) async {
      final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_formaPago?idCliente="+idCliente);
      var response = await http.get(urlApi);
-   /*  List<dynamic> resp = json.decode(response.body);
-     Map<String, dynamic> decodedResp = resp.first;
-     formasPago =  ModeloFormasPago.fromJson(decodedResp);
-     print(formasPago.nombre);*/
      var jsonBody =   json.decode(response.body);
      for (var data in jsonBody) {
        modeloFp.add(new ModeloFormasPago(data['idcliente'],data['formasPago_idformasPago'],data['cliente_idcliente'],
@@ -176,14 +169,14 @@ class _InformacionMedicoState extends State<InformacionMedico> {
             child: Column(
               children: [
                 Text(widget.nombreMedico),
-                Text(modelo.descripcion_espe.toString()),
+                if(modelo.datos_extra == null || modelo.datos_extra.toString().isEmpty)Visibility(visible:false,child:Text(modelo.descripcion_espe.toString()))else Text(modelo.descripcion_espe.toString()),
+                if(modelo.datos_extra == null || modelo.datos_extra.toString().isEmpty)Visibility(visible:false,child:Text(modelo.datos_extra.toString()))else Text(modelo.datos_extra.toString()),
               ],
             )
           ),
         ],
       ),
     );
-
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30.0),
@@ -216,9 +209,9 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children:[
-                      Text("Cedulas: \n"+resultados),
-                      Text("Servicios:\n" + resServicios),
-                      Text("Formas de pago : \n"+ resFp),
+                      if(resultados.isEmpty) Visibility(visible:false,child:Text("Cedulas: \n"+resultados))else Text("Cedulas: \n"+resultados),
+                      if(resServicios.isEmpty)Visibility(visible:false,child: Text("Servicios:\n" + resServicios))else Text("Servicios:\n" + resServicios),
+                      if(resFp.isEmpty)Visibility(visible: false,child:Text("Formas de pago : \n"+ resFp)) else Text("Formas de pago : \n"+ resFp),
                       if(modelo.horario == null || modelo.horario.toString().isEmpty)Visibility(visible:false,child:Text("Horarios: \n" +modelo.horario.toString()))else Text("Horarios: \n" +modelo.horario.toString()),
                     ],
                   ),
@@ -235,7 +228,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     return GestureDetector(
       onTap: (){
         setState(() {
-          googleMaps('comgooglemaps://?center='+modeloDireccion.direccion.toString());
+          googleMaps('google.navigation:q='+modeloDireccion.direccion.toString());
         });
       },
       child: Column(
@@ -302,7 +295,6 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
                         const Text('Telefono (Agendar Cita)'),
-
                       ],
                     ),
                   ),
@@ -412,10 +404,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        Text(modelo.whatsapp.toString(), style: TextStyle(
-                            fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                            ,fontSize: 9)
-                        ),
+                        Text('Whatsapp'),
                       ],
                     ),
                   ),
@@ -453,10 +442,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        Text(modelo.facebook.toString(), style: TextStyle(
-                            fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                            ,fontSize: 9)
-                        ),
+                        Text('Facebook'),
                       ],
                     ),
                   ),
@@ -494,10 +480,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        Text(modelo.instagram.toString(), style: TextStyle(
-                            fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                            ,fontSize: 9)
-                        ),
+                        Text('Instagram'),
                       ],
                     ),
                   ),
@@ -529,10 +512,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children:[
-                      Text(modelo.twitter.toString(), style: TextStyle(
-                          fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                          ,fontSize: 9)
-                      ),
+                      Text('Twitter'),
                     ],
                   ),
                 ),
@@ -569,10 +549,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        Text(modelo.pagina_web.toString(), style: TextStyle(
-                            fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                            ,fontSize: 9)
-                        ),
+                        Text('Pagina Web'),
                       ],
                     ),
                   ),
@@ -610,10 +587,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        Text(modelo.e_mail.toString(), style: TextStyle(
-                            fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                            ,fontSize: 9)
-                        ),
+                        Text('E-mail'),
                       ],
                     ),
                   ),
@@ -625,29 +599,6 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       ),
     );
   }
-
-   Future<void>_makePhoneCall(String url)async{
-     if(!await canLaunch(url)){
-       await launch(url);
-     }else{
-       throw 'Could not launch $url';
-     }
-   }
-   Future<void> ulrWeb(String url) async {
-     if (!await canLaunch(url)) {
-       await launch(url);
-     } else {
-       throw 'Could not launch $url';
-     }
-   }
-
-   Future<void> correo(String url) async {
-     if (!await canLaunch(url)) {
-       await launch(url);
-     } else {
-       throw 'Could not launch $url';
-     }
-   }
    Future<void> googleMaps(String url) async {
      if (!await canLaunch(url)) {
        await launch(url);
@@ -656,6 +607,13 @@ class _InformacionMedicoState extends State<InformacionMedico> {
      }
    }
 
+   Future<void>_makePhoneCall(String url)async{
+     if(!await canLaunch(url)){
+       await launch(url);
+     }else{
+       throw 'Could not launch $url';
+     }
+   }
    void launchWhatsApp(@required number) async {
      String url() {
        if (Platform.isAndroid) {
@@ -677,6 +635,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
        throw 'Could not launch $url';
      }
    }
+
    Future<void> _instagram(String url) async {
      if (!await canLaunch(url)) {
        await launch(url);
@@ -684,4 +643,22 @@ class _InformacionMedicoState extends State<InformacionMedico> {
        throw 'Could not launch $url';
      }
    }
+   Future<void> ulrWeb(String url) async {
+     if (!await canLaunch(url)) {
+       await launch(url);
+     } else {
+       throw 'Could not launch $url';
+     }
+   }
+   Future<void> correo(String url) async {
+     if (!await canLaunch(url)) {
+       await launch(url);
+     } else {
+       throw 'Could not launch $url';
+     }
+   }
+
+
+
+
 }

@@ -53,14 +53,14 @@ initState() {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.nameEspecialidad),
+        title: Text(widget.nameEspecialidad ),
       ),
       body: mostrarMedicos(),
     );
   }
 
   mostrarMedicos() {
-     var size = MediaQuery.of(context).size;
+    var size = MediaQuery.of(context).size;
     final double itemHeight = size.height * 15.8;
     final double itemWidth = size.width * 120;
     return  Container(
@@ -90,11 +90,17 @@ initState() {
                   child: Card(
                     child: Row(
                       children: [
-                        Container(
+                        if(medicos.imagenName == null || medicos.imagenName.toString().isEmpty)
+                          Container(
+                            width: 30.0,
+                            height: 40.0,
+                          child: Image.network(urlApi+'images/default.png')
+                        )
+                        else Container(
                           width: 30.0,
                           height: 40.0,
                           child:
-                          new Image.network(urlApi+'images/'+medicos.imagenName.toString()),
+                           Image.network(urlApi+'images/'+medicos.imagenName.toString()),
                         ),
                         SizedBox(
                           width: 2.5,
