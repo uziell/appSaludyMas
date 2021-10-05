@@ -136,7 +136,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
           children: [
             imagenMedico(),
             informacionPersonal(),
-            if(modeloDireccion.direccion == null)Visibility(visible:false,child:direccion())else direccion(),
+            if(modeloDireccion.direccion == null|| modeloDireccion.direccion.toString().isEmpty)Visibility(visible:false,child:direccion())else direccion(),
             if(modelo.telefono1 == null || modelo.telefono1.toString().isEmpty)Visibility(visible:false,child:telefono1()) else telefono1(),
             if(modelo.telefono2 == null || modelo.telefono2.toString().isEmpty)Visibility(visible:false,child:telefono2())else telefono2(),
             if(modelo.telefono_emergencias == null || modelo.telefono_emergencias.toString().isEmpty)Visibility(visible:false,child:telEmergencia())else telEmergencia(),

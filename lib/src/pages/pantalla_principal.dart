@@ -267,7 +267,14 @@ return Container(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children:[
-                              Text(value.nombrecategoria.toString(), style: TextStyle(
+                              if(value.nombrecategoria == "ANÁLISIS CLINICOS")
+                                Text("LABORATORIO DE "+value.nombrecategoria.toString(), style: TextStyle(
+                                fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
+                                ,fontSize: 9,
+                              ),)else if(value.nombrecategoria == "ULTRASONIDO Y RAYOS X")
+                                Text("RADIOLOGÍA", style: TextStyle(
+                                    fontStyle: FontStyle.normal, fontWeight: FontWeight.bold,fontSize: 9))
+                              else Text(value.nombrecategoria.toString(), style: TextStyle(
                                 fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
                                 ,fontSize: 9,
                               ),),

@@ -32,16 +32,16 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
   void initState() {
     super.initState();
 
-    if (widget.nombreEspecialidad == "ESPECIALIDADES" ||
-        widget.nombreEspecialidad == "ODONTOLOGÍA" ||
-        widget.nombreEspecialidad == "ESPECIALIDADES PEDIATRICAS") {
+    if (widget.nombreEspecialidad == "ESPECIALIDADES"
+        || widget.nombreEspecialidad == "ODONTOLOGÍA"
+        || widget.nombreEspecialidad == "ESPECIALIDADES PEDIATRICAS"
+        || widget.nombreEspecialidad == "DIRECTORIOS") {
       consultarEspecialidades(
           widget.nombreEstado, widget.nombreCiudad, widget.idCategoria).then((
           value) {
         setState(() {});
       });
     } else if (widget.nombreEspecialidad == "CLINICAS Y HOSPITALES") {
-      print('Este es de clinicas pendiente');
       ConsultarClinicas(
           widget.nombreEstado, widget.nombreCiudad, widget.idCategoria).then((
           value) {
@@ -49,34 +49,29 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
 
         });
       });
-    } else {
+    } else{
       consultarClientesSinEspecialidad(
           widget.nombreEstado, widget.nombreCiudad, widget.idCategoria,
           widget.nombreEspecialidad).then((value) {
         setState(() {
-
         });
       });
     }
   }
 
-  Future consultarEspecialidades(String nombreEstado, String nombreCiudad,
-      String idCategoria) async {
-    //print('Esto tiene el nombre: '+nombreEstado+"ciudad: "+ nombreCiudad+ "idCate: "+idCategoria);
+  Future consultarEspecialidades(String nombreEstado, String nombreCiudad,String idCategoria) async {
+    print('Esto tiene el nombre: '+nombreEstado+"ciudad: "+ nombreCiudad+ "idCate: "+idCategoria);
     datosEspecialidad.clear();
-    final urlApi = Uri.parse(
-        "https://www.salumas.com/Salud_Y_Mas_Api/consultas_especialidad?nameEdo=" +
-            nombreEstado + "&nameCd=" + nombreCiudad + "&idCate=" +
-            idCategoria);
+    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultas_especialidad?nameEdo="+nombreEstado+"&nameCd="+nombreCiudad+"&idCate="+idCategoria);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
-    //print(urlApi);
+    print(urlApi);
     for (var data in jsonBody) {
       datosEspecialidad.add(new ModeloEspecialidad(
           data['idespecialidad'], data['nombre'], data['imagen'].toString(),
           data['imagenGeneral'].toString()));
     }
-    datosEspecialidad.forEach((someData) => print('Name : ${someData.imagen}'));
+    datosEspecialidad.forEach((someData) => print('Name : ${someData.nombre}'));
   }
 
   Future ConsultarClinicas(String nombreEstado, String nombreCiudad,
@@ -137,7 +132,8 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
 
               if(widget.nombreEspecialidad == "ESPECIALIDADES" ||
                   widget.nombreEspecialidad == "ODONTOLOGÍA" ||
-                  widget.nombreEspecialidad == "ESPECIALIDADES PEDIATRICAS")
+                  widget.nombreEspecialidad == "ESPECIALIDADES PEDIATRICAS" ||
+                  widget.nombreEspecialidad == "DIRECTORIOS")
                 Container(child: _llamarEspecialidadesCategoria())
               else
                 if (widget.nombreEspecialidad ==
@@ -213,8 +209,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                               children: [
                                 Text(espe.nombre.toString(), style: TextStyle(
                                   fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.bold
-                                  ,
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 9,
                                 ),),
                               ],
