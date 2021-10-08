@@ -1,7 +1,7 @@
 
 
 class ModeloCedulas{
-  final String idcliente;
+  final String? idcliente;
   final String? idcedula;
   final String? tipoCedula;
   final String? cedula;

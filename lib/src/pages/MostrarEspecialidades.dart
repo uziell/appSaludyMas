@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:salud_y_mas/src/models/modeloEspecialidades.dart';
 import 'package:salud_y_mas/src/models/modelo_medicos_especialidad.dart';
 import 'package:salud_y_mas/src/pages/informacionClientes.dart';
+import 'package:salud_y_mas/src/pages/mostrarInformacionClinicasYHospitales.dart';
 import 'package:salud_y_mas/src/pages/mostrarMedicosDeEspecialidad.dart';
 // ignore: must_be_immutable
 
@@ -27,6 +28,8 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
   List<ModeloEspecialidad> datosEspecialidad = [];
   List<ModeloMedicosEspecialidad> medicosEspe = [];
   List<ModeloClinicaYHospitales> modeloClinicas = [];
+  String nombreMedico='';
+  String idClientess='';
 
   @override
   void initState() {
@@ -36,72 +39,72 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
         || widget.nombreEspecialidad == "ODONTOLOGÍA"
         || widget.nombreEspecialidad == "ESPECIALIDADES PEDIATRICAS"
         || widget.nombreEspecialidad == "DIRECTORIOS") {
+
       consultarEspecialidades(
           widget.nombreEstado, widget.nombreCiudad, widget.idCategoria).then((
           value) {
         setState(() {});
       });
-    } else if (widget.nombreEspecialidad == "CLINICAS Y HOSPITALES") {
+    }else if (widget.nombreEspecialidad == "FARMACIAS DEL AHORRO"){
+
+    }
+      else if (widget.nombreEspecialidad == "CLINICAS Y HOSPITALES") {
       ConsultarClinicas(
           widget.nombreEstado, widget.nombreCiudad, widget.idCategoria).then((
           value) {
         setState(() {
-
         });
       });
-    } else{
-      consultarClientesSinEspecialidad(
+    }
+    else consultarClientesSinEspecialidad(
           widget.nombreEstado, widget.nombreCiudad, widget.idCategoria,
           widget.nombreEspecialidad).then((value) {
         setState(() {
         });
       });
-    }
   }
 
   Future consultarEspecialidades(String nombreEstado, String nombreCiudad,String idCategoria) async {
     print('Esto tiene el nombre: '+nombreEstado+"ciudad: "+ nombreCiudad+ "idCate: "+idCategoria);
     datosEspecialidad.clear();
-    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultas_especialidad?nameEdo="+nombreEstado+"&nameCd="+nombreCiudad+"&idCate="+idCategoria);
+    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultas_especialidad?nameEdo="
+        +nombreEstado+"&nameCd="+nombreCiudad+"&idCate="+idCategoria);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
     print(urlApi);
     for (var data in jsonBody) {
       datosEspecialidad.add(new ModeloEspecialidad(
-          data['idespecialidad'], data['nombre'], data['imagen'].toString(),
+          data['idespecialidad'],
+          data['nombre'],
+          data['imagen'].toString(),
           data['imagenGeneral'].toString()));
     }
     datosEspecialidad.forEach((someData) => print('Name : ${someData.nombre}'));
   }
 
-  Future ConsultarClinicas(String nombreEstado, String nombreCiudad,
-      String idCategoria) async {
+  Future ConsultarClinicas(String nombreEstado, String nombreCiudad, String idCategoria) async {
     modeloClinicas.clear();
-    final urlApi = Uri.parse(
-        "https://www.salumas.com/Salud_Y_Mas_Api/consultas_clinicas?nameEdo=" +
-            nombreEstado + "&nameCd=" + nombreCiudad + "&idCate=" +
-            idCategoria);
+    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultas_clinicas?nameEdo="
+        +nombreEstado + "&nameCd=" + nombreCiudad + "&idCate=" + idCategoria);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
-    //print(urlApi);
+    print(urlApi);
     for (var data in jsonBody) {
       modeloClinicas.add(new ModeloClinicaYHospitales(
-          data['idclinicasyhospitales'], data['nombre'],
-          data['imagen'].toString(), data['idcat'], data['idcd'],
+          data['idclinicasyhospitales'],
+          data['nombre'],
+          data['imagen'].toString(),
+          data['idcat'],
+          data['idcd'],
           data['idedo']));
     }
     modeloClinicas.forEach((someData) => print('Name : ${someData.nombre}'));
   }
 
-  Future consultarClientesSinEspecialidad(String nombreEstado,
-      String nombreCiudad, String idCategoria, String nameCate) async {
-    print('Esto tiene el nombre: ' + nombreEstado + "ciudad: " + nombreCiudad +
-        "idCate: " + idCategoria + "idespeci:" + nameCate);
+  Future consultarClientesSinEspecialidad(String nombreEstado,String nombreCiudad, String idCategoria, String nameCate) async {
     medicosEspe.clear();
-    final urlApi = Uri.parse(
-        "https://www.salumas.com/Salud_Y_Mas_Api/consultas_clientesSinEspecialidad?nameEdo=" +
-            nombreEstado + "&nameCd=" + nombreCiudad +
-            "&idCat=" + idCategoria + "&nameCate=" + nameCate);
+    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultas_clientesSinEspecialidad?nameEdo="
+        +nombreEstado + "&nameCd=" + nombreCiudad + "&idCat=" + idCategoria + "&nameCate=" + nameCate);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
     print(urlApi);
@@ -116,6 +119,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
           data['ciudad_has_categoria_ciudad_idciudad'],
           data['ciudad_has_categoria_ciudad_estado_idestado'],
           data['ciudad_has_categoria_categoria_idcategoria']));
+
     }
     medicosEspe.forEach((someData) => print('Name : ${someData.nombre}'));
   }
@@ -129,18 +133,14 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
       body: SingleChildScrollView(
         child: Column(
             children: [
-
               if(widget.nombreEspecialidad == "ESPECIALIDADES" ||
                   widget.nombreEspecialidad == "ODONTOLOGÍA" ||
                   widget.nombreEspecialidad == "ESPECIALIDADES PEDIATRICAS" ||
                   widget.nombreEspecialidad == "DIRECTORIOS")
                 Container(child: _llamarEspecialidadesCategoria())
-              else
-                if (widget.nombreEspecialidad ==
-                    "CLINICAS Y HOSPITALES") Container(
-                    child: _llamarCategoriasHospitales())
-                else
-                  Container(child: llarClientesDeCategoria(),),
+              else if (widget.nombreEspecialidad == "CLINICAS Y HOSPITALES") Container(child: _llamarCategoriasHospitales())
+              else if(widget.nombreEspecialidad == "FARMACIAS DEL AHORRO")Container(child:  llamarCOnta())
+                  else Container(child: llarClientesDeCategoria()),
             ]
         ),
       ),
@@ -249,16 +249,16 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    /*Navigator.of(context).push(MaterialPageRoute<Null>(
+                    Navigator.of(context).push(MaterialPageRoute<Null>(
                     builder:  (BuildContext context){
-                         String nameCategoria = espe.nombre;
-                          String nameEdo = widget.nombreEstado;
-                          String nameCd = widget.nombreCiudad;
-                          String idCategoria = widget.idCategoria;
-                          String idespecialidad = espe.idespecialidad;
-                          return MedicosEspecialidad(nameCategoria,nameEdo,nameCd,idCategoria,idespecialidad);
+                          String idclinica = clinicas.idclinicasyhospitales.toString();
+                          String idedo = clinicas.idedo.toString();
+                          String idcd = clinicas.idcd.toString();
+                          String idCateg = clinicas.idcat.toString();
+                          String nameClinica = clinicas.nombre.toString();
+                          return ClinicasInformacion(idclinica,idedo,idcd,idCateg,nameClinica);
                         }
-                    ));*/
+                    ));
                   },
                   child: Card(
                     child: Row(
@@ -303,7 +303,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                   ),
                 )
               ],
-            ),
+            )
           );
         }).toList(),
       ),
@@ -332,9 +332,9 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute<Null>(
                         builder: (BuildContext context) {
-                          String nombreMEdico = medicos.nombre;
+                          String nombreMedico = medicos.nombre;
                           String idCliente = medicos.idcliente;
-                          return InformacionMedico(nombreMEdico, idCliente);
+                          return InformacionMedico(nombreMedico, idCliente);
                         }));
                   },
                   child: Card(
@@ -383,6 +383,12 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
           );
         }).toList(),
       ),
+    );
+  }
+
+  llamarCOnta() {
+    return Container(
+      color: Colors.amber,
     );
   }
 }

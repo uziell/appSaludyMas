@@ -222,7 +222,11 @@ return Container(
     var size = MediaQuery.of(context).size;
     final double itemHeight = size.height * 15.8;
     final double itemWidth = size.width * 120;
-    return Card(
+
+    if(vista == 'Seleccione')return Card(
+      child: Image.asset('assets/sinDatos.jpg')
+    );
+    else return Card(
        color:const Color(0xff4fb3bf),
         child: Container(
           child: new GridView.count(

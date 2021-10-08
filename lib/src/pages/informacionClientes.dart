@@ -77,7 +77,9 @@ class _InformacionMedicoState extends State<InformacionMedico> {
            data['cedula'],data['escuela'],data['cliente_idcliente']));
      }
      for(int i=0; i<clieEs.length;i++){
-       listaCedulas.add(clieEs.elementAt(i).tipoCedula.toString()+"//"+clieEs.elementAt(i).cedula.toString()+"//"+clieEs.elementAt(i).escuela.toString()+"\n");
+       if(clieEs.elementAt(i).escuela == null)
+         listaCedulas.add(clieEs.elementAt(i).tipoCedula.toString()+"//"+clieEs.elementAt(i).cedula.toString()+"\n");
+       else listaCedulas.add(clieEs.elementAt(i).tipoCedula.toString()+"//"+clieEs.elementAt(i).cedula.toString()+"//"+clieEs.elementAt(i).escuela.toString()+"\n");
        for(int j=0; j<listaCedulas.length;j++){
           resultados += listaCedulas.elementAt(j);
           listaCedulas.clear();
@@ -169,7 +171,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
             child: Column(
               children: [
                 Text(widget.nombreMedico),
-                if(modelo.datos_extra == null || modelo.datos_extra.toString().isEmpty)Visibility(visible:false,child:Text(modelo.descripcion_espe.toString()))else Text(modelo.descripcion_espe.toString()),
+                if(modelo.descripcion_espe == null || modelo.descripcion_espe.toString().isEmpty)Visibility(visible:false,child:Text(modelo.descripcion_espe.toString()))else Text(modelo.descripcion_espe.toString()),
                 if(modelo.datos_extra == null || modelo.datos_extra.toString().isEmpty)Visibility(visible:false,child:Text(modelo.datos_extra.toString()))else Text(modelo.datos_extra.toString()),
               ],
             )
