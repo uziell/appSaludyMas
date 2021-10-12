@@ -11,11 +11,11 @@ class ModeloServicios{
   ModeloServicios(this.idcliente, this.idservicios, this.nombre,
       this.descripcion, this.costo, this.cliente_idcliente);
 
-  /*ModeloServicios.fromJson(Map<String, dynamic>json)
+  ModeloServicios.fromJson(Map<String, dynamic>json)
      : idcliente = json['idcliente'],
        idservicios = json['idservicios'],
        nombre = json['nombre'],
        descripcion = json['descripcion'],
        costo = json['costo'],
-       cliente_idcliente = json['cliente_idcliente'];*/
+       cliente_idcliente = json['cliente_idcliente'];
 }

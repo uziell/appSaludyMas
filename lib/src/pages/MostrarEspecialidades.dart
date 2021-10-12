@@ -4,11 +4,12 @@ import 'package:salud_y_mas/src/models/modeloClinicasyHospitales.dart';
 import 'dart:convert';
 
 import 'package:salud_y_mas/src/models/modeloEspecialidades.dart';
+import 'package:salud_y_mas/src/models/modeloFarmaciasDelAhorro.dart';
 import 'package:salud_y_mas/src/models/modelo_medicos_especialidad.dart';
 import 'package:salud_y_mas/src/pages/informacionClientes.dart';
 import 'package:salud_y_mas/src/pages/mostrarInformacionClinicasYHospitales.dart';
 import 'package:salud_y_mas/src/pages/mostrarMedicosDeEspecialidad.dart';
-// ignore: must_be_immutable
+
 
 class EspecialidadCategoria extends StatefulWidget {
   String nombreEspecialidad ='';
@@ -16,7 +17,8 @@ class EspecialidadCategoria extends StatefulWidget {
   String nombreEstado='';
   String nombreCiudad='';
   String imagenGeneral='';
-  EspecialidadCategoria(this.nombreEspecialidad,this.idCategoria,this.nombreEstado,this.nombreCiudad,this.imagenGeneral,{Key? key}) : super(key: key);
+  String idFarmacias='';
+  EspecialidadCategoria(this.nombreEspecialidad,this.idCategoria,this.nombreEstado,this.nombreCiudad,this.imagenGeneral,this.idFarmacias,{Key? key}) : super(key: key);
   
   @override
   _EspecialidadCategoriaState createState() => _EspecialidadCategoriaState();
@@ -24,17 +26,19 @@ class EspecialidadCategoria extends StatefulWidget {
 
 class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
 
-  String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
+  final String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
+
   List<ModeloEspecialidad> datosEspecialidad = [];
   List<ModeloMedicosEspecialidad> medicosEspe = [];
   List<ModeloClinicaYHospitales> modeloClinicas = [];
+  IdFarmaciasDelAhorro modeloIdFarmacias = new IdFarmaciasDelAhorro('');
   String nombreMedico='';
   String idClientess='';
 
   @override
   void initState() {
     super.initState();
-
+//aqui verificamos si esta entrando a las categorias que tienen especialidades
     if (widget.nombreEspecialidad == "ESPECIALIDADES"
         || widget.nombreEspecialidad == "ODONTOLOGÍA"
         || widget.nombreEspecialidad == "ESPECIALIDADES PEDIATRICAS"
@@ -45,10 +49,8 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
           value) {
         setState(() {});
       });
-    }else if (widget.nombreEspecialidad == "FARMACIAS DEL AHORRO"){
-
-    }
-      else if (widget.nombreEspecialidad == "CLINICAS Y HOSPITALES") {
+      //aqui obtendremos a la categoria farmacias y obtendremos su inf
+    } else if (widget.nombreEspecialidad == "CLINICAS Y HOSPITALES") {
       ConsultarClinicas(
           widget.nombreEstado, widget.nombreCiudad, widget.idCategoria).then((
           value) {
@@ -64,14 +66,21 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
       });
   }
 
+
+
+
+// en este método vamos a obtener las especialidades de las 4 categorias que tienen especialidad
   Future consultarEspecialidades(String nombreEstado, String nombreCiudad,String idCategoria) async {
     print('Esto tiene el nombre: '+nombreEstado+"ciudad: "+ nombreCiudad+ "idCate: "+idCategoria);
+
     datosEspecialidad.clear();
     final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultas_especialidad?nameEdo="
         +nombreEstado+"&nameCd="+nombreCiudad+"&idCate="+idCategoria);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
     print(urlApi);
+
+    //en este foreach recorremos para obtener lo que nos trae la consulta y guardarlo en la lista de tipo ModeloEspecialidad
     for (var data in jsonBody) {
       datosEspecialidad.add(new ModeloEspecialidad(
           data['idespecialidad'],
@@ -82,6 +91,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
     datosEspecialidad.forEach((someData) => print('Name : ${someData.nombre}'));
   }
 
+  //en este metodo consultamos las clinicas
   Future ConsultarClinicas(String nombreEstado, String nombreCiudad, String idCategoria) async {
     modeloClinicas.clear();
     final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultas_clinicas?nameEdo="
@@ -101,6 +111,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
     modeloClinicas.forEach((someData) => print('Name : ${someData.nombre}'));
   }
 
+  //método para consultar las categorias que no tienen especialidad
   Future consultarClientesSinEspecialidad(String nombreEstado,String nombreCiudad, String idCategoria, String nameCate) async {
     medicosEspe.clear();
     final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultas_clientesSinEspecialidad?nameEdo="
@@ -139,7 +150,6 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                   widget.nombreEspecialidad == "DIRECTORIOS")
                 Container(child: _llamarEspecialidadesCategoria())
               else if (widget.nombreEspecialidad == "CLINICAS Y HOSPITALES") Container(child: _llamarCategoriasHospitales())
-              else if(widget.nombreEspecialidad == "FARMACIAS DEL AHORRO")Container(child:  llamarCOnta())
                   else Container(child: llarClientesDeCategoria()),
             ]
         ),
@@ -334,7 +344,8 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                         builder: (BuildContext context) {
                           String nombreMedico = medicos.nombre;
                           String idCliente = medicos.idcliente;
-                          return InformacionMedico(nombreMedico, idCliente);
+                          String imagenCliente = medicos.imagenName.toString();
+                          return InformacionMedico(nombreMedico, idCliente,imagenCliente);
                         }));
                   },
                   child: Card(
@@ -386,10 +397,5 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
     );
   }
 
-  llamarCOnta() {
-    return Container(
-      color: Colors.amber,
-    );
-  }
 }
 

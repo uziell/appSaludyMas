@@ -3,8 +3,7 @@
 class ModeloMedicoClinicas{
   final String idcliente;
   final String nombre;
-  final String? clinicasyhospitales_idclinicasyhospitales;
-  /*final String? descripcion_espe;
+  final String? descripcion_espe;
   final String? telefono1;
   final String? telefono2;
   final String? telefono_emergencias;
@@ -17,14 +16,15 @@ class ModeloMedicoClinicas{
   final String? pagina_web;
   final String? datos_extra;
   final String? estatus;
+  final String? serviciosNombre;
   final String? clinicasyhospitales_idclinicasyhospitales;
-  final String? direccion;*/
+  final String? direccion;
+  final String?  imagenName;
 
   ModeloMedicoClinicas(
       this.idcliente,
       this.nombre,
-      this.clinicasyhospitales_idclinicasyhospitales);
-     /* this.descripcion_espe,
+      this.descripcion_espe,
       this.telefono1,
       this.telefono2,
       this.telefono_emergencias,
@@ -37,15 +37,16 @@ class ModeloMedicoClinicas{
       this.pagina_web,
       this.datos_extra,
       this.estatus,
+      this.serviciosNombre,
       this.clinicasyhospitales_idclinicasyhospitales,
-      this.direccion);*/
+      this.direccion,
+      this.imagenName);
 
 
- /* ModeloMedicoClinicas.fromJson(Map<String, dynamic> json)
+  /*ModeloMedicoClinicas.fromJson(Map<String, dynamic> json)
       : idcliente = json['idcliente'],
         nombre = json['nombre'],
-        clinicasyhospitales_idclinicasyhospitales = json['clinicasyhospitales_idclinicasyhospitales'];
-       /* descripcion_espe = json['descripcion_espe'],
+        descripcion_espe = json['descripcion_espe'],
         telefono1 = json['telefono1'],
         telefono2 = json['telefono2'],
         telefono_emergencias = json['telefono_emergencias'],
@@ -58,15 +59,17 @@ class ModeloMedicoClinicas{
         pagina_web = json['pagina_web'],
         datos_extra = json['datos_extra'],
         estatus = json['estatus'],
+        serviciosNombre =  json['serviciosNombre'],
         clinicasyhospitales_idclinicasyhospitales = json['clinicasyhospitales_idclinicasyhospitales'],
-        direccion = json['direccion'];*/
+        direccion = json['direccion'],
+        imagenName = json['imagenName'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['idcliente'] = idcliente;
     data['nombre'] = this.nombre;
     data['clinicasyhospitales_idclinicasyhospitales'] = this.clinicasyhospitales_idclinicasyhospitales;
-    /*data['descripcion_espe'] = this.descripcion_espe;
+    data['descripcion_espe'] = this.descripcion_espe;
     data['telefono1'] = this.telefono1;
     data['telefono2'] = this.telefono2;
     data['telefono_emergencias'] = this.telefono_emergencias;
@@ -79,8 +82,7 @@ class ModeloMedicoClinicas{
     data['datos_extra'] = this.datos_extra;
     data['estatus'] = this.estatus;
     data['clinicasyhospitales_idclinicasyhospitales'] = this.clinicasyhospitales_idclinicasyhospitales;
-    data['direccion'] = this.direccion;*/
-
+    data['direccion'] = this.direccion;
     return data;
   }*/
 }

@@ -12,7 +12,7 @@ class ModeloCedulas{
   ModeloCedulas(this.idcliente, this.idcedula, this.tipoCedula, this.cedula,
       this.escuela, this.cliente_idcliente);
 
-  /*ModeloCedulas.fromJson(Map<String, dynamic> json)
+  ModeloCedulas.fromJson(Map<String, dynamic> json)
       : idcliente = json['idcliente'],
         idcedula = json['idcedula'],
         tipoCedula = json['tipoCedula'],
@@ -20,7 +20,7 @@ class ModeloCedulas{
         escuela = json['escuela'],
         cliente_idcliente = json['cliente_idcliente'];
 
-  Map<String, dynamic> toJson() {
+ /* Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['idcliente'] = idcliente;
     data['idcedula'] = this.idcedula;

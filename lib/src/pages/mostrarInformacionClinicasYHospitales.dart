@@ -1,16 +1,14 @@
-import 'dart:collection';
 import 'dart:convert';
-import 'dart:ffi';
-
-import 'package:flutter/material.dart';
+import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:salud_y_mas/src/clases/claseMedicosClinicas.dart';
 import 'package:salud_y_mas/src/models/modeloCedulas.dart';
-import 'package:salud_y_mas/src/models/modeloInformacionMedico.dart';
 import 'package:salud_y_mas/src/models/modeloInformacionMedicosClinicas.dart';
 import 'package:salud_y_mas/src/models/modeloMedicosClinicas.dart';
-import 'package:collection/collection.Dart';
 import 'package:salud_y_mas/src/models/modeloServicios.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ClinicasInformacion extends StatefulWidget {
   String idClinicas;
@@ -32,13 +30,13 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
   List<ModeloMedicoClinicas> datosEspecialidad = [];
   ///en esta lista guardamos el id de cada medico
   List<String> listaMedicos = [];
+  List<String> listanombres=[];
   String resMedicos ='';
 
   ///en esta lista guardamos todos los datos de las cedulas
   List<ModeloCedulas> clieEs=[];
   ///en esta lista gurdamos nada mas las cedulas el tipo de cedula y el nombre de la escuela
   List<String> listaCedulas = [];
-  String resultados = "";
 
  ///en esta lista estan almacenado los servicios
   List<ModeloServicios> modeloServ = [];
@@ -49,6 +47,12 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
   List<ModeloInfomacionClientesMedicos> listaInfMe=[];
   List<String> listaCompleta = [];
   ModeloInfomacionClientesMedicos modelo = new ModeloInfomacionClientesMedicos('','','','','','','','','','','','','','','','','','');
+  ModeloMedicoClinicas modeloMedicoClinicas= new ModeloMedicoClinicas('','','','','','','','','','','','','','','','','','','');
+  List<InfMeClinicas> info= [];
+
+
+  var servicios ="";
+  String tel='';
 
 
   @override
@@ -56,115 +60,80 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
     // TODO: implement initState
 
     super.initState();
+
+    //mandamos a llamar el metodo donde obtendremos a los medicos de cada clinica
     consultarMedicosInformacion(widget.idClinicas).then((value) {
       setState(() {
+        //consulta la cedula de cada Medico
+        consultarCedulas().then((value) {
+          setState(() {});
+        });
+
+        //consulta el servicio de cada medico
+
       });
     });
   }
   //en este metodo se consulta las cedulas
   Future consultarCedulas() async {
-   for(var id in listaMedicos){
-     print(listaMedicos.toString()+': tiene lista medicos');
-     final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_cedula?idCliente="+id);
+    //hacemos el recorrido con un foreach para hacer las consultas de las cedulas con su respectivo id
+   for(var id in datosEspecialidad){
+     //print('esto tien id+ '+id.idcliente.toString());
+
+     final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_cedula?idCliente="+id.idcliente);
      var response = await http.get(urlApi);
      var jsonBody = jsonDecode(response.body);
-     print('el bodi: '+jsonBody.toString());
+
+     print('el body'+ jsonBody.toString());
+     //hacemos el recorrido de los que nos trae el json y se lo agregamos a la lista de CliEs.
      for (var data in jsonBody) {
        clieEs.add(new ModeloCedulas(data['idcliente'],data['idcedula'],data['tipoCedula'],
            data['cedula'],data['escuela'],data['cliente_idcliente']));
      }
+     var cedulas = "";
+     // por cada medico agregar detalles de la cédula a la lista de cédulas [{id, nombreCedula, cédula, nombreEscuela},{id, nombreCedula, cédula, nombreEscuela}...]
      for(int i=0; i<clieEs.length;i++){
-       listaCedulas.add(clieEs.elementAt(i).idcliente.toString()+"//"+clieEs.elementAt(i).tipoCedula.toString()+"//"+clieEs.elementAt(i).cedula.toString()+"//"+clieEs.elementAt(i).escuela.toString()+"\n");
-       for(int j=0; j<listaCedulas.length;j++){
-         resultados += listaCedulas.elementAt(j);
-         print('el res: '+resultados);
-         listaCedulas.clear();
-       }
+       if (i == 0)
+         cedulas += clieEs.elementAt(i).tipoCedula.toString()+"//"+clieEs.elementAt(i).cedula.toString()+"//"+clieEs.elementAt(i).escuela.toString();
+       else if(clieEs.elementAt(i).escuela == null)  cedulas += clieEs.elementAt(i).tipoCedula.toString()+" "+clieEs.elementAt(i).cedula.toString();
+         else cedulas += "\n"+clieEs.elementAt(i).tipoCedula.toString()+"//"+clieEs.elementAt(i).cedula.toString()+"//"+clieEs.elementAt(i).escuela.toString();
+
+
      }
+     info.add(new InfMeClinicas(
+         id.idcliente.toString(), id.nombre.toString(), id.descripcion_espe.toString(), id.telefono1.toString(),
+         id.telefono2.toString(), id.telefono_emergencias.toString(), id.facebook.toString(),
+         id.instagram.toString(), id.twitter.toString(), id.e_mail.toString(), id.horario.toString(),
+         id.whatsapp.toString(), id.pagina_web.toString(), id.datos_extra.toString(),
+         id.estatus.toString(), id.serviciosNombre.toString(),
+         id.clinicasyhospitales_idclinicasyhospitales.toString(), id.direccion.toString(), cedulas,'','',id.imagenName.toString()));
+
+     tel= id.telefono_emergencias.toString();
+
+
      clieEs.clear();
-     listaMedicos.clear();
    }
-  }
-
-  consultarInformacionMedicoHospital() async {
-    for(var id in listaMedicos){
-      final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultarInformacionMedico?idcliente="+id);
-      var response = await http.get(urlApi);
-      var jsonBody = jsonDecode(response.body);
-     /* List<dynamic> resp = json.decode(response.body);
-      Map<String, dynamic> decodedResp = resp.first;
-      modelo = ModeloInfomacionClientesMedicos.fromJson(decodedResp);*/
-
-     // print('el bodi: '+jsonBody.toString());
-     for (var data in jsonBody) {
-        listaInfMe.add(new ModeloInfomacionClientesMedicos(
-            data['idcliente'],
-            data['descripcion_espe'], data['telefono1'],data['telefono2'],
-            data['telefono_emergencias'], data['facebook'], data['instagram'],
-            data['twitter'], data['e_mail'],data['horario'],
-            data['whatsapp'], data['pagina_web'], data['datos_extra'],
-            data['direccion'], data['tipoCedula'], data['cedula'],
-            data['escuela'], data['nombre']));
-      }
-
-
-      for(int i=0; i<listaInfMe.length;i++){
-        listaCompleta.add(listaInfMe.elementAt(i).descripcion_espe.toString());
-        print('lista: '+listaCompleta.toString());
-        listaCompleta.clear();
-      }
-      listaInfMe.clear();
-      listaMedicos.clear();
-    }
-
+   datosEspecialidad.clear();
   }
 
   consultarMedicosInformacion(String idClinicas) async {
-    final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_medicos_clinicas?idClinica="+idClinicas);
+    //datosEspecialidad.clear();
+    final urlApi = Uri.parse(
+        "https://www.salumas.com/Salud_Y_Mas_Api/consulta_medicos_clinicas?idClinica=" +
+            idClinicas);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
     print(urlApi);
     for (var data in jsonBody) {
-      datosEspecialidad.add(new ModeloMedicoClinicas(data['idcliente'],data['nombre'],
-          data['clinicasyhospitales_idclinicasyhospitales']));
+      datosEspecialidad.add(new ModeloMedicoClinicas(data['idcliente'], data['nombre'],data['descripcion_espe']
+      ,data['telefono1'],data['telefono2'],data['telefono_emergencias'],data['facebook'],data['instagram'],data['twitter'],
+          data['e_mail'],data['horario'],data['whatsapp'],data['pagina_web'],data['datos_extra'],data['estatus'],data['serviciosNombre'],
+          data['clinicasyhospitales_idclinicasyhospitales'],data['direccion'],data['imagenName']));
     }
-    for (var datosid in datosEspecialidad){
-      listaMedicos.add(datosid.idcliente);
-      consultarCedulas().then((value) {
-        setState(() {
-          listaMedicos.addAll(listaCedulas);
-          print('esto tiene listaMedicos: '+listaMedicos.toString());
-        });
-      });
 
-     /* consultarInformacionMedicoHospital().then((value) {
-        setState(() {
-
-
-        });
-      });*/
-      listaMedicos.clear();
-    }
+    //datosEspecialidad.clear();
   }
 
-  conustarServiciosMedicos() async {
-    for (var id in listaMedicos){
-      final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_servicios?idCliente="+id);
-      var response = await http.get(urlApi);
-      var jsonBody =   json.decode(response.body);
-      for (var data in jsonBody) {
-        modeloServ.add(new ModeloServicios(data['idcliente'],data['idservicios'],data['nombre'],
-            data['descripcion'],data['costo'],data['cliente_idcliente']));
-      }
-      for(int i=0; i<modeloServ.length;i++){
-        listaServicios.add(modeloServ.elementAt(i).idcliente.toString()+modeloServ.elementAt(i).nombre.toString()+",");
-        for(int j=0; j<listaServicios.length;j++){
-          resServicios += listaServicios.elementAt(j);
-          listaServicios.clear();
-        }
-      }
-    }
-  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -172,62 +141,37 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
         appBar: AppBar(
           title: Text(widget.nameClinica),
         ),
-        body: mostrarMedicos(),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              //mostrarImagenPerfil(),
+              mostrarMedicos(),
+              direccion(),
+              telefono1(),
+              telefono2(),
+              telefono_emergencias(),
+              whatSapp(),
+              facebook(),
+              instagram(),
+              paginaWeb(),
+              email(),
+            ],
+          ),
+        )
+        //mostarMe(),
       ),
 
     );
   }
-
-  mostrarMedicos() {
-    var size = MediaQuery.of(context).size;
-    final double itemHeight = size.height * 15.8;
-    final double itemWidth = size.width * 120;
-    return  Container(
-      child: new GridView.count(
-        crossAxisCount: 1,
-        childAspectRatio: (itemWidth / itemHeight),
-        controller: new ScrollController(keepScrollOffset: false),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        children: datosEspecialidad.map((medicos) {
-          return new Container(
-            margin: new EdgeInsets.all(1.0),
+  mostrarImagenPerfil() {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: info.map((medicos){
+          return Card(
             child: Column(
               children: [
-                GestureDetector(
-                  onTap: (){
-                   /* Navigator.of(context).push(MaterialPageRoute<Null>(
-                        builder:  (BuildContext context){
-                          String nombreMEdico = medicos.nombre;
-                          String idCliente = medicos.idcliente;
-                          /*String nameCd = widget.nombreCiudad;
-                           String idCategoria = widget.idCategoria;
-                           String idEspeciliad = espe.idespecialidad;*/
-                          return InformacionMedico(nombreMEdico,idCliente);
-                        }));*/
-                  },
-                  child: Card(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children:[
-                                Text(medicos.nombre),
-                                 Text(modelo.cedula.toString()),
-                              //  Text(resServicios),
-                                //if(medicos.horario == null || medicos.horario.toString().isEmpty)Visibility(visible:false,child:Text(medicos.horario.toString()))
-                               // else Text(medicos.horario.toString()),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
+                if(medicos.imagenName == 'null' || medicos.imagenName.toString().isEmpty)Visibility(visible:false,child:Image.network(urlApi+'images/'+medicos.imagenName.toString()))else Image.network(urlApi+'images/'+medicos.imagenName.toString()),
               ],
             ),
           );
@@ -235,6 +179,500 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
       ),
     );
   }
+
+  mostrarMedicos() {
+    return Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: info.map((medicos){
+                return Card(
+                  child: Column(
+                    children: [
+                      if(medicos.imagenName == 'null' || medicos.imagenName.toString().isEmpty)Visibility(visible:false,child:Image.network(urlApi+'images/'+medicos.imagenName.toString()))else Image.network(urlApi+'images/'+medicos.imagenName.toString()),
+                      Text(medicos.nombreMedico.toString()),
+                      if(medicos.descripcion_espe == 'null' || medicos.descripcion_espe.toString().isEmpty)Visibility(visible:false,child:Text(medicos.descripcion_espe.toString()))else Text(medicos.descripcion_espe.toString()),
+                      if(medicos.serviciosNombre == 'null' || medicos.serviciosNombre.toString().isEmpty)Visibility(visible:false,child:Text(medicos.serviciosNombre.toString()))else Text(medicos.serviciosNombre.toString()),
+                      if(medicos.tipoCedula == 'null' || medicos.tipoCedula.toString().isEmpty)Visibility(visible:false,child:Text(medicos.tipoCedula.toString()))else Text(medicos.tipoCedula.toString()),
+                      if(medicos.horario == 'null' || medicos.horario.toString().isEmpty)Visibility(visible: false, child:Text(medicos.horario.toString()))else Text(medicos.horario.toString()),
+
+                      //if(medicos.direccion == 'null' || medicos.direccion.toString().isEmpty)Visibility(visible:false,child:direccion())else direccion(),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          );
+  }
+
+
+
+  Future<void> googleMaps(String url) async {
+    if (!await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<void>_makePhoneCall(String url)async{
+    if(!await canLaunch(url)){
+      await launch(url);
+    }else{
+      throw 'Could not launch $url';
+    }
+  }
+  void launchWhatsApp(@required number) async {
+    String url() {
+      if (Platform.isAndroid) {
+        return "whatsapp://send?phone=$number";
+      } else {
+        return "whatsapp://send?phone=$number";
+      }
+    }
+    if (!await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
+  }
+  Future<void> _facebook(String url) async {
+    if (!await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<void> _instagram(String url) async {
+    if (!await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+  Future<void> ulrWeb(String url) async {
+    if (!await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+  Future<void> correo(String url) async {
+    if (!await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+
+
+
+  direccion() {
+    return Card(
+      child: Column(
+        children: info.map((value){
+          return GestureDetector(
+            onTap: (){
+              setState(() {
+                 googleMaps('google.navigation:q='+value.direccion.toString());
+              });
+            },
+            child: Row(
+              children: [
+                if(value.direccion == 'null' || value.direccion.toString().isEmpty)Visibility(visible:false,child:
+                Container(width: 30.0, height: 40.0, child: Image.asset('assets/mapa.png')))
+                    else Container(width: 30.0, height: 40.0, child: Image.asset('assets/mapa.png')
+                ),
+                SizedBox(
+                  width: 2.5,
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      // border: Border.all(color: Colors.black,width: 2),
+                      color:const Color(0xff00838f),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children:[
+                       if(value.direccion == 'null' || value.direccion.toString().isEmpty)Visibility(visible:false,child:Text(value.direccion.toString()))else
+                         Text(value.direccion.toString(),style: TextStyle(color: Colors.white, fontSize: 15))
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  telefono1() {
+    return Card(
+      child: Column(
+        children: info.map((value){
+          return GestureDetector(
+            onTap: (){
+              setState(() {
+                _makePhoneCall('tel: '+value.telefono1.toString());
+              });
+            },
+            child: Row(
+              children: [
+                if(value.telefono1 == 'null' || value.telefono1.toString().isEmpty)Visibility(visible:false,child:
+                Container(width: 30.0, height: 40.0, child:  Image.asset('assets/telefono.png')))
+                else Container(width: 30.0, height: 40.0, child: Image.asset('assets/telefono.png')),
+                SizedBox(
+                  width: 2.5,
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      // border: Border.all(color: Colors.black,width: 2),
+                      color:const Color(0xff00838f),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children:[
+                        if(value.telefono1 == 'null' || value.telefono1.toString().isEmpty)Visibility(visible:false,child:Text('Telefono'))else
+                          Text('Telefono',style: TextStyle(color: Colors.white, fontSize: 20)),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  telefono2() {
+    return Card(
+      child: Column(
+        children: info.map((value){
+          return GestureDetector(
+            onTap: (){
+              setState(() {
+                _makePhoneCall('tel: '+value.telefono2.toString());
+              });
+            },
+            child: Row(
+              children: [
+                if(value.telefono2 == 'null' || value.telefono2.toString().isEmpty)Visibility(visible:false,child:
+                Container(width: 30.0, height: 40.0, child:  Image.asset('assets/telefono.png')))
+                else Container(width: 30.0, height: 40.0, child: Image.asset('assets/telefono.png')),
+                SizedBox(
+                  width: 2.5,
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      // border: Border.all(color: Colors.black,width: 2),
+                      color:const Color(0xff00838f),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children:[
+                        if(value.telefono2 == 'null' || value.telefono2.toString().isEmpty)Visibility(visible:false,child:Text('Telefono'))else
+                          Text('Telefono',style: TextStyle(color: Colors.white, fontSize: 20)),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  telefono_emergencias() {
+    return Card(
+      child: GestureDetector(
+        child: Column(
+          children: info.map((value){
+            return GestureDetector(
+              onTap: (){
+                setState(() {
+                  _makePhoneCall('tel: '+value.telefono_emergencias.toString());
+                });
+              },
+              child: Row(
+                children: [
+                  if(value.telefono_emergencias == 'null' || value.telefono_emergencias.toString().isEmpty)Visibility(visible:false,child:
+                  Container(width: 30.0, height: 40.0, child:  Image.asset('assets/llamada-de-emergencia.png')))
+                  else Container(width: 30.0, height: 40.0, child: Image.asset('assets/llamada-de-emergencia.png')),
+                  SizedBox(
+                    width: 2.5,
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        // border: Border.all(color: Colors.black,width: 2),
+                        color:const Color(0xff00838f),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children:[
+                          if(value.telefono_emergencias == 'null' || value.telefono_emergencias.toString().isEmpty)Visibility(visible:false,child:Text('Telefono Emergencias'))else
+                            Text('Telefono Emergencias',style: TextStyle(color: Colors.white, fontSize: 20)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  whatSapp() {
+    return Card(
+      child: GestureDetector(
+        child: Column(
+          children: info.map((value){
+            return GestureDetector(
+              onTap: (){
+                setState(() {
+                  launchWhatsApp("+52"+value.whatsapp.toString());
+                });
+              },
+              child: Row(
+
+                children: [
+                  if(value.whatsapp == 'null' || value.whatsapp.toString().isEmpty)Visibility(visible:false,child:
+                  Container(width: 30.0, height: 40.0, child:  Image.asset('assets/whatsapp.png')))
+                  else Container(width: 30.0, height: 40.0, child: Image.asset('assets/whatsapp.png')),
+                  SizedBox(
+                    width: 2.5,
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        // border: Border.all(color: Colors.black,width: 2),
+                        color:const Color(0xff00838f),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children:[
+                          if(value.whatsapp == 'null' || value.whatsapp.toString().isEmpty)Visibility(visible:false,child:Text('Whatsapp'))else
+                            Text('WhatSapp',style: TextStyle(color: Colors.white, fontSize: 20)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  facebook() {
+    return Card(
+      child: GestureDetector(
+        child: Column(
+          children: info.map((value){
+            return GestureDetector(
+              onTap: (){
+                setState(() {
+                  _facebook('https://www.facebook.com/'+value.facebook.toString());
+                });
+              },
+              child: Row(
+                children: [
+                  if(value.facebook == 'null' || value.facebook.toString().isEmpty)Visibility(visible:false,child:
+                  Container(width: 30.0, height: 40.0, child:   Image.asset('assets/facebook.png')))
+                  else Container(width: 30.0, height: 40.0, child:  Image.asset('assets/facebook.png')),
+                  SizedBox(
+                    width: 2.5,
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        // border: Border.all(color: Colors.black,width: 2),
+                        color:const Color(0xff00838f),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children:[
+                          if(value.facebook == 'null' || value.facebook.toString().isEmpty)Visibility(visible:false,child:Text('Facebook'))
+                          else Text('Facebook',style: TextStyle(color: Colors.white, fontSize: 20)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  instagram() {
+    return Card(
+      child: GestureDetector(
+        child: Column(
+          children: info.map((value){
+            return GestureDetector(
+              onTap: (){
+                setState(() {
+                  _instagram('https://www.instagram.com/'+value.instagram.toString());
+                });
+              },
+              child: Row(
+                children: [
+                  if(value.instagram == 'null' || value.instagram.toString().isEmpty)Visibility(visible:false,child:
+                  Container(width: 30.0, height: 40.0, child:    Image.asset('assets/instagram.png')))
+                  else Container(width: 30.0, height: 40.0, child:  Image.asset('assets/instagram.png')),
+                  SizedBox(
+                    width: 2.5,
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        // border: Border.all(color: Colors.black,width: 2),
+                        color:const Color(0xff00838f),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children:[
+                          if(value.instagram == 'null' || value.instagram.toString().isEmpty)Visibility(visible:false,child:Text('Instagram'))
+                          else Text('Instagram',style: TextStyle(color: Colors.white, fontSize: 20)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  paginaWeb() {
+    return Card(
+      child: GestureDetector(
+        child: Column(
+          children: info.map((value){
+            return GestureDetector(
+              onTap: (){
+                setState(() {
+                  ulrWeb('https://'+value.pagina_web.toString());
+                });
+              },
+              child: Row(
+                children: [
+                  if(value.pagina_web == 'null' || value.pagina_web.toString().isEmpty)Visibility(visible:false,child:
+                  Container(width: 30.0, height: 40.0, child:    Image.asset('assets/red-mundial.png'),))
+                  else Container(width: 30.0, height: 40.0, child:   Image.asset('assets/red-mundial.png'),),
+                  SizedBox(
+                    width: 2.5,
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        // border: Border.all(color: Colors.black,width: 2),
+                        color:const Color(0xff00838f),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children:[
+                          if(value.pagina_web == 'null' || value.pagina_web.toString().isEmpty)Visibility(visible:false,child:Text('Pagina Web'))
+                          else Text('Pagina Web',style: TextStyle(color: Colors.white, fontSize: 20)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  email() {
+    return Card(
+      child: GestureDetector(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: info.map((value){
+            return GestureDetector(
+              onTap: (){
+                setState(() {
+                  correo('mailto:'+value.e_mail.toString());
+                });
+              },
+              child: Row(
+                children: [
+                  if(value.e_mail == 'null' || value.e_mail.toString().isEmpty)Visibility(visible:false,child:
+                  Container(width: 30.0, height: 40.0, child:   Image.asset('assets/email.png')))
+                  else Container(width: 30.0, height: 40.0, child: Image.asset('assets/email.png')),
+                  SizedBox(
+                    width: 2.5,
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        // border: Border.all(color: Colors.black,width: 2),
+                        color:const Color(0xff00838f),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children:[
+                          if(value.e_mail == 'null' || value.e_mail.toString().isEmpty)Visibility(visible:false,child:Text('Email'))
+                          else Text('Email',style: TextStyle(color: Colors.white, fontSize: 20),),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+
+
+
+
 }
 
 
