@@ -1,14 +1,11 @@
 import 'dart:convert';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:salud_y_mas/src/models/modeloFarmaciasDelAhorro.dart';
 import 'package:salud_y_mas/src/models/modelo_categoria.dart';
-import 'package:salud_y_mas/src/pages/MostrarEspecialidades.dart';
-import 'package:salud_y_mas/src/pages/informacionClientes.dart';
-
-
-
+import 'package:salud_y_mas/src/pages/pantalla_especialidades_categoria.dart';
 
 class PantallaPrincipal extends StatefulWidget {
   @override
@@ -18,11 +15,15 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
 
   List<String> estadosConsulta = [], ciudadesConsulta = [], imagenes =[];
   List<MyModel> myData = [];
+
   String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
   List<String> listImagenes = [] ;
-  String vista = 'Seleccione';
+  String vista = 'Estados';
   String vistaCiudad = "Seleccione una ciudad";
   IdFarmaciasDelAhorro modeloIdFarmacias = new IdFarmaciasDelAhorro('');
+
+  List<IdFarmaciasDelAhorro> idFarma=[];
+  String? farma='';
 
   Future consultarImagenes() async {
     final url = Uri.parse(urlApi+'consultas_carrusel.php');
@@ -31,7 +32,6 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     for (var valor in respuestaImagen) {
       imagenes.add((valor['imagen']).toString());
     }
-    // print('Esto tiene imagenes: '+ imagenes.toString());
   }
   llenarCarrucel(List<String> lista) {
     print('Esto tiene lista:'+lista.toString());
@@ -80,20 +80,32 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
       });
     });
 
-
     //
   }
+  /*consultarInformacionFMDA(String nombreEdo,String nombreCiudad) async {
 
-  Future consultarInformacionFMDA(String nombreCiudad) async {
-    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultarFarmaciasdelAhorro?nameCd="+nombreCiudad);
+    idFarma.clear();
+    print('ciudad: '+nombreEdo+ 'edo: '+nombreCiudad);
+    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultarFarmaciasdelAhorro?nameEdo="+nombreEdo+"&nameCd="+nombreCiudad);
+    print(urlApi);
     var response = await http.get(urlApi);
-    List<dynamic> resp = json.decode(response.body);
+    var jsonBody =   json.decode(response.body);
+    print(urlApi);
+    for (var data in jsonBody) {
+      idFarma.add(new IdFarmaciasDelAhorro(data['cliente_idcliente']));
+    }
+
+    for(int i=0; i<idFarma.length;i++){
+      farma = idFarma.elementAt(i).cliente_idcliente;
+    }
+
+
+    /* List<dynamic> resp = json.decode(response.body);
     Map<String, dynamic> decodedResp = resp.first;
     modeloIdFarmacias =  IdFarmaciasDelAhorro.fromJson(decodedResp);
+    print('idCliente'+modeloIdFarmacias.cliente_idcliente.toString());*/
+  }*/
 
-
-    print('idCliente'+modeloIdFarmacias.idclie.toString());
-  }
 
   Future consultarCategorias(String actualStado, String actualCiudad)async{
     print('Esto tiene '+ actualStado +'y ciudad '+ actualCiudad);
@@ -110,10 +122,11 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
   }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Container(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Salud Y Mas'),
+          title:  new Center(child: new Text('Salud Y Mas', textAlign: TextAlign.center)),
+          backgroundColor: const Color(0xff00838f),
         ),
         body: ListView(
           children: [
@@ -145,7 +158,7 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
               isExpanded: true,
               iconSize: 20,
               icon: Icon(Icons.arrow_drop_down, color: Colors.white),
-              items: estadosConsulta.map((String estadoC) {
+              items: estadosConsulta.map((estadoC) {
                 return DropdownMenuItem(
                   value: estadoC,
                   child: Text(estadoC,
@@ -155,22 +168,17 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
               onChanged: (String? seleccion){
                 setState(() {
                   vista = seleccion.toString();
+
                   consultarAPICiudades(vista).then((value){
                     setState(() {
                       vistaCiudad = ciudadesConsulta[0].toString();
 
                       consultarCategorias(vista,vistaCiudad).then((value){
                         setState(() {
-
                         });
                       });
-
-                      /*consultarInformacionFMDA(vistaCiudad).then((value) {
-                        setState(() {
-                          print('vistaCiudad'+ vistaCiudad);
-                        });
-                      });*/
                     });
+
                   });
                 });
               },
@@ -205,16 +213,12 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                   vistaCiudad = _ciudadActual.toString();
                   //consultarCategorias(vista,vistaCiudad);
                   consultarCategorias(vista,vistaCiudad).then((value){
-                    setState(() {});
-                  });
-
-                  consultarInformacionFMDA(vistaCiudad).then((value) {
                     setState(() {
-                      print('vistaCiudad'+ vistaCiudad);
                     });
                   });
                 });
               },
+
               hint: Text(vistaCiudad,style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold, fontSize: 16),),
             ),
           ),
@@ -248,8 +252,8 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     final double itemHeight = size.height * 15.8;
     final double itemWidth = size.width * 120;
 
-    if(vista == 'Seleccione')return Card(
-        child: Image.asset('assets/fondo.jpeg')
+    if(vista == 'Estados')return CupertinoAlertDialog(
+      content:  Image.asset('assets/lupa(1).png'),
     );
     else return Container(
         child: new GridView.count(
@@ -270,36 +274,25 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
                 children: [
                   GestureDetector(
                     onTap: (){
-                      if(value.nombrecategoria == "FARMACIAS DEL AHORRO" )
-                        Navigator.of(context).push(MaterialPageRoute<Null>(
-                          builder:  (BuildContext context){
-                            String nombreCd = vistaCiudad;
-                            String imagenCategoria = value.imagen.toString();
-                            String idFarmacias = modeloIdFarmacias.idclie.toString();
-                            return InformacionMedico(nombreCd,idFarmacias,imagenCategoria);
-                          }
-                      ));
-                      else Navigator.of(context).push(MaterialPageRoute<Null>(
+                      Navigator.of(context).push(MaterialPageRoute<Null>(
                           builder:  (BuildContext context){
                             String nombreCategoria =  value.nombrecategoria.toString();
                             String idcategoria = value.idcategoria;
                             String nombreEdo = vista;
                             String nombreCd = vistaCiudad;
                             String imagenGeneral = value.imagenGeneral.toString();
-                            String idFarmacias = modeloIdFarmacias.idclie.toString();
-                            return EspecialidadCategoria(nombreCategoria,idcategoria,nombreEdo,nombreCd,imagenGeneral,idFarmacias);
+                          //  String idFarmacias = modeloIdFarmacias.cliente_idcliente.toString();
+                            return EspecialidadCategoria(nombreCategoria,idcategoria,nombreEdo,nombreCd,imagenGeneral);
                           }
                       ));
                     },
                     child: Card(
-
                       child: Row(
                         children: [
                           Container(
                             width: 30.0,
                             height: 40.0,
                             child: Image.network(urlApi+'images/'+value.imagen.toString()),
-
                           ),
                           SizedBox(
                             width: 2.5,
@@ -340,4 +333,5 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
         ),
     );
   }
+
 }

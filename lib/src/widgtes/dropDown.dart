@@ -6,7 +6,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:salud_y_mas/src/models/modelo_categoria.dart';
-import 'package:salud_y_mas/src/pages/MostrarEspecialidades.dart';
+import 'package:salud_y_mas/src/pages/pantalla_especialidades_categoria.dart';
 import 'package:salud_y_mas/src/widgtes/backgraund.dart';
 import 'package:salud_y_mas/src/widgtes/dropDown.dart';
 

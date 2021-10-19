@@ -1,42 +1,34 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:salud_y_mas/src/models/modelo_medicos_especialidad.dart';
-import 'package:salud_y_mas/src/pages/informacionClientes.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class MedicosEspecialidad extends StatefulWidget {
-
+class ListaMedicosCategoria extends StatefulWidget {
   String nameEspecialidad, nameEdo,nameCd,idCategoria,idEspecialidad;
-  
-  MedicosEspecialidad(this.nameEspecialidad,this.nameEdo,this.nameCd,this.idCategoria,this.idEspecialidad,{Key? key}) : super(key: key);
-  @override
+  ListaMedicosCategoria(this.nameEspecialidad,this.nameEdo,this.nameCd,this.idCategoria,this.idEspecialidad,{Key? key}) : super(key: key);
 
-  _MedicosEspecialidadState createState() => _MedicosEspecialidadState();
+  @override
+  _ListaMedicosCategoriaState createState() => _ListaMedicosCategoriaState();
 }
 
-
-
-class _MedicosEspecialidadState extends State<MedicosEspecialidad> {
-
-
- String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
+class _ListaMedicosCategoriaState extends State<ListaMedicosCategoria> {
+  String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
   List<ModeloMedicosEspecialidad> medicosEspe = [];
-   String imagenNombre='';
-   String ima='';
+  String imagenNombre='';
+  String ima='';
+
   @override
-initState() {
-  super.initState();
-
-  consultarMedicos(widget.nameEdo,widget.nameCd,widget.idCategoria,widget.idEspecialidad).then((value) {
-    setState(() {
-
+  initState() {
+    super.initState();
+    print('nameEdo: '+widget.nameEdo +'nameCd: '+widget.nameCd +'idCateg: '+widget.idCategoria +'idEspeci: '+widget.idEspecialidad);
+    consultarMedicos(widget.nameEdo,widget.nameCd,widget.idCategoria,widget.idEspecialidad).then((value) {
+      setState(() {
+      });
     });
-  });
+  }
 
-  print("tiene: "+imagenNombre);
-
-}
- Future consultarMedicos(String nEdo, String nCd, String idCate, String idEspe)async{
+  Future consultarMedicos(String nEdo, String nCd, String idCate, String idEspe)async{
     medicosEspe.clear();
     final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultas_clientesDespecialidad?nameEdo="+nEdo+"&nameCd="+nCd+"&idCat="+idCate+"&idEspec="+idEspe);
     var response = await http.get(urlApi);
@@ -44,18 +36,17 @@ initState() {
     print(urlApi);
     for (var data in jsonBody) {
       medicosEspe.add(new ModeloMedicosEspecialidad(data['idcliente'], data['nombre'],data['imagenName'].toString(),
-      data['especialidad_idespecialidad'],data['cliente_idcliente'],data['ciudad_has_categoria_ciudad_idciudad'],
-      data['ciudad_has_categoria_ciudad_estado_idestado'],data['ciudad_has_categoria_categoria_idcategoria'])); 
-    } 
-    medicosEspe.forEach((someData)=>print('Name : ${someData.imagenName}'));     
+          data['especialidad_idespecialidad'],data['cliente_idcliente'],data['ciudad_has_categoria_ciudad_idciudad'],
+          data['ciudad_has_categoria_ciudad_estado_idestado'],data['ciudad_has_categoria_categoria_idcategoria']));
+    }
+    medicosEspe.forEach((someData)=>print('Name : ${someData.imagenName}'));
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.nameEspecialidad ),
-      ),
-      body: mostrarMedicos(),
+      body:  mostrarMedicos(),
     );
   }
 
@@ -77,7 +68,7 @@ initState() {
               children: [
                 GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute<Null>(
+                  /*  Navigator.of(context).push(MaterialPageRoute<Null>(
                         builder:  (BuildContext context){
                           String nombreMEdico = medicos.nombre;
                           String idCliente = medicos.idcliente;
@@ -86,22 +77,22 @@ initState() {
                            String idCategoria = widget.idCategoria;
                            String idEspeciliad = espe.idespecialidad;*/
                           return InformacionMedico(nombreMEdico,idCliente,imagenName);
-                        }));
-                    },
+                        }));*/
+                  },
                   child: Card(
                     child: Row(
                       children: [
                         if(medicos.imagenName == null || medicos.imagenName.toString().isEmpty)
                           Container(
-                            width: 30.0,
-                            height: 40.0,
-                          child: Image.network(urlApi+'images/default.png')
-                        )
+                              width: 30.0,
+                              height: 40.0,
+                              child: Image.network(urlApi+'images/default.png')
+                          )
                         else Container(
                           width: 30.0,
                           height: 40.0,
                           child:
-                           Image.network(urlApi+'images/'+medicos.imagenName.toString()),
+                          Image.network(urlApi+'images/'+medicos.imagenName.toString()),
                         ),
                         SizedBox(
                           width: 2.5,
@@ -109,18 +100,18 @@ initState() {
                         Expanded(
                           child: Container(
                             child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children:[
-                              Text(medicos.nombre, style: TextStyle(
-                                fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                                ,fontSize: 9,
-                              ),),
-                            ],
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children:[
+                                Text(medicos.nombre, style: TextStyle(
+                                  fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
+                                  ,fontSize: 9,
+                                ),),
+                              ],
+                            ),
                           ),
                         ),
-                        ),
-                       ],
+                      ],
                     ),
                   ),
                 )

@@ -3,10 +3,10 @@
 
 class IdFarmaciasDelAhorro{
 
-  String? idclie;
+  String? cliente_idcliente;
 
-  IdFarmaciasDelAhorro(this.idclie);
+  IdFarmaciasDelAhorro(this.cliente_idcliente);
 
-  IdFarmaciasDelAhorro.fromJson(Map<String, dynamic> json)
-      : idclie = json['idclie'];
+  /*IdFarmaciasDelAhorro.fromJson(Map<String, dynamic> json)
+      : cliente_idcliente = json['cliente_idcliente'];*/
 }

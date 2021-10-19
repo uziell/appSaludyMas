@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
@@ -45,15 +46,14 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
 
 
   List<ModeloInfomacionClientesMedicos> listaInfMe=[];
-  List<String> listaCompleta = [];
-  ModeloInfomacionClientesMedicos modelo = new ModeloInfomacionClientesMedicos('','','','','','','','','','','','','','','','','','');
-  ModeloMedicoClinicas modeloMedicoClinicas= new ModeloMedicoClinicas('','','','','','','','','','','','','','','','','','','');
+ // ModeloInfomacionClientesMedicos modelo = new ModeloInfomacionClientesMedicos('','','','','','','','','','','','','','','','','','');
+  //ModeloMedicoClinicas modeloMedicoClinicas= new ModeloMedicoClinicas('','','','','','','','','','','','','','','','','','','');
   List<InfMeClinicas> info= [];
 
+  String? dire,tel1,tel2,telE,face,insta,twi,em,what,pagWeb;
 
-  var servicios ="";
-  String tel='';
-
+  double _progress =0;
+  int _duration=1;
 
   @override
   void initState() {
@@ -62,8 +62,11 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
     super.initState();
 
     //mandamos a llamar el metodo donde obtendremos a los medicos de cada clinica
+
+    starTime();
     consultarMedicosInformacion(widget.idClinicas).then((value) {
       setState(() {
+
         //consulta la cedula de cada Medico
         consultarCedulas().then((value) {
           setState(() {});
@@ -74,6 +77,28 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
       });
     });
   }
+
+  void starTime (){
+    new Timer.periodic(Duration(seconds: _duration), (timer){
+     setState(() {
+       if(_progress == _duration){
+         timer.cancel();
+       }else{
+         _progress += 0.2;
+       }
+     });
+    });
+  }
+
+  consultarProgres() {
+    return CircularProgressIndicator(
+      backgroundColor: Colors.blueAccent,
+      valueColor: AlwaysStoppedAnimation(Colors.amber),
+      strokeWidth: 10,
+      value: _progress,
+    );
+  }
+  
   //en este metodo se consulta las cedulas
   Future consultarCedulas() async {
     //hacemos el recorrido con un foreach para hacer las consultas de las cedulas con su respectivo id
@@ -108,19 +133,25 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
          id.estatus.toString(), id.serviciosNombre.toString(),
          id.clinicasyhospitales_idclinicasyhospitales.toString(), id.direccion.toString(), cedulas,'','',id.imagenName.toString()));
 
-     tel= id.telefono_emergencias.toString();
 
-
+     dire = id.direccion.toString();
+     tel1 = id.telefono1.toString();
+     tel2 = id.telefono2.toString();
+     telE = id.telefono_emergencias.toString();
+     face = id.facebook.toString();
+     insta =id.instagram.toString();
+     what = id.whatsapp.toString();
+     pagWeb = id.pagina_web.toString();
+     em = id.e_mail.toString();
+         print('egf: '+dire.toString());
      clieEs.clear();
    }
    datosEspecialidad.clear();
   }
 
   consultarMedicosInformacion(String idClinicas) async {
-    //datosEspecialidad.clear();
     final urlApi = Uri.parse(
-        "https://www.salumas.com/Salud_Y_Mas_Api/consulta_medicos_clinicas?idClinica=" +
-            idClinicas);
+        "https://www.salumas.com/Salud_Y_Mas_Api/consulta_medicos_clinicas?idClinica=" +idClinicas);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
     print(urlApi);
@@ -131,7 +162,6 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
           data['clinicasyhospitales_idclinicasyhospitales'],data['direccion'],data['imagenName']));
     }
 
-    //datosEspecialidad.clear();
   }
 
   @override
@@ -144,17 +174,18 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              //mostrarImagenPerfil(),
+              consultarProgres(),
+             // mostrarImagenPerfil(),
               mostrarMedicos(),
-              direccion(),
-              telefono1(),
-              telefono2(),
-              telefono_emergencias(),
-              whatSapp(),
-              facebook(),
-              instagram(),
-              paginaWeb(),
-              email(),
+              if(dire == null || dire.toString().isEmpty)Visibility(visible:false,child: direccion())else direccion(),
+              if(tel1 == null || tel1.toString().isEmpty)Visibility(visible:false,child: telefono1())else telefono1(),
+              if(tel2 == null || tel2.toString().isEmpty)Visibility(visible:false,child: telefono2())else telefono2(),
+              if(telE == null || telE.toString().isEmpty )Visibility(visible:false,child: telefono_emergencias())else telefono_emergencias(),
+              if(face == null || face.toString().isEmpty)Visibility(visible:false,child:facebook()) else facebook(),
+              if(insta == null || insta.toString().isEmpty) Visibility(visible: false, child: instagram())else instagram(),
+              if(what == null || what.toString().isEmpty)Visibility(visible: false,child: whatSapp())else whatSapp(),
+              if(pagWeb == null || pagWeb.toString().isEmpty)Visibility(visible:false,child: paginaWeb())else paginaWeb(),
+              if(em == null || em.toString().isEmpty)Visibility(visible:false,child: email())else email()
             ],
           ),
         )
@@ -203,70 +234,6 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
             ),
           );
   }
-
-
-
-  Future<void> googleMaps(String url) async {
-    if (!await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  Future<void>_makePhoneCall(String url)async{
-    if(!await canLaunch(url)){
-      await launch(url);
-    }else{
-      throw 'Could not launch $url';
-    }
-  }
-  void launchWhatsApp(@required number) async {
-    String url() {
-      if (Platform.isAndroid) {
-        return "whatsapp://send?phone=$number";
-      } else {
-        return "whatsapp://send?phone=$number";
-      }
-    }
-    if (!await canLaunch(url())) {
-      await launch(url());
-    } else {
-      throw 'Could not launch ${url()}';
-    }
-  }
-  Future<void> _facebook(String url) async {
-    if (!await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  Future<void> _instagram(String url) async {
-    if (!await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-  Future<void> ulrWeb(String url) async {
-    if (!await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-  Future<void> correo(String url) async {
-    if (!await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-
-
 
   direccion() {
     return Card(
@@ -385,7 +352,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children:[
                         if(value.telefono2 == 'null' || value.telefono2.toString().isEmpty)Visibility(visible:false,child:Text('Telefono'))else
-                          Text('Telefono',style: TextStyle(color: Colors.white, fontSize: 20)),
+                          Text('Telefono 2',style: TextStyle(color: Colors.white, fontSize: 20)),
                       ],
                     ),
                   ),
@@ -497,7 +464,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
             return GestureDetector(
               onTap: (){
                 setState(() {
-                  _facebook('https://www.facebook.com/'+value.facebook.toString());
+                  _facebook('https://www.facebook.com/'+face.toString());
                 });
               },
               child: Row(
@@ -669,8 +636,100 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
     );
   }
 
+  /*facebook() {
+    return Card(
+      child: GestureDetector(
+    onTap: (){
 
+    },
+        child: Row(
+      children: [
+      if(face == 'null' || face.toString().isEmpty)Visibility(visible:false,child:
+    Container(width: 30.0, height: 40.0, child:   Image.asset('assets/email.png')))
+    else Container(width: 30.0, height: 40.0, child: Image.asset('assets/email.png')),
+    SizedBox(
+    width: 2.5,
+    ),
+    Expanded(
+    child: Container(
+    decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(12),
+    // border: Border.all(color: Colors.black,width: 2),
+    color:const Color(0xff00838f),
+    ),
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children:[
+    if(face == 'null' || face.toString().isEmpty)Visibility(visible:false,child:Text('face'))
+    else Text('face',style: TextStyle(color: Colors.white, fontSize: 20),),
+    ],
+    ),
+    ),
+    ),
+    ],
+    ),
+    ),
+    );
+  }*/
 
+  Future<void> googleMaps(String url) async {
+    if (!await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<void>_makePhoneCall(String url)async{
+    if(!await canLaunch(url)){
+      await launch(url);
+    }else{
+      throw 'Could not launch $url';
+    }
+  }
+  void launchWhatsApp(@required number) async {
+    String url() {
+      if (Platform.isAndroid) {
+        return "whatsapp://send?phone=$number";
+      } else {
+        return "whatsapp://send?phone=$number";
+      }
+    }
+    if (!await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
+  }
+  Future<void> _facebook(String url) async {
+    if (!await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Future<void> _instagram(String url) async {
+    if (!await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+  Future<void> ulrWeb(String url) async {
+    if (!await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+  Future<void> correo(String url) async {
+    if (!await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
 
 }

@@ -139,7 +139,6 @@ class _InformacionMedicoState extends State<InformacionMedico> {
           children: [
             imagenMedico(),
             informacionPersonal(),
-            if(modelo.descripcion_espe == "FARMACIAS DEL AHORRO")direccion(),
             if(modeloDireccion.direccion == null|| modeloDireccion.direccion.toString().isEmpty)Visibility(visible:false,child:direccion())else direccion(),
             if(modelo.telefono1 == null || modelo.telefono1.toString().isEmpty)Visibility(visible:false,child:telefono1()) else telefono1(),
             if(modelo.telefono2 == null || modelo.telefono2.toString().isEmpty)Visibility(visible:false,child:telefono2())else telefono2(),
@@ -161,15 +160,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       //clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          if(modelo.descripcion_espe == "FARMACIAS DEL AHORRO")
-            FadeInImage(
-            image:NetworkImage(urlApi + 'images/' + widget.imagenCategoria),
-            placeholder: AssetImage('assets/jar-loading.gif'),
-            fadeInDuration: Duration(milliseconds: 200),
-            height: 230.0,
-            fit: BoxFit.cover,
-            )
-          else FadeInImage(
+        FadeInImage(
             image:NetworkImage('https://www.xtrafondos.com/descargar.php?id=5846&resolucion=2560x1440'),
             placeholder: AssetImage('assets/jar-loading.gif'),
             fadeInDuration: Duration(milliseconds: 200),
@@ -240,8 +231,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     return GestureDetector(
       onTap: (){
         setState(() {
-          if(modelo.descripcion_espe == "FARMACIAS DEL AHORRO") googleMaps('google.navigation:q=farmacias del ahorro');
-          else googleMaps('google.navigation:q='+modeloDireccion.direccion.toString());
+          googleMaps('google.navigation:q='+modeloDireccion.direccion.toString());
         });
       },
       child: Column(
@@ -263,8 +253,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children:[
-                          if(modelo.descripcion_espe == "FARMACIAS DEL AHORRO") Text('Te Ubica a tu Farmacia mas Cercana')
-                          else Text(modeloDireccion.direccion.toString(), style: TextStyle(
+                          Text(modeloDireccion.direccion.toString(), style: TextStyle(
                         fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
                         ,fontSize: 9)
                           ),
@@ -308,9 +297,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        if(modelo.descripcion_espe == "FARMACIAS DEL AHORRO")
-                          Text('Llamar: '+ modelo.nombre.toString())
-                        else const Text('Telefono (Agendar Cita)'),
+                         const Text('Telefono (Agendar Cita)'),
                       ],
                     ),
                   ),

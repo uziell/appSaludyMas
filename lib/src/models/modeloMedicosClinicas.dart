@@ -1,25 +1,25 @@
 
 
 class ModeloMedicoClinicas{
-  final String idcliente;
-  final String nombre;
-  final String? descripcion_espe;
-  final String? telefono1;
-  final String? telefono2;
-  final String? telefono_emergencias;
-  final String? facebook;
-  final String? instagram;
-  final String? twitter;
-  final String? e_mail;
-  final String? horario;
-  final String? whatsapp;
-  final String? pagina_web;
-  final String? datos_extra;
-  final String? estatus;
-  final String? serviciosNombre;
-  final String? clinicasyhospitales_idclinicasyhospitales;
-  final String? direccion;
-  final String?  imagenName;
+  String idcliente;
+  String nombre;
+  String? descripcion_espe;
+  String? telefono1;
+  String? telefono2;
+  String? telefono_emergencias;
+  String? facebook;
+  String? instagram;
+  String? twitter;
+  String? e_mail;
+  String? horario;
+  String? whatsapp;
+  String? pagina_web;
+  String? datos_extra;
+  String? estatus;
+  String? serviciosNombre;
+  String? clinicasyhospitales_idclinicasyhospitales;
+  String? direccion;
+  String?  imagenName;
 
   ModeloMedicoClinicas(
       this.idcliente,
@@ -41,6 +41,7 @@ class ModeloMedicoClinicas{
       this.clinicasyhospitales_idclinicasyhospitales,
       this.direccion,
       this.imagenName);
+
 
 
   /*ModeloMedicoClinicas.fromJson(Map<String, dynamic> json)
