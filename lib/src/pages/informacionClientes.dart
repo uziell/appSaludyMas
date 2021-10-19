@@ -137,6 +137,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            //carrucelPersonal(),
             imagenMedico(),
             informacionPersonal(),
             if(modeloDireccion.direccion == null|| modeloDireccion.direccion.toString().isEmpty)Visibility(visible:false,child:direccion())else direccion(),
@@ -660,6 +661,10 @@ class _InformacionMedicoState extends State<InformacionMedico> {
        throw 'Could not launch $url';
      }
    }
+
+  carrucelPersonal() {
+
+  }
 
 
 

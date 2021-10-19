@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:salud_y_mas/src/models/modeloFarmaciasDelAhorro.dart';
 import 'package:salud_y_mas/src/models/modelo_categoria.dart';
 import 'package:salud_y_mas/src/pages/pantalla_especialidades_categoria.dart';
-import 'package:salud_y_mas/src/pages/pantalla_lista_medicos.dart';
 
 class CategoriasCiudad extends StatefulWidget {
   String nombreEdo='';
@@ -22,6 +22,11 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
   List<String> listImagenes = [] ;
   List<MyModel> myData = [];
 
+  List<dynamic> lisId =[];
+  String idFa='';
+
+  IdFarmaciasDelAhorro modeloIdFarmacias = new IdFarmaciasDelAhorro('');
+
 
   Future consultarAPICiudades(String nameEdo) async {
     final url = Uri.parse(urlApi+'consultas_cd?nameEdo='+nameEdo);
@@ -32,8 +37,8 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
 
   }
 
-  Future consultarImagenes() async {
-    final url = Uri.parse(urlApi+'consultas_carrusel.php');
+  Future consultarImagenes(String nameEdp) async {
+    final url = Uri.parse(urlApi+'consultas_carrusel?nameEdo='+nameEdp);
     var response = await http.get(url);
     var respuestaImagen = jsonDecode(response.body);
     for (var valor in respuestaImagen) {
@@ -61,11 +66,47 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
 
   }
 
+  /*consultarInformacionFMDA(String nombreEdo,String nombreCiudad) async {
+
+    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultarFarmaciasdelAhorro?nameEdo="+nombreEdo+"&nameCd="+nombreCiudad);
+    print(urlApi);
+    var response = await http.get(urlApi);
+    lisId = json.decode(response.body);
+
+    print('json: '+lisId.toString());
+    lisId.forEach((element) {
+      if(element['cliente_idcliente'] == []){
+        idFa = 'null';
+      }else{
+        idFa = element['cliente_idcliente'];
+      }
+
+      print('id'+ idFa);
+    });
+
+    return lisId;
+
+   /* List<dynamic> resp = json.decode(response.body);
+    Map<String, dynamic> decodedResp = resp.single;
+    modeloIdFarmacias =  IdFarmaciasDelAhorro.fromJson(decodedResp);*/
+
+    print('idFarmacias: '+modeloIdFarmacias.cliente_idcliente.toString());
+   /* var jsonBody =   json.decode(response.body);
+    print(urlApi);
+    for (var data in jsonBody) {
+      idFarma.add(new IdFarmaciasDelAhorro(data['cliente_idcliente']));
+    }
+    for(int i=0; i<idFarma.length;i++){
+      farma = idFarma.elementAt(i).cliente_idcliente;
+      print('farma'+ farma.toString());
+    }*/
+  }*/
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    consultarImagenes().then((value) {
+    consultarImagenes(widget.nombreEdo).then((value) {
       llenarCarrucel(imagenes);
 
     });
@@ -129,8 +170,15 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
               //consultarCategorias(vista,vistaCiudad);
               consultarCategorias(widget.nombreEdo,vistaCiudad).then((value){
                 setState(() {
+
+                  });
                 });
-              });
+
+            /*  consultarInformacionFMDA(widget.nombreEdo, vistaCiudad).then((value){
+                setState(() {
+                });
+              });*/
+
             });
           },
           hint: Text(vistaCiudad,style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold, fontSize: 16),),
@@ -154,6 +202,7 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
         pagination: new SwiperPagination(),
         control: new SwiperControl(),
         autoplay: true,
+
       ),
     );
 

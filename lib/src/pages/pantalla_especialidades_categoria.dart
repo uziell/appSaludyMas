@@ -130,44 +130,61 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                           String nameCd = widget.nombreCiudad;
                           String idCategoria = widget.idCategoria;
                           String idespecialidad = espe['idespecialidad'];
-                          return MedicosEspecialidad(nameCategoria, nameEdo, nameCd, idCategoria,idespecialidad);
+                          String? imagenEspe = espe['imagen'];
+                          return MedicosEspecialidad(nameCategoria, nameEdo, nameCd, idCategoria,idespecialidad,imagenEspe.toString());
                         }
                     ));
                   },
                   child: Card(
-                    child: Row(
-                      children: [
-                        if(espe['imagen'] == null || espe['imagen'].toString().isEmpty)
-                          Container(
-                            width: 30.0,
-                            height: 40.0,
-                            child: Image.network(urlApi + 'images/default.png'),
-                          ) else
-                          Container(
-                            width: 30.0,
-                            height: 40.0,
-                            child: Image.network(urlApi +'images/'+espe['imagen']),
+                    color: Colors.transparent,
+                    elevation: 0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.0),
+                        color: Colors.white,
+                        boxShadow:<BoxShadow>[
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 10.0,
+                            spreadRadius: 2.0,
+                            offset: Offset(2.0,-10.0),
                           ),
-                        SizedBox(
-                          width: 2.5,
-                        ),
-                        Expanded(
-                          child: Container(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(espe['nombre'], style: TextStyle(
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 9,
-                                ),),
-                              ],
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          if(espe['imagen'] == null || espe['imagen'].toString().isEmpty)
+                            Container(
+                              width: 30.0,
+                              height: 40.0,
+                              child: Image.network(urlApi + 'images/default.png'),
+                            ) else
+                            Container(
+                              width: 30.0,
+                              height: 40.0,
+                              child: Image.network(urlApi +'images/'+espe['imagen']),
+                            ),
+                          SizedBox(
+                            width: 2.5,
+                          ),
+                          Expanded(
+                            child: Container(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(espe['nombre'], style: TextStyle(
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 9,
+                                  ),),
+                                ],
 
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 )
