@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -131,12 +132,13 @@ class _InformacionMedicoState extends State<InformacionMedico> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.nombreMedico),
-      ),
+      drawerEnableOpenDragGesture: false,
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(
+              height: 50,
+            ),
             //carrucelPersonal(),
             imagenMedico(),
             informacionPersonal(),
@@ -162,19 +164,19 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       child: Column(
         children: [
         FadeInImage(
-            image:NetworkImage('https://www.xtrafondos.com/descargar.php?id=5846&resolucion=2560x1440'),
+            image: NetworkImage(urlApi+'images/'+widget.imagenCategoria),
             placeholder: AssetImage('assets/jar-loading.gif'),
             fadeInDuration: Duration(milliseconds: 200),
-            height: 230.0,
+            //height: 230.0,
             fit: BoxFit.cover,
           ),
           Container(
             padding: EdgeInsets.all(10.0),
             child: Column(
               children: [
-                Text(widget.nombreMedico),
-                if(modelo.descripcion_espe == null || modelo.descripcion_espe.toString().isEmpty)Visibility(visible:false,child:Text(modelo.descripcion_espe.toString()))else Text(modelo.descripcion_espe.toString()),
-                if(modelo.datos_extra == null || modelo.datos_extra.toString().isEmpty)Visibility(visible:false,child:Text(modelo.datos_extra.toString()))else Text(modelo.datos_extra.toString()),
+                Text(widget.nombreMedico, style: GoogleFonts.montserrat(fontSize: 12,color: Colors.blue)),
+                if(modelo.descripcion_espe == null || modelo.descripcion_espe.toString().isEmpty)Visibility(visible:false,child:Text(modelo.descripcion_espe.toString()))else Text(modelo.descripcion_espe.toString(),style: GoogleFonts.montserrat(fontSize: 12,color: Colors.blue)),
+                if(modelo.datos_extra == null || modelo.datos_extra.toString().isEmpty)Visibility(visible:false,child:Text(modelo.datos_extra.toString()))else Text(modelo.datos_extra.toString(),style: GoogleFonts.montserrat(fontSize: 12,color: Colors.blue)),
               ],
             )
           ),
@@ -213,10 +215,17 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children:[
-                      if(resultados.isEmpty) Visibility(visible:false,child:Text("Cedulas: \n"+resultados))else Text("Cedulas: \n"+resultados),
-                      if(resServicios.isEmpty)Visibility(visible:false,child: Text("Servicios:\n" + resServicios))else Text("Servicios:\n" + resServicios),
-                      if(resFp.isEmpty)Visibility(visible: false,child:Text("Formas de pago : \n"+ resFp)) else Text("Formas de pago : \n"+ resFp),
-                      if(modelo.horario == null || modelo.horario.toString().isEmpty)Visibility(visible:false,child:Text("Horarios: \n" +modelo.horario.toString()))else Text("Horarios: \n" +modelo.horario.toString()),
+                      if(resultados.isEmpty) Visibility(visible:false,child:Text("Cedulas:"))else Center(child: Text("Cedulas:",style: GoogleFonts.montserrat(fontSize: 13,color: Colors.blue))),
+                      if(resultados.isEmpty) Visibility(visible:false,child:Text(resultados))else Center(child: Text(resultados, style: GoogleFonts.montserrat(fontSize: 13))),
+
+                      if(resServicios.isEmpty)Visibility(visible:false,child: Text("Servicios:"))else Center(child: Text("Servicios:",style: GoogleFonts.montserrat(fontSize: 13,color: Colors.blue))),
+                      if(resServicios.isEmpty)Visibility(visible:false,child: Text(resServicios))else Center(child: Text(resServicios,style: GoogleFonts.montserrat(fontSize: 13))),
+
+                      if(resFp.isEmpty)Visibility(visible: false,child:Text("Formas de pago :")) else Center(child: Text("Formas de pago:",style: GoogleFonts.montserrat(fontSize: 13,color: Colors.blue))),
+                      if(resFp.isEmpty)Visibility(visible: false,child:Text(resFp)) else Center(child:Text(resFp,style: GoogleFonts.montserrat(fontSize: 13))),
+
+                      if(modelo.horario == null || modelo.horario.toString().isEmpty)Visibility(visible:false,child:Text("Horarios:" ))else Center(child: Text("Horarios:" ,style: GoogleFonts.montserrat(fontSize: 13,color: Colors.blue))),
+                      if(modelo.horario == null || modelo.horario.toString().isEmpty)Visibility(visible:false,child:Text(modelo.horario.toString()))else Center(child: Text(modelo.horario.toString(),style: GoogleFonts.montserrat(fontSize: 13))),
                     ],
                   ),
                 ),

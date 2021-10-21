@@ -34,7 +34,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
       appBar: AppBar(
         elevation: 0,
         title: new Center(child: new Text('SALUD Y MÁS', textAlign: TextAlign.center)),
@@ -49,7 +48,7 @@ class _HomePageState extends State<HomePage> {
     final double itemWidth = size.width * 80;
     return GridView.count(
         crossAxisCount: 2,
-        padding: EdgeInsets.all(40),
+        padding: EdgeInsets.all(15),
         scrollDirection: Axis.vertical,
        childAspectRatio: (itemWidth / itemHeight),
         controller: new ScrollController(keepScrollOffset: false),
@@ -58,35 +57,42 @@ class _HomePageState extends State<HomePage> {
           onTap: (){
             Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (context) => CategoriasCiudad(e['nombre'])
+                    builder: (context) => CategoriasCiudad(e['nombre'], e['colorEdo'])
                 )
             );
           },
           child: Card(
-            margin: EdgeInsets.all(2),
-              color: Colors.transparent,
-              elevation: 0,
-                child: Column(
-                  children: [
-                    Container(
-                      height: 150,
-                      width: 140,
-                      decoration: BoxDecoration(
-                          //color: const Color(0xff00838f),
-                          borderRadius: BorderRadius.circular(26),
-                          image: DecorationImage(
-                              image: NetworkImage(urlApi+'images/'+e['imagenEstado']),
-                              fit:  BoxFit.fill
-                          )
-                      ),
-                    ),
-                    //Text(e['nombre'], style: TextStyle(color: Colors.blue),)
-                  ],
-                ),
+              margin: EdgeInsets.all(2),
+                color: Colors.transparent,
+                elevation: 0,
+                  child: Column(
+                    children: [
+
+                      Container(
+                        height: size.height / nombreEdo.length,
+                        width: 140,
+                        decoration: BoxDecoration(
+                            //color: const Color(0xff00838f),
+                            border: Border.all(color:  Color(int.parse(e['colorEdo'])),width: 2),
+                            borderRadius: BorderRadius.circular(26),
+                            image: DecorationImage(
+                                image: NetworkImage(urlApi+'images/'+e['imagenEstado']),
+                                fit:  BoxFit.fill
+                            )
+                        ),
+                      )
+
+
+                      //Text(e['nombre'], style: TextStyle(color: Colors.blue),)
+                    ],
+            ),
           ),
         )).toList(),
     );
   }
+
+
+
 
 }
 

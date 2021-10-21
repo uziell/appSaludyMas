@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:salud_y_mas/src/pages/informacionClientes.dart';
@@ -12,7 +13,8 @@ class EspecialidadCategoria extends StatefulWidget {
   String nombreEstado='';
   String nombreCiudad='';
   String imagenGeneral='';
-  EspecialidadCategoria(this.nombreEspecialidad,this.idCategoria,this.nombreEstado,this.nombreCiudad,this.imagenGeneral,{Key? key}) : super(key: key);
+  String colorEdo ='';
+  EspecialidadCategoria(this.nombreEspecialidad,this.idCategoria,this.nombreEstado,this.nombreCiudad,this.imagenGeneral,this.colorEdo,{Key? key}) : super(key: key);
   
   @override
   _EspecialidadCategoriaState createState() => _EspecialidadCategoriaState();
@@ -20,10 +22,12 @@ class EspecialidadCategoria extends StatefulWidget {
 
 class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
 
+
   final String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
   List<dynamic> listaEspecialidades =[];
   List<dynamic>listaMedicosEspe = [];
   List<dynamic> listaClinicas=[];
+
 
   @override
   void initState() {
@@ -86,11 +90,16 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.nombreEspecialidad),
+        backgroundColor: Color(int.parse(widget.colorEdo)),
+        title: Center(child: Text(widget.nombreEspecialidad,style: GoogleFonts.montserrat(color: Colors.white, fontSize: 14))),
+        actions: [
+          IconButton(onPressed: (){}, icon: Icon(Icons.search))
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
             children: [
+              //imagenGeneral(),
               if(widget.nombreEspecialidad == "ESPECIALIDADES" ||
                   widget.nombreEspecialidad == "ODONTOLOGÍA" ||
                   widget.nombreEspecialidad == "ESPECIALIDADES PEDIATRICAS" ||
@@ -107,99 +116,72 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
 
   _llamarEspecialidadesCategoria() {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = size.height * 15.8;
-    final double itemWidth = size.width * 120;
-    return Container(
-      child: new GridView.count(
+    final double itemHeight = size.height * 30;
+    final double itemWidth = size.width * 160;
+    return GridView.count(
+      mainAxisSpacing: 2.0,
         crossAxisCount: 2,
         childAspectRatio: (itemWidth / itemHeight),
         controller: new ScrollController(keepScrollOffset: false),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         children: listaEspecialidades.map((espe) {
-          return new Container(
-            margin: new EdgeInsets.all(1.0),
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute<Null>(
-                        builder: (BuildContext context) {
-                          String nameCategoria = espe['nombre'];
-                          String nameEdo = widget.nombreEstado;
-                          String nameCd = widget.nombreCiudad;
-                          String idCategoria = widget.idCategoria;
-                          String idespecialidad = espe['idespecialidad'];
-                          String? imagenEspe = espe['imagen'];
-                          return MedicosEspecialidad(nameCategoria, nameEdo, nameCd, idCategoria,idespecialidad,imagenEspe.toString());
-                        }
-                    ));
-                  },
-                  child: Card(
-                    color: Colors.transparent,
-                    elevation: 0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30.0),
-                        color: Colors.white,
-                        boxShadow:<BoxShadow>[
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 10.0,
-                            spreadRadius: 2.0,
-                            offset: Offset(2.0,-10.0),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          if(espe['imagen'] == null || espe['imagen'].toString().isEmpty)
-                            Container(
-                              width: 30.0,
-                              height: 40.0,
-                              child: Image.network(urlApi + 'images/default.png'),
-                            ) else
-                            Container(
-                              width: 30.0,
-                              height: 40.0,
-                              child: Image.network(urlApi +'images/'+espe['imagen']),
-                            ),
-                          SizedBox(
-                            width: 2.5,
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+          return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute<Null>(
+                            builder: (BuildContext context) {
+                              String nameCategoria = espe['nombre'];
+                              String nameEdo = widget.nombreEstado;
+                              String nameCd = widget.nombreCiudad;
+                              String idCategoria = widget.idCategoria;
+                              String idespecialidad = espe['idespecialidad'];
+                              String? imagenEspe = espe['imagen'];
+                              return MedicosEspecialidad(nameCategoria, nameEdo, nameCd, idCategoria,idespecialidad,imagenEspe.toString(),widget.colorEdo);
+                            }
+                        ));
+                      },
+                      child: Card(
+                          margin: EdgeInsets.all(2),
+                          child:  Row(
                                 children: [
-                                  Text(espe['nombre'], style: TextStyle(
-                                    fontStyle: FontStyle.normal,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 9,
-                                  ),),
-                                ],
+                                  if(espe['imagen'] == null || espe['imagen'].toString().isEmpty)
+                                    Container(
+                                      width: 60.0,
+                                      height: 70.0,
+                                      child: Image.network(urlApi + 'images/default.png'),
+                                    ) else
+                                    Container(
+                                      width: 60.0,
+                                      height: 70.0,
+                                      child: Image.network(urlApi +'images/'+espe['imagen']),
+                                    ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Center(
+                                            child: Text(espe['nombre'], style: GoogleFonts.montserrat(color: Colors.black54, fontSize: 14, fontWeight: FontWeight.bold))
+                                          ),
+                                        ],
 
-                              ),
-                            ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                           ),
-                        ],
                       ),
-                    ),
-                  ),
-                )
-              ],
-            ),
           );
         }).toList(),
-      ),
     );
   }
 
   _llamarCategoriasHospitales() {
-    var size = MediaQuery
-        .of(context)
-        .size;
+    var size = MediaQuery.of(context).size;
     final double itemHeight = size.height * 15.8;
     final double itemWidth = size.width * 120;
     return Container(
@@ -211,6 +193,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
         scrollDirection: Axis.vertical,
         children: listaClinicas.map((clinicas) {
           return new Container(
+
             margin: new EdgeInsets.all(1.0),
             child: Column(
               children: [
@@ -253,9 +236,9 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                                 Text(
                                   clinicas['nombre'], style: TextStyle(
                                   fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.bold
-                                  ,
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 9,
+                                  color: Colors.black54
                                 ),),
                               ],
                             ),
@@ -323,6 +306,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                                   fontStyle: FontStyle.normal,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 9,
+                                  color: Colors.black54
                                 ),),
                               ],
                             ),
@@ -340,5 +324,13 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
     );
   }
 
+  imagenGeneral() {
+
+  }
+
 }
+
+
+
+
 

@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:salud_y_mas/src/models/modeloFarmaciasDelAhorro.dart';
 import 'package:salud_y_mas/src/models/modelo_categoria.dart';
 import 'package:salud_y_mas/src/pages/pantalla_especialidades_categoria.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CategoriasCiudad extends StatefulWidget {
   String nombreEdo='';
-  CategoriasCiudad(this.nombreEdo,{Key? key}) : super(key: key);
+  String colorEdo ='';
+  CategoriasCiudad(this.nombreEdo,this.colorEdo,{Key? key}) : super(key: key);
 
   @override
   _CategoriasCiudadState createState() => _CategoriasCiudadState();
@@ -32,7 +34,6 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
     final url = Uri.parse(urlApi+'consultas_cd?nameEdo='+nameEdo);
     var response = await http.get(url);
     nombreCd = json.decode(response.body);
-    print('nombreCiudad: '+nombreCd.toString());
     return nombreCd;
 
   }
@@ -66,42 +67,6 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
 
   }
 
-  /*consultarInformacionFMDA(String nombreEdo,String nombreCiudad) async {
-
-    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultarFarmaciasdelAhorro?nameEdo="+nombreEdo+"&nameCd="+nombreCiudad);
-    print(urlApi);
-    var response = await http.get(urlApi);
-    lisId = json.decode(response.body);
-
-    print('json: '+lisId.toString());
-    lisId.forEach((element) {
-      if(element['cliente_idcliente'] == []){
-        idFa = 'null';
-      }else{
-        idFa = element['cliente_idcliente'];
-      }
-
-      print('id'+ idFa);
-    });
-
-    return lisId;
-
-   /* List<dynamic> resp = json.decode(response.body);
-    Map<String, dynamic> decodedResp = resp.single;
-    modeloIdFarmacias =  IdFarmaciasDelAhorro.fromJson(decodedResp);*/
-
-    print('idFarmacias: '+modeloIdFarmacias.cliente_idcliente.toString());
-   /* var jsonBody =   json.decode(response.body);
-    print(urlApi);
-    for (var data in jsonBody) {
-      idFarma.add(new IdFarmaciasDelAhorro(data['cliente_idcliente']));
-    }
-    for(int i=0; i<idFarma.length;i++){
-      farma = idFarma.elementAt(i).cliente_idcliente;
-      print('farma'+ farma.toString());
-    }*/
-  }*/
-
   @override
   void initState() {
     // TODO: implement initState
@@ -122,25 +87,26 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          title:  new Center(child: new Text(widget.nombreEdo,style: TextStyle(color: Colors.black), textAlign: TextAlign.center)),
+          backgroundColor: Color(int.parse(widget.colorEdo)),
+          title:  new Center(child: new Text(widget.nombreEdo,style: GoogleFonts.abrilFatface(), textAlign: TextAlign.center,)),
         ),
         body: ListView(
-          children: [
-            Padding(padding: EdgeInsetsDirectional.all(5)),
-            dropdownCiudades(),
-            SizedBox(
-              height: 5,
-              width: 5,
-            ),
-            carrucelDeImagenes(),
-            SizedBox(
-              height: 5,
-              width: 5,
-            ),
-            categorias(),
-          ],
+            children: [
+              Padding(padding: EdgeInsetsDirectional.all(5)),
+              dropdownCiudades(),
+              SizedBox(
+                height: 5,
+                width: 5,
+              ),
+              carrucelDeImagenes(),
+              SizedBox(
+                height: 5,
+                width: 5,
+              ),
+              categorias(),
+            ],
+          ),
         ),
-      ),
     );
   }
 
@@ -150,8 +116,8 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
       padding: EdgeInsets.symmetric(horizontal:12, vertical: 4),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          //border: Border.all(color: Colors.black,width: 2)
-          color:const Color(0xff00838f)
+          //border: Border.all(color: Colors.black,width: 2),
+          color: Color(int.parse(widget.colorEdo))
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton(
@@ -173,12 +139,7 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
 
                   });
                 });
-
-            /*  consultarInformacionFMDA(widget.nombreEdo, vistaCiudad).then((value){
-                setState(() {
-                });
-              });*/
-
+              
             });
           },
           hint: Text(vistaCiudad,style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold, fontSize: 16),),
@@ -190,7 +151,7 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
   carrucelDeImagenes() {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xff5DC1B9),width: 2),
+        border: Border.all(color: Color(int.parse(widget.colorEdo)),width: 2),
       ),
       width: double.infinity,
       height: 250.0,
@@ -210,11 +171,12 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
 
   categorias() {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = size.height * 38;
-    final double itemWidth = size.width * 110;
+    final double itemHeight = size.height * 15;
+    final double itemWidth = size.width * 50;
     return GridView.count(
+      mainAxisSpacing: 5.0,
       crossAxisCount: 2,
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.all(15),
       scrollDirection: Axis.vertical,
       childAspectRatio: (itemWidth / itemHeight),
       controller: new ScrollController(keepScrollOffset: false),
@@ -228,20 +190,21 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
                 String nombreEdo = widget.nombreEdo;
                 String nombreCd = vistaCiudad;
                 String imagenGeneral = categ.imagenGeneral.toString();
+
                 //  String idFarmacias = modeloIdFarmacias.cliente_idcliente.toString();
-                return EspecialidadCategoria(nombreCategoria,idcategoria,nombreEdo,nombreCd,imagenGeneral);
+                return EspecialidadCategoria(nombreCategoria,idcategoria,nombreEdo,nombreCd,imagenGeneral,widget.colorEdo);
               }
           ));
         },
         child: Card(
-          margin: EdgeInsets.all(2),
+          margin: EdgeInsets.zero,
           color:  Colors.transparent,
           elevation: 0,
           child: Column(
             children: [
               Container(
-                height: 100,
-                width: 100,
+                height: 70,
+                width: 70,
                 decoration: BoxDecoration(
                    // color: const Color(0xff00838f),
                     borderRadius: BorderRadius.circular(26),
@@ -256,23 +219,24 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
               ),
               Expanded(
                 child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:[
-                      if(categ.nombrecategoria == "ANÁLISIS CLINICOS")
-                        Text("LABORATORIO DE "+categ.nombrecategoria.toString(), style: TextStyle(
-                          fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                          ,fontSize: 9,
-                        ),)else if(categ.nombrecategoria == "ULTRASONIDO Y RAYOS X")
-                        Text("RADIOLOGÍA", style: TextStyle(
-                            fontStyle: FontStyle.normal, fontWeight: FontWeight.bold,fontSize: 9))
-                      else Text(categ.nombrecategoria.toString(), style: TextStyle(
-                          fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                          ,fontSize: 9,
-                        ),),
-                    ],
+                  child: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children:[
+                        if(categ.nombrecategoria == "ANÁLISIS CLINICOS")
+                          Text("LABORATORIO DE "+categ.nombrecategoria.toString(),
+                              style: GoogleFonts.montserrat( fontStyle:  FontStyle.normal,fontSize: 14))
+                        else if(categ.nombrecategoria == "ULTRASONIDO Y RAYOS X")
+                          Text("RADIOLOGÍA",
+                              style: GoogleFonts.montserrat( fontStyle:  FontStyle.normal,fontSize: 14))
+                        else
+                          Text(categ.nombrecategoria.toString(),
+                            style:GoogleFonts.montserrat( fontStyle:  FontStyle.normal)
+                          ),
+                      ],
 
+                    ),
                   ),
                 ),
               ),

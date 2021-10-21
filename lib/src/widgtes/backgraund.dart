@@ -15,7 +15,6 @@ class Background extends StatelessWidget {
           Color(0xffb2dfdb),
           Color(0xff26a69a),
 
-
       ]
     )
   );

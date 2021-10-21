@@ -8,7 +8,8 @@ class MedicosEspecialidad extends StatefulWidget {
 
   String nameEspecialidad, nameEdo,nameCd,idCategoria,idEspecialidad;
   String? imagen;
-  MedicosEspecialidad(this.nameEspecialidad,this.nameEdo,this.nameCd,this.idCategoria,this.idEspecialidad,this.imagen,{Key? key}) : super(key: key);
+  String colorEdo='';
+  MedicosEspecialidad(this.nameEspecialidad,this.nameEdo,this.nameCd,this.idCategoria,this.idEspecialidad,this.imagen,this.colorEdo,{Key? key}) : super(key: key);
   @override
   _MedicosEspecialidadState createState() => _MedicosEspecialidadState();
 }
@@ -39,7 +40,10 @@ initState() {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      appBar: AppBar(
+        backgroundColor: Color(int.parse(widget.colorEdo)),
+        title: Center(child: Text(widget.nameEspecialidad, style: TextStyle(color: Colors.white,fontSize: 15))),
+      ),
       body: Column(
         children: [
           SizedBox(
@@ -53,17 +57,15 @@ initState() {
   }
 
   mostrarMedicos() {
-    return  Container(
-      child: new ListView(
+    var size = MediaQuery.of(context).size;
+    final double itemHeight = size.height * 30;
+    final double itemWidth = size.width * 160;
+    return ListView(
         controller: new ScrollController(keepScrollOffset: false),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         children: listaMedicos.map((medicos) {
-          return new Container(
-            margin: new EdgeInsets.all(1.0),
-            child: Column(
-              children: [
-                GestureDetector(
+          return GestureDetector(
                   onTap: (){
                     Navigator.of(context).push(MaterialPageRoute<Null>(
                         builder:  (BuildContext context){
@@ -76,47 +78,52 @@ initState() {
                           return InformacionMedico(nombreMEdico,idCliente,imagenName.toString());
                         }));
                     },
-                  child: Card(
-                    child: Row(
-                      children: [
-                        if(medicos['imagenName'] == null || medicos['imagenName'].toString().isEmpty)
-                          Container(
-                            width: 30.0,
-                            height: 40.0,
-                          child: Image.network(urlApi+'images/default.png')
-                        )
-                        else Container(
-                          width: 30.0,
-                          height: 40.0,
-                          child:
-                           Image.network(urlApi+'images/'+medicos['imagenName']),
-                        ),
-                        SizedBox(
-                          width: 2.5,
-                        ),
-                        Expanded(
-                          child: Container(
-                            child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children:[
-                              Text(medicos['nombre'], style: TextStyle(
-                                fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                                ,fontSize: 9,
-                              ),),
-                            ],
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: const Color(0xff00838f),width: 2),
+                    ),
+                    margin: EdgeInsets.all(4),
+                    width: 200,
+                    height: 60,
+                    child: Card(
+                      child: Row(
+                        children: [
+                          if(medicos['imagenName'] == null || medicos['imagenName'].toString().isEmpty)
+                            Container(
+                                width: 60.0,
+                                height: 70.0,
+                                child: Image.network(urlApi+'images/default.png')
+                          )
+                          else Container(
+                            width: 60.0,
+                            height: 70.0,
+                            child: Image.network(urlApi+'images/'+medicos['imagenName']),
                           ),
-                        ),
-                        ),
-                       ],
+                          SizedBox(
+                            width: 2.5,
+                          ),
+                          Expanded(
+                            child: Container(
+                              child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children:[
+                                Center(
+                                  child: Text(medicos['nombre'], style: TextStyle(
+                                    fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
+                                    ,fontSize: 13,
+                                  ),),
+                                ),
+                              ],
+                            ),
+                          ),
+                          ),
+                         ],
+                      ),
                     ),
                   ),
-                )
-              ],
-            ),
           );
         }).toList(),
-      ),
     );
   }
 
