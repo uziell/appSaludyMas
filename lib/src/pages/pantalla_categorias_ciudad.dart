@@ -225,14 +225,14 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
                         if(categ.nombrecategoria == "ANÁLISIS CLINICOS")
-                          Text("LABORATORIO DE "+categ.nombrecategoria.toString(),
-                              style: GoogleFonts.montserrat( fontStyle:  FontStyle.normal,fontSize: 14))
+                          Center(child:Text("LABORATORIO DE "+categ.nombrecategoria.toString(),
+                              style: GoogleFonts.montserrat( fontStyle:  FontStyle.normal,fontSize: 12)))
                         else if(categ.nombrecategoria == "ULTRASONIDO Y RAYOS X")
-                          Text("RADIOLOGÍA",
-                              style: GoogleFonts.montserrat( fontStyle:  FontStyle.normal,fontSize: 14))
+                         Center(child: Text("RADIOLOGÍA",
+                              style: GoogleFonts.montserrat( fontStyle:  FontStyle.normal,fontSize: 12)))
                         else
-                          Text(categ.nombrecategoria.toString(),
-                            style:GoogleFonts.montserrat( fontStyle:  FontStyle.normal)
+                         Center(child: Text(categ.nombrecategoria.toString(),
+                            style:GoogleFonts.montserrat( fontStyle:  FontStyle.normal, fontSize: 12))
                           ),
                       ],
 

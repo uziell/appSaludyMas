@@ -263,10 +263,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children:[
-                          Text(modeloDireccion.direccion.toString(), style: TextStyle(
-                        fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                        ,fontSize: 9)
-                          ),
+                          Text(modeloDireccion.direccion.toString(),style: GoogleFonts.montserrat(fontSize: 13)),
                         ],
                       ),
                     ),
@@ -307,7 +304,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                         const Text('Telefono (Agendar Cita)'),
+                          Center(child: Text('Telefono (Agendar Cita)',style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -343,7 +340,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        Text('Telefono'),
+                        Center(child: Text('Telefono',style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -379,7 +376,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        Text('Telefono Emergencia'),
+                        Center(child: Text('Telefono Emergencia',style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -417,7 +414,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        Text('Whatsapp'),
+                        Center(child:Text('Whatsapp',style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -455,7 +452,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        Text('Facebook'),
+                        Center(child: Text('Facebook',style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -493,7 +490,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        Text('Instagram'),
+                        Center(child: Text('Instagram', style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -525,7 +522,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children:[
-                      Text('Twitter'),
+                      Center(child: Text('Twitter', style: GoogleFonts.montserrat(fontSize: 13))),
                     ],
                   ),
                 ),
@@ -562,7 +559,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        Text('Pagina Web'),
+                        Center(child: Text('Pagina Web',style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -600,7 +597,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                        Text('E-mail'),
+                       Center(child: Text('E-mail',style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
