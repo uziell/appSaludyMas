@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:salud_y_mas/src/models/modeloFarmaciasDelAhorro.dart';
@@ -171,9 +172,14 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
 
   categorias() {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = size.height * 15;
+    final double itemHeight = size.height * 20;
     final double itemWidth = size.width * 50;
-    return GridView.count(
+
+    if(vistaCiudad == "Seleccione una ciudad")return CupertinoAlertDialog(
+      title: Text('Seleccione Una Ciudad'),
+      
+    );
+    else return GridView.count(
       mainAxisSpacing: 5.0,
       crossAxisCount: 2,
       padding: EdgeInsets.all(15),

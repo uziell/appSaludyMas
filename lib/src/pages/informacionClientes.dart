@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:card_swiper/card_swiper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -35,7 +36,8 @@ class _InformacionMedicoState extends State<InformacionMedico> {
    List<String> listaFomasPago = [];
    String resFp="";
 
-
+   List<dynamic> listaCarrucelPersonal =[];
+   List<String> listImagenes = [] ;
   @override
   void initState()
   {
@@ -60,13 +62,36 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       setState(() {
       });
     });
+    consultarCarruceCliente(widget.idCliente).then((value) {
+      setState(() {
+        llenarCarrucel(listaCarrucelPersonal);
+      });
+    });
   }
+
+   consultarCarruceCliente(String idCliente) async {
+     final url = Uri.parse(urlApi+'consultas_carrucel_cliente?idCliente='+idCliente);
+     var response = await http.get(url);
+     var respuestaImagen = jsonDecode(response.body);
+     for (var valor in respuestaImagen) {
+       listaCarrucelPersonal.add((valor['imagen']).toString());
+     }
+   }
+   llenarCarrucel(List<dynamic> lista) {
+     print('Esto tiene lista:'+lista.toString());
+     for (var i = 0; i < lista.length; i++) {
+       listImagenes.add(urlApi+'/images/'+lista[i]);
+     }
+   }
+
    consultaInformacion(String idCliente) async {
      final  urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_general?idCliente="+idCliente);
      var response = await http.get(urlApi);
      List<dynamic> resp = json.decode(response.body);
      Map<String, dynamic> decodedResp = resp.first;
      modelo =  ModeloInformacionMedico.fromJson(decodedResp);
+
+     print('json: '+resp.toString());
      print(modelo.descripcion_espe);
    }
 
@@ -152,6 +177,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
             if(modelo.twitter == null || modelo.twitter.toString().isEmpty)Visibility(visible:false, child:twitter())else twitter(),
             if(modelo.pagina_web == null || modelo.pagina_web.toString().isEmpty)Visibility(visible:false,child:paginaWeb())else paginaWeb(),
             if(modelo.e_mail == null || modelo.e_mail.toString().isEmpty)Visibility(visible:false,child:email())else email(),
+            if(listaCarrucelPersonal.isEmpty)Visibility(visible:false,child:carrucelPersonal())else carrucelPersonal(),
           ],
         ),
       )
@@ -163,7 +189,15 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       //clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-        FadeInImage(
+          if(widget.imagenCategoria == 'null')
+            FadeInImage(
+              image: NetworkImage(urlApi+'images/default.png'),
+              placeholder: AssetImage('assets/jar-loading.gif'),
+              fadeInDuration: Duration(milliseconds: 200),
+              //height: 230.0,
+              fit: BoxFit.cover,
+            )
+       else FadeInImage(
             image: NetworkImage(urlApi+'images/'+widget.imagenCategoria),
             placeholder: AssetImage('assets/jar-loading.gif'),
             fadeInDuration: Duration(milliseconds: 200),
@@ -174,9 +208,9 @@ class _InformacionMedicoState extends State<InformacionMedico> {
             padding: EdgeInsets.all(10.0),
             child: Column(
               children: [
-                Text(widget.nombreMedico, style: GoogleFonts.montserrat(fontSize: 12,color: Colors.blue)),
-                if(modelo.descripcion_espe == null || modelo.descripcion_espe.toString().isEmpty)Visibility(visible:false,child:Text(modelo.descripcion_espe.toString()))else Text(modelo.descripcion_espe.toString(),style: GoogleFonts.montserrat(fontSize: 12,color: Colors.blue)),
-                if(modelo.datos_extra == null || modelo.datos_extra.toString().isEmpty)Visibility(visible:false,child:Text(modelo.datos_extra.toString()))else Text(modelo.datos_extra.toString(),style: GoogleFonts.montserrat(fontSize: 12,color: Colors.blue)),
+                Text(widget.nombreMedico, textAlign:  TextAlign.center,style: GoogleFonts.montserrat(fontSize: 12,color: Colors.blue)),
+                if(modelo.descripcion_espe == null || modelo.descripcion_espe.toString().isEmpty)Visibility(visible:false,child:Text(modelo.descripcion_espe.toString()))else Text(modelo.descripcion_espe.toString(),textAlign:  TextAlign.center,style: GoogleFonts.montserrat(fontSize: 12,color: Colors.blue)),
+                if(modelo.datos_extra == null || modelo.datos_extra.toString().isEmpty)Visibility(visible:false,child:Text(modelo.datos_extra.toString()))else Text(modelo.datos_extra.toString(),textAlign:  TextAlign.center,style: GoogleFonts.montserrat(fontSize: 12,color: Colors.blue)),
               ],
             )
           ),
@@ -216,16 +250,16 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children:[
                       if(resultados.isEmpty) Visibility(visible:false,child:Text("Cedulas:"))else Center(child: Text("Cedulas:",style: GoogleFonts.montserrat(fontSize: 13,color: Colors.blue))),
-                      if(resultados.isEmpty) Visibility(visible:false,child:Text(resultados))else Center(child: Text(resultados, style: GoogleFonts.montserrat(fontSize: 13))),
+                      if(resultados.isEmpty) Visibility(visible:false,child:Text(resultados))else Center(child: Text(resultados, textAlign:  TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13))),
 
                       if(resServicios.isEmpty)Visibility(visible:false,child: Text("Servicios:"))else Center(child: Text("Servicios:",style: GoogleFonts.montserrat(fontSize: 13,color: Colors.blue))),
-                      if(resServicios.isEmpty)Visibility(visible:false,child: Text(resServicios))else Center(child: Text(resServicios,style: GoogleFonts.montserrat(fontSize: 13))),
+                      if(resServicios.isEmpty)Visibility(visible:false,child: Text(resServicios))else  Center(child:Text(resServicios,textAlign:  TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13))),
 
                       if(resFp.isEmpty)Visibility(visible: false,child:Text("Formas de pago :")) else Center(child: Text("Formas de pago:",style: GoogleFonts.montserrat(fontSize: 13,color: Colors.blue))),
-                      if(resFp.isEmpty)Visibility(visible: false,child:Text(resFp)) else Center(child:Text(resFp,style: GoogleFonts.montserrat(fontSize: 13))),
+                      if(resFp.isEmpty)Visibility(visible: false,child:Text(resFp)) else Center(child:Text(resFp,textAlign:  TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13))),
 
                       if(modelo.horario == null || modelo.horario.toString().isEmpty)Visibility(visible:false,child:Text("Horarios:" ))else Center(child: Text("Horarios:" ,style: GoogleFonts.montserrat(fontSize: 13,color: Colors.blue))),
-                      if(modelo.horario == null || modelo.horario.toString().isEmpty)Visibility(visible:false,child:Text(modelo.horario.toString()))else Center(child: Text(modelo.horario.toString(),style: GoogleFonts.montserrat(fontSize: 13))),
+                      if(modelo.horario == null || modelo.horario.toString().isEmpty)Visibility(visible:false,child:Text(modelo.horario.toString()))else Center(child: Text(modelo.horario.toString(),textAlign:  TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13))),
                     ],
                   ),
                 ),
@@ -241,7 +275,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     return GestureDetector(
       onTap: (){
         setState(() {
-          googleMaps('google.navigation:q='+modeloDireccion.direccion.toString());
+          googleMaps(modeloDireccion.direccion.toString());
         });
       },
       child: Column(
@@ -263,7 +297,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children:[
-                          Text(modeloDireccion.direccion.toString(),style: GoogleFonts.montserrat(fontSize: 13)),
+                          Text(modeloDireccion.direccion.toString(),textAlign:  TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13)),
                         ],
                       ),
                     ),
@@ -281,7 +315,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     return GestureDetector(
       onTap: (){
         setState(() {
-          _makePhoneCall('tel: '+modelo.telefono1.toString());
+          _makePhoneCall(modelo.telefono1.toString());
         });
 
       },
@@ -304,7 +338,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
-                          Center(child: Text('Telefono (Agendar Cita)',style: GoogleFonts.montserrat(fontSize: 13))),
+                          Center(child: Text('Telefono (Agendar Cita)',textAlign:  TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -319,7 +353,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
   telefono2() {
     return GestureDetector(
       onTap: (){
-        _makePhoneCall('tel: '+modelo.telefono2.toString());
+        _makePhoneCall(modelo.telefono2.toString());
       },
       child: Column(
         children: [
@@ -355,7 +389,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
   telEmergencia() {
     return GestureDetector(
       onTap: (){
-        _makePhoneCall('tel: '+modelo.telefono_emergencias.toString());
+        _makePhoneCall(modelo.telefono_emergencias.toString());
       },
       child: Column(
         children: [
@@ -430,7 +464,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     return GestureDetector(
       onTap: (){
         setState(() {
-          _facebook('https://www.facebook.com/'+modelo.facebook.toString());
+          _facebook(modelo.facebook.toString());
         });
       },
       child: Column(
@@ -468,7 +502,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     return GestureDetector(
       onTap: (){
         setState(() {
-          _instagram('https://www.instagram.com/'+modelo.instagram.toString());
+          _instagram(modelo.instagram.toString());
         });
       },
       child: Column(
@@ -537,7 +571,8 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     return GestureDetector(
       onTap: (){
         setState(() {
-          ulrWeb('https://'+modelo.pagina_web.toString());
+          ulrWeb(modelo.pagina_web.toString());
+          print(modelo.pagina_web.toString());
         });
       },
       child: Column(
@@ -575,7 +610,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     return GestureDetector(
       onTap: (){
         setState(() {
-          correo('mailto:'+modelo.e_mail.toString());
+          correo(modelo.e_mail.toString());
         });
       },
       child: Column(
@@ -609,68 +644,129 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       ),
     );
   }
-   Future<void> googleMaps(String url) async {
-     if (!await canLaunch(url)) {
-       await launch(url);
-     } else {
-       throw 'Could not launch $url';
-     }
-   }
-
-   Future<void>_makePhoneCall(String url)async{
-     if(!await canLaunch(url)){
-       await launch(url);
-     }else{
-       throw 'Could not launch $url';
-     }
-   }
-   void launchWhatsApp(@required number) async {
+   Future<void> googleMaps(@required urls) async {
      String url() {
-       if (Platform.isAndroid) {
-         return "whatsapp://send?phone=$number";
+       if (Platform.isIOS) {
+         return "google.navigation:q=$urls";
        } else {
-         return "whatsapp://send?phone=$number";
+         return "google.navigation:q=$urls";
        }
      }
-     if (!await canLaunch(url())) {
+     if (await canLaunch(url())) {
        await launch(url());
      } else {
        throw 'Could not launch ${url()}';
      }
    }
-   Future<void> _facebook(String url) async {
-     if (!await canLaunch(url)) {
-       await launch(url);
+
+   Future<void>_makePhoneCall(@required numero)async{
+    String url(){
+      if (Platform.isIOS) {
+        return "tel://$numero";
+      } else {
+        return "tel://$numero";
+      }
+    }
+     if(await canLaunch(url())){
+       await launch(url());
+     }else{
+       throw 'Could not launch ${url()}';
+     }
+   }
+   void launchWhatsApp(@required number) async {
+     String url() {
+       if (Platform.isIOS) {
+         return "whatsapp://send?phone=$number";
+       } else {
+         return "whatsapp://send?phone=$number";
+       }
+     }
+     if (await canLaunch(url())) {
+       await launch(url());
      } else {
-       throw 'Could not launch $url';
+       throw 'Could not launch ${url()}';
+     }
+   }
+   Future<void> _facebook(@required link) async {
+     String url() {
+       if (Platform.isIOS) {
+         return "https://www.facebook.com/$link";
+       } else {
+         return "https://www.facebook.com/$link";
+       }
+     }
+     if (await canLaunch(url())) {
+       await launch(url());
+     } else {
+       throw 'Could not launch ${url()}';
      }
    }
 
-   Future<void> _instagram(String url) async {
-     if (!await canLaunch(url)) {
-       await launch(url);
+   Future<void> _instagram(@required link) async {
+     String url() {
+       if (Platform.isIOS) {
+         return "https://www.instagram.com/$link";
+       } else {
+         return "https://www.instagram.com/$link";
+       }
+     }
+     if (await canLaunch(url())) {
+       await launch(url());
      } else {
-       throw 'Could not launch $url';
+       throw 'Could not launch ${url()}';
      }
    }
-   Future<void> ulrWeb(String url) async {
-     if (!await canLaunch(url)) {
-       await launch(url);
+   Future<void> ulrWeb(@required link) async {
+     String url() {
+       if (Platform.isIOS) {
+         return "https://$link";
+       } else {
+         return "https://$link";
+       }
+     }
+     if (await canLaunch(url())) {
+       await launch(url());
      } else {
-       throw 'Could not launch $url';
+       throw 'Could not launch ${url()}';
      }
    }
-   Future<void> correo(String url) async {
-     if (!await canLaunch(url)) {
-       await launch(url);
+   Future<void> correo(@required correooo) async {
+     String url() {
+       if (Platform.isIOS) {
+         return "mailto:$correooo";
+       } else {
+         return "mailto:$correooo";
+       }
+     }
+     if (await canLaunch(url())) {
+       await launch(url());
      } else {
-       throw 'Could not launch $url';
+       throw 'Could not launch ${url()}';
      }
    }
 
   carrucelPersonal() {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black54,width: 2),
+      ),
+      width: double.infinity,
+      height: 200.0,
+      child: Swiper(
+        itemBuilder: (BuildContext context,int index){
+          return new Image.network(listImagenes[index],fit: BoxFit.fill,);
+        },
+        itemCount: listImagenes.length,
+        pagination: new SwiperPagination(),
+        control: new SwiperControl(),
+        autoplay: true,
+
+      ),
+    );
 
   }
+
+
 
 
 

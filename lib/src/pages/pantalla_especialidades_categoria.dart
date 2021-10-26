@@ -36,8 +36,8 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
     if (widget.nombreEspecialidad == "ESPECIALIDADES"
         || widget.nombreEspecialidad == "ODONTOLOGÍA"
         || widget.nombreEspecialidad == "ESPECIALIDADES PEDIATRICAS"
-        || widget.nombreEspecialidad == "DIRECTORIOS") {
-
+        || widget.nombreEspecialidad == "DIRECTORIOS"
+    ) {
       consultarEspecialidades(
           widget.nombreEstado, widget.nombreCiudad, widget.idCategoria).then((
           value) {
@@ -92,9 +92,6 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
       appBar: AppBar(
         backgroundColor: Color(int.parse(widget.colorEdo)),
         title: Center(child: Text(widget.nombreEspecialidad,style: GoogleFonts.montserrat(color: Colors.white, fontSize: 14))),
-        actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.search))
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -116,74 +113,73 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
 
   _llamarEspecialidadesCategoria() {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = size.height * 30;
+    final double itemHeight = size.height * 35;
     final double itemWidth = size.width * 160;
     return GridView.count(
       mainAxisSpacing: 2.0,
-        crossAxisCount: 2,
-        childAspectRatio: (itemWidth / itemHeight),
-        controller: new ScrollController(keepScrollOffset: false),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        children: listaEspecialidades.map((espe) {
-          return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute<Null>(
-                            builder: (BuildContext context) {
-                              String nameCategoria = espe['nombre'];
-                              String nameEdo = widget.nombreEstado;
-                              String nameCd = widget.nombreCiudad;
-                              String idCategoria = widget.idCategoria;
-                              String idespecialidad = espe['idespecialidad'];
-                              String? imagenEspe = espe['imagen'];
-                              return MedicosEspecialidad(nameCategoria, nameEdo, nameCd, idCategoria,idespecialidad,imagenEspe.toString(),widget.colorEdo);
-                            }
-                        ));
-                      },
-                      child: Card(
-                          margin: EdgeInsets.all(2),
-                          child:  Row(
-                                children: [
-                                  if(espe['imagen'] == null || espe['imagen'].toString().isEmpty)
-                                    Container(
-                                      width: 60.0,
-                                      height: 70.0,
-                                      child: Image.network(urlApi + 'images/default.png'),
-                                    ) else
-                                    Container(
-                                      width: 60.0,
-                                      height: 70.0,
-                                      child: Image.network(urlApi +'images/'+espe['imagen']),
-                                    ),
-                                  SizedBox(
-                                    width: 5,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Center(
-                                            child: Text(espe['nombre'], style: GoogleFonts.montserrat(color: Colors.black54, fontSize: 14, fontWeight: FontWeight.bold))
-                                          ),
-                                        ],
-
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                          ),
-                      ),
-          );
-        }).toList(),
+      crossAxisCount: 2,
+      childAspectRatio: (itemWidth / itemHeight),
+      controller: new ScrollController(keepScrollOffset: false),
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      children: listaEspecialidades.map((espe) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute<Null>(
+                builder: (BuildContext context) {
+                  String nameCategoria = espe['nombre'];
+                  String nameEdo = widget.nombreEstado;
+                  String nameCd = widget.nombreCiudad;
+                  String idCategoria = widget.idCategoria;
+                  String idespecialidad = espe['idespecialidad'];
+                  String? imagenEspe = espe['imagen'];
+                  return MedicosEspecialidad(nameCategoria, nameEdo, nameCd, idCategoria,idespecialidad,imagenEspe.toString(),widget.colorEdo);
+                }
+                ));
+            },
+          child: Card(
+            margin: EdgeInsets.all(2),
+            child:  Row(
+              children: [
+                if(espe['imagen'] == null || espe['imagen'].toString().isEmpty)
+                  Container(
+                    width: 60.0,
+                    height: 70.0,
+                    child: Image.network(urlApi + 'images/default.png'),
+                  ) else
+                    Container(
+                      width: 60.0,
+                      height: 70.0,
+                      child: Image.network(urlApi +'images/'+espe['imagen']),
+                    ),
+                SizedBox(
+                  width: 5,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                            child: Text(espe['nombre'], style: GoogleFonts.montserrat(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.bold))
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
   _llamarCategoriasHospitales() {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = size.height * 15.8;
-    final double itemWidth = size.width * 120;
+    final double itemHeight = size.height * 35;
+    final double itemWidth = size.width * 160;
     return Container(
       child: new GridView.count(
         crossAxisCount: 2,
@@ -192,12 +188,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         children: listaClinicas.map((clinicas) {
-          return new Container(
-
-            margin: new EdgeInsets.all(1.0),
-            child: Column(
-              children: [
-                GestureDetector(
+          return  GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute<Null>(
                     builder:  (BuildContext context){
@@ -206,26 +197,27 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                           String idcd = clinicas['idcd'];
                           String idCateg = clinicas['idcat'];
                           String nameClinica = clinicas['nombre'];
-                          return ClinicasInformacion(idclinica,idedo,idcd,idCateg,nameClinica);
+                          return ClinicasInformacion(idclinica,idedo,idcd,idCateg,nameClinica,widget.colorEdo);
                         }
                     ));
                   },
                   child: Card(
+                    margin: EdgeInsets.all(2),
                     child: Row(
                       children: [
                         if(clinicas['imagen'] == null || clinicas['imagen'].toString().isEmpty)
                           Container(
-                            width: 30.0,
-                            height: 40.0,
+                            width: 60.0,
+                            height: 70.0,
                             child: Image.network(urlApi + 'images/default.png'),
                           ) else
                           Container(
-                            width: 30.0,
-                            height: 40.0,
+                            width: 60.0,
+                            height: 70.0,
                             child: Image.network(urlApi + 'images/'+clinicas['imagen']),
                           ),
                         SizedBox(
-                          width: 2.5,
+                          width: 5,
                         ),
                         Expanded(
                           child: Container(
@@ -234,12 +226,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  clinicas['nombre'], style: TextStyle(
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 9,
-                                  color: Colors.black54
-                                ),),
+                                  clinicas['nombre'], style: GoogleFonts.montserrat(color: Colors.black54, fontSize: 12, fontWeight: FontWeight.bold))
                               ],
                             ),
                           ),
@@ -247,10 +234,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                       ],
                     ),
                   ),
-                )
-              ],
-            )
-          );
+                );
         }).toList(),
       ),
     );
@@ -263,11 +247,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         children: listaMedicosEspe.map((medicos) {
-          return new Container(
-            margin: new EdgeInsets.all(1.0),
-            child: Column(
-              children: [
-                GestureDetector(
+          return GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute<Null>(
                         builder: (BuildContext context) {
@@ -277,47 +257,52 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                           return InformacionMedico(nombreMedico, idCliente,imagenCliente.toString());
                         }));
                   },
-                  child: Card(
-                    child: Row(
-                      children: [
-                        if(medicos['imagenName'] == null || medicos['imagenName'].toString().isEmpty)
-                          Container(
-                              width: 30.0,
-                              height: 40.0,
-                              child: Image.network(urlApi + 'images/default.png')
-                          )
-                        else
-                          Container(
-                            width: 30.0,
-                            height: 40.0,
-                            child:
-                            Image.network(urlApi + 'images/'+medicos['imagenName']),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: const Color(0xff00838f),width: 2),
+                    ),
+                    margin: EdgeInsets.all(4),
+                    width: 200,
+                    height: 60,
+                    child: Card(
+                      child: Row(
+                        children: [
+                          if(medicos['imagenName'] == null || medicos['imagenName'].toString().isEmpty)
+                            Container(
+                                width: 60.0,
+                                height: 70.0,
+                                child: Image.network(urlApi + 'images/default.png')
+                            )
+                          else
+                            Container(
+                              width: 60.0,
+                              height: 70.0,
+                              child:
+                              Image.network(urlApi + 'images/'+medicos['imagenName']),
+                            ),
+                          SizedBox(
+                            width: 2.5,
                           ),
-                        SizedBox(
-                          width: 2.5,
-                        ),
-                        Expanded(
-                          child: Container(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(medicos['nombre'], style: TextStyle(
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 9,
-                                  color: Colors.black54
-                                ),),
-                              ],
+                          Expanded(
+                            child: Container(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Center(
+                                    child: Text(medicos['nombre'], style: TextStyle(
+                                      fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
+                                      ,fontSize: 13,
+                                    ),),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                )
-              ],
-            ),
           );
         }).toList(),
       ),

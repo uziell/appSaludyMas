@@ -44,22 +44,22 @@ initState() {
         backgroundColor: Color(int.parse(widget.colorEdo)),
         title: Center(child: Text(widget.nameEspecialidad, style: TextStyle(color: Colors.white,fontSize: 15))),
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 50,
-          ),
-          imagenGeneral(),
-          mostrarMedicos(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 25,
+            ),
+            imagenGeneral(),
+            mostrarMedicos(),
+          ],
+        ),
       )
     );
   }
 
   mostrarMedicos() {
     var size = MediaQuery.of(context).size;
-    final double itemHeight = size.height * 30;
-    final double itemWidth = size.width * 160;
     return ListView(
         controller: new ScrollController(keepScrollOffset: false),
         shrinkWrap: true,
@@ -109,9 +109,11 @@ initState() {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children:[
                                 Center(
-                                  child: Text(medicos['nombre'], style: TextStyle(
-                                    fontStyle: FontStyle.normal, fontWeight: FontWeight.bold
-                                    ,fontSize: 13,
+                                  child: Text(medicos['nombre'],
+                                    style: TextStyle(
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
                                   ),),
                                 ),
                               ],
@@ -132,7 +134,7 @@ initState() {
       //clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          if(widget.imagen == 'null')
+          if(widget.imagen == 'null' || widget.imagen.toString().isEmpty)
             FadeInImage(
               image:AssetImage('assets/jar-loading.gif'),
               placeholder: AssetImage('assets/jar-loading.gif'),

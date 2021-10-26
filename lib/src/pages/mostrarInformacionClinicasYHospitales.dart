@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:salud_y_mas/src/clases/claseMedicosClinicas.dart';
 import 'package:salud_y_mas/src/models/modeloCedulas.dart';
@@ -17,7 +19,8 @@ class ClinicasInformacion extends StatefulWidget {
   String idCd;
   String idCate;
   String nameClinica;
-  ClinicasInformacion(this.idClinicas, this.idEdo,this.idCd,this.idCate,this.nameClinica,{Key? key}) : super(key: key);
+  String colorEdo;
+  ClinicasInformacion(this.idClinicas, this.idEdo,this.idCd,this.idCate,this.nameClinica,this.colorEdo,{Key? key}) : super(key: key);
 
   @override
   _ClinicasInformacionState createState() => _ClinicasInformacionState();
@@ -63,7 +66,6 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
 
     //mandamos a llamar el metodo donde obtendremos a los medicos de cada clinica
 
-    starTime();
     consultarMedicosInformacion(widget.idClinicas).then((value) {
       setState(() {
 
@@ -78,27 +80,6 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
     });
   }
 
-  void starTime (){
-    new Timer.periodic(Duration(seconds: _duration), (timer){
-     setState(() {
-       if(_progress == _duration){
-         timer.cancel();
-       }else{
-         _progress += 0.2;
-       }
-     });
-    });
-  }
-
-  consultarProgres() {
-    return CircularProgressIndicator(
-      backgroundColor: Colors.blueAccent,
-      valueColor: AlwaysStoppedAnimation(Colors.amber),
-      strokeWidth: 10,
-      value: _progress,
-    );
-  }
-  
   //en este metodo se consulta las cedulas
   Future consultarCedulas() async {
     //hacemos el recorrido con un foreach para hacer las consultas de las cedulas con su respectivo id
@@ -169,12 +150,12 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Color(int.parse(widget.colorEdo)),
           title: Text(widget.nameClinica),
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              consultarProgres(),
              // mostrarImagenPerfil(),
               mostrarMedicos(),
               if(dire == null || dire.toString().isEmpty)Visibility(visible:false,child: direccion())else direccion(),
@@ -217,16 +198,25 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: info.map((medicos){
                 return Card(
-                  child: Column(
+                  child: Row(
                     children: [
-                      if(medicos.imagenName == 'null' || medicos.imagenName.toString().isEmpty)Visibility(visible:false,child:Image.network(urlApi+'images/'+medicos.imagenName.toString()))else Image.network(urlApi+'images/'+medicos.imagenName.toString()),
-                      Text(medicos.nombreMedico.toString()),
-                      if(medicos.descripcion_espe == 'null' || medicos.descripcion_espe.toString().isEmpty)Visibility(visible:false,child:Text(medicos.descripcion_espe.toString()))else Text(medicos.descripcion_espe.toString()),
-                      if(medicos.serviciosNombre == 'null' || medicos.serviciosNombre.toString().isEmpty)Visibility(visible:false,child:Text(medicos.serviciosNombre.toString()))else Text(medicos.serviciosNombre.toString()),
-                      if(medicos.tipoCedula == 'null' || medicos.tipoCedula.toString().isEmpty)Visibility(visible:false,child:Text(medicos.tipoCedula.toString()))else Text(medicos.tipoCedula.toString()),
-                      if(medicos.horario == 'null' || medicos.horario.toString().isEmpty)Visibility(visible: false, child:Text(medicos.horario.toString()))else Text(medicos.horario.toString()),
-
-                      //if(medicos.direccion == 'null' || medicos.direccion.toString().isEmpty)Visibility(visible:false,child:direccion())else direccion(),
+                      Expanded(
+                          child: Container(
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if(medicos.imagenName == 'null' || medicos.imagenName.toString().isEmpty)Visibility(visible:false,child:Image.network(urlApi+'images/'+medicos.imagenName.toString()))else Image.network(urlApi+'images/'+medicos.imagenName.toString()),
+                                  Center(child:Text(medicos.nombreMedico.toString(),textAlign: TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13,color: Colors.blue))),
+                                  if(medicos.descripcion_espe == 'null' || medicos.descripcion_espe.toString().isEmpty)Visibility(visible:false,child:Text(medicos.descripcion_espe.toString()))else Center(child: Text(medicos.descripcion_espe.toString(), textAlign: TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13))),
+                                  if(medicos.serviciosNombre == 'null' || medicos.serviciosNombre.toString().isEmpty)Visibility(visible:false,child:Text(medicos.serviciosNombre.toString()))else Center(child:Text(medicos.serviciosNombre.toString(),style: GoogleFonts.montserrat(fontSize: 13))),
+                                  if(medicos.tipoCedula == 'null' || medicos.tipoCedula.toString().isEmpty)Visibility(visible:false,child:Text(medicos.tipoCedula.toString()))else Center(child: Text(medicos.tipoCedula.toString(),style: GoogleFonts.montserrat(fontSize: 13))),
+                                  if(medicos.horario == 'null' || medicos.horario.toString().isEmpty)Visibility(visible: false, child:Text(medicos.horario.toString()))else Center(child:Text(medicos.horario.toString(),style: GoogleFonts.montserrat(fontSize: 13))),
+                                  //if(medicos.direccion == 'null' || medicos.direccion.toString().isEmpty)Visibility(visible:false,child:direccion())else direccion(),
+                                ],
+                            ),
+                          )
+                      )
                     ],
                   ),
                 );
@@ -681,7 +671,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
   }
 
   Future<void>_makePhoneCall(String url)async{
-    if(!await canLaunch(url)){
+    if(await canLaunch(url)){
       await launch(url);
     }else{
       throw 'Could not launch $url';

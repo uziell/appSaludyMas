@@ -15,7 +15,7 @@ class ModeloInformacionMedico {
   final String? whatsapp;
   final String? pagina_web;
   final String? datos_extra;
-  final String estatus;
+  final String? estatus;
 
 
   ModeloInformacionMedico(

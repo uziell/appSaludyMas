@@ -1,7 +1,9 @@
+import 'dart:async';
+import 'package:data_connection_checker_tv/data_connection_checker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:salud_y_mas/src/pages/pantalla_categorias_ciudad.dart';
 
 void main() => runApp(HomePage());
@@ -24,6 +26,10 @@ class _HomePageState extends State<HomePage> {
       setState(() {});
     });
   }
+
+
+
+
   Future<List<dynamic>> consultarAPIEstados() async {
     final url = Uri.parse(urlApi+'consultas_edo.php');
     var response = await http.get(url);
@@ -38,7 +44,11 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         title: new Center(child: new Text('SALUD Y MÁS', textAlign: TextAlign.center)),
       ),
-      body: CardCiudad(),
+      body: Column(
+          children:[
+            CardCiudad(),
+          ]
+      )
     );
   }
 
@@ -67,7 +77,6 @@ class _HomePageState extends State<HomePage> {
                 elevation: 0,
                   child: Column(
                     children: [
-
                       Container(
                         height: size.height / nombreEdo.length,
                         width: 140,
