@@ -109,8 +109,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
       ),
     );
   }
-
-
+  
   _llamarEspecialidadesCategoria() {
     var size = MediaQuery.of(context).size;
     final double itemHeight = size.height * 35;
