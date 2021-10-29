@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.saludymas.fluttersaludymas">
+    package="com.example.salud_y_mas">
    <application
         android:label="Salud y Mas"
         android:icon="@mipmap/launcher_icon">
