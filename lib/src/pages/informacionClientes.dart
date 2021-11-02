@@ -9,6 +9,7 @@ import 'package:salud_y_mas/src/models/modeloDireccion.dart';
 import 'package:salud_y_mas/src/models/modeloFormasPago.dart';
 import 'package:salud_y_mas/src/models/modeloInformacionMedico.dart';
 import 'package:salud_y_mas/src/models/modeloServicios.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -316,6 +317,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       onTap: (){
         setState(() {
           _makePhoneCall(modelo.telefono1.toString());
+          //launch()
         });
 
       },
@@ -647,14 +649,16 @@ class _InformacionMedicoState extends State<InformacionMedico> {
    Future<void> googleMaps(@required urls) async {
      String url() {
        if (Platform.isIOS) {
-         return "google.navigation:q=$urls";
+         return  "google.navigation:q=$urls";
        } else {
          return "google.navigation:q=$urls";
        }
      }
-     if (await canLaunch(url())) {
+     if(await canLaunch(url())){
        await launch(url());
-     } else {
+     }else if(!await canLaunch(url())){
+       await launch(url());
+     }else{
        throw 'Could not launch ${url()}';
      }
    }
@@ -669,6 +673,8 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     }
      if(await canLaunch(url())){
        await launch(url());
+     }else if(!await canLaunch(url())){
+       await launch(url());
      }else{
        throw 'Could not launch ${url()}';
      }
@@ -681,9 +687,11 @@ class _InformacionMedicoState extends State<InformacionMedico> {
          return "whatsapp://send?phone=$number";
        }
      }
-     if (await canLaunch(url())) {
+     if(await canLaunch(url())){
        await launch(url());
-     } else {
+     }else if(!await canLaunch(url())){
+       await launch(url());
+     }else{
        throw 'Could not launch ${url()}';
      }
    }
@@ -695,9 +703,11 @@ class _InformacionMedicoState extends State<InformacionMedico> {
          return "https://www.facebook.com/$link";
        }
      }
-     if (await canLaunch(url())) {
+     if(await canLaunch(url())){
        await launch(url());
-     } else {
+     }else if(!await canLaunch(url())){
+       await launch(url());
+     }else{
        throw 'Could not launch ${url()}';
      }
    }
@@ -710,9 +720,11 @@ class _InformacionMedicoState extends State<InformacionMedico> {
          return "https://www.instagram.com/$link";
        }
      }
-     if (await canLaunch(url())) {
+     if(await canLaunch(url())){
        await launch(url());
-     } else {
+     }else if(!await canLaunch(url())){
+       await launch(url());
+     }else{
        throw 'Could not launch ${url()}';
      }
    }
@@ -724,9 +736,11 @@ class _InformacionMedicoState extends State<InformacionMedico> {
          return "https://$link";
        }
      }
-     if (await canLaunch(url())) {
+     if(await canLaunch(url())){
        await launch(url());
-     } else {
+     }else if(!await canLaunch(url())){
+       await launch(url());
+     }else{
        throw 'Could not launch ${url()}';
      }
    }
@@ -738,9 +752,11 @@ class _InformacionMedicoState extends State<InformacionMedico> {
          return "mailto:$correooo";
        }
      }
-     if (await canLaunch(url())) {
+     if(await canLaunch(url())){
        await launch(url());
-     } else {
+     }else if(!await canLaunch(url())){
+       await launch(url());
+     }else{
        throw 'Could not launch ${url()}';
      }
    }

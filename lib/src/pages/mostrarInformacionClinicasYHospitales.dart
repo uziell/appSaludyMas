@@ -232,7 +232,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
           return GestureDetector(
             onTap: (){
               setState(() {
-                 googleMaps('google.navigation:q='+value.direccion.toString());
+                 googleMaps(value.direccion.toString());
               });
             },
             child: Row(
@@ -276,7 +276,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
           return GestureDetector(
             onTap: (){
               setState(() {
-                _makePhoneCall('tel: '+value.telefono1.toString());
+                _makePhoneCall(value.telefono1.toString());
               });
             },
             child: Row(
@@ -319,7 +319,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
           return GestureDetector(
             onTap: (){
               setState(() {
-                _makePhoneCall('tel: '+value.telefono2.toString());
+                _makePhoneCall(value.telefono2.toString());
               });
             },
             child: Row(
@@ -363,7 +363,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
             return GestureDetector(
               onTap: (){
                 setState(() {
-                  _makePhoneCall('tel: '+value.telefono_emergencias.toString());
+                  _makePhoneCall(value.telefono_emergencias.toString());
                 });
               },
               child: Row(
@@ -408,7 +408,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
             return GestureDetector(
               onTap: (){
                 setState(() {
-                  launchWhatsApp("+52"+value.whatsapp.toString());
+                  launchWhatsApp('+52'+value.whatsapp.toString());
                 });
               },
               child: Row(
@@ -454,7 +454,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
             return GestureDetector(
               onTap: (){
                 setState(() {
-                  _facebook('https://www.facebook.com/'+face.toString());
+                  _facebook(value.facebook.toString());
                 });
               },
               child: Row(
@@ -499,7 +499,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
             return GestureDetector(
               onTap: (){
                 setState(() {
-                  _instagram('https://www.instagram.com/'+value.instagram.toString());
+                  _instagram(value.instagram.toString());
                 });
               },
               child: Row(
@@ -544,7 +544,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
             return GestureDetector(
               onTap: (){
                 setState(() {
-                  ulrWeb('https://'+value.pagina_web.toString());
+                  ulrWeb(value.pagina_web.toString());
                 });
               },
               child: Row(
@@ -590,7 +590,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
             return GestureDetector(
               onTap: (){
                 setState(() {
-                  correo('mailto:'+value.e_mail.toString());
+                  correo(value.e_mail.toString());
                 });
               },
               child: Row(
@@ -662,65 +662,120 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
     );
   }*/
 
-  Future<void> googleMaps(String url) async {
-    if (!await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+  Future<void> googleMaps(@required urls) async {
+    String url() {
+      if (Platform.isIOS) {
+        return  "google.navigation:q=$urls";
+      } else {
+        return "google.navigation:q=$urls";
+      }
+    }
+    if(await canLaunch(url())){
+      await launch(url());
+    }else if(!await canLaunch(url())){
+      await launch(url());
+    }else{
+      throw 'Could not launch ${url()}';
     }
   }
 
-  Future<void>_makePhoneCall(String url)async{
-    if(await canLaunch(url)){
-      await launch(url);
+  Future<void>_makePhoneCall(@required numero)async{
+    String url(){
+      if (Platform.isIOS) {
+        return "tel://$numero";
+      } else {
+        return "tel://$numero";
+      }
+    }
+    if(await canLaunch(url())){
+      await launch(url());
+    }else if(!await canLaunch(url())){
+      await launch(url());
     }else{
-      throw 'Could not launch $url';
+      throw 'Could not launch ${url()}';
     }
   }
   void launchWhatsApp(@required number) async {
     String url() {
-      if (Platform.isAndroid) {
+      if (Platform.isIOS) {
         return "whatsapp://send?phone=$number";
       } else {
         return "whatsapp://send?phone=$number";
       }
     }
-    if (!await canLaunch(url())) {
+    if(await canLaunch(url())){
       await launch(url());
-    } else {
+    }else if(!await canLaunch(url())){
+      await launch(url());
+    }else{
       throw 'Could not launch ${url()}';
     }
   }
-  Future<void> _facebook(String url) async {
-    if (!await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+  Future<void> _facebook(@required link) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "https://www.facebook.com/$link";
+      } else {
+        return "https://www.facebook.com/$link";
+      }
+    }
+    if(await canLaunch(url())){
+      await launch(url());
+    }else if(!await canLaunch(url())){
+      await launch(url());
+    }else{
+      throw 'Could not launch ${url()}';
     }
   }
 
-  Future<void> _instagram(String url) async {
-    if (!await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+  Future<void> _instagram(@required link) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "https://www.instagram.com/$link";
+      } else {
+        return "https://www.instagram.com/$link";
+      }
+    }
+    if(await canLaunch(url())){
+      await launch(url());
+    }else if(!await canLaunch(url())){
+      await launch(url());
+    }else{
+      throw 'Could not launch ${url()}';
     }
   }
-  Future<void> ulrWeb(String url) async {
-    if (!await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+  Future<void> ulrWeb(@required link) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "https://$link";
+      } else {
+        return "https://$link";
+      }
+    }
+    if(await canLaunch(url())){
+      await launch(url());
+    }else if(!await canLaunch(url())){
+      await launch(url());
+    }else{
+      throw 'Could not launch ${url()}';
     }
   }
-  Future<void> correo(String url) async {
-    if (!await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+  Future<void> correo(@required correooo) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "mailto:$correooo";
+      } else {
+        return "mailto:$correooo";
+      }
+    }
+    if(await canLaunch(url())){
+      await launch(url());
+    }else if(!await canLaunch(url())){
+      await launch(url());
+    }else{
+      throw 'Could not launch ${url()}';
     }
   }
-
 
 }
 
