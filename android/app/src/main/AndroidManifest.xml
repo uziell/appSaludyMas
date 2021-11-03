@@ -1,11 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.saludymas.appsaludymas">
+    package="com.example.salud_y_mas">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="Salud y Mas"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/launcher_icon">
-
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -40,6 +39,5 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-
     </application>
 </manifest>
