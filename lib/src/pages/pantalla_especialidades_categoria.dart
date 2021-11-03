@@ -253,7 +253,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                           String nombreMedico = medicos['nombre'];
                           String idCliente = medicos['idcliente'];
                           String? imagenCliente = medicos['imagenName'];
-                          return InformacionMedico(nombreMedico, idCliente,imagenCliente.toString());
+                          return InformacionMedico(nombreMedico, idCliente,imagenCliente.toString(),widget.colorEdo);
                         }));
                   },
                   child: Container(
@@ -313,6 +313,10 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
   }
 
 }
+
+
+
+
 
 
 

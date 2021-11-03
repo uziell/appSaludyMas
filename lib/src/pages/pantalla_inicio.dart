@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
+  //VARIBLE PARA ALMACENAR LOS DATOS DEL JSON DE CONSULTAR ESTADOS
   List<dynamic> nombreEdo = [];
 
   @override
@@ -29,7 +30,8 @@ class _HomePageState extends State<HomePage> {
 
 
 
-
+//METODO PARA CONSULTAR LOS ESTADOS LOS CUAL CONTIENE NOMBRE, IMAGEN Y UN COLOR ASIGANDO POR EL ADMINISTRADOR
+// GUARDA LOS DATOS EN LA VARIBALE nombreEdo
   Future<List<dynamic>> consultarAPIEstados() async {
     final url = Uri.parse(urlApi+'consultas_edo.php');
     var response = await http.get(url);
@@ -52,6 +54,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  //METODO PARA PINTAR LAS IMAGENES DENTRO DE UN GRIDVIEW
   Widget CardCiudad() {
     var size = MediaQuery.of(context).size;
     final double itemHeight = size.height * 38;
@@ -89,9 +92,8 @@ class _HomePageState extends State<HomePage> {
                                 fit:  BoxFit.fill
                             )
                         ),
+
                       )
-
-
                       //Text(e['nombre'], style: TextStyle(color: Colors.blue),)
                     ],
             ),

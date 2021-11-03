@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -9,7 +11,7 @@ import 'package:salud_y_mas/src/models/modeloDireccion.dart';
 import 'package:salud_y_mas/src/models/modeloFormasPago.dart';
 import 'package:salud_y_mas/src/models/modeloInformacionMedico.dart';
 import 'package:salud_y_mas/src/models/modeloServicios.dart';
-import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:salud_y_mas/src/pages/pantalla_inicio.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -17,7 +19,8 @@ class InformacionMedico extends StatefulWidget {
   String nombreMedico;
   String idCliente;
   String imagenCategoria;
-  InformacionMedico(this.nombreMedico,this.idCliente,this.imagenCategoria,{Key? key}) : super(key: key);
+  String colorEdo;
+  InformacionMedico(this.nombreMedico,this.idCliente,this.imagenCategoria,this.colorEdo,{Key? key}) : super(key: key);
 
   @override
   _InformacionMedicoState createState() => _InformacionMedicoState();
@@ -39,6 +42,8 @@ class _InformacionMedicoState extends State<InformacionMedico> {
 
    List<dynamic> listaCarrucelPersonal =[];
    List<String> listImagenes = [] ;
+
+   int _paginaActual=0;
   @override
   void initState()
   {
@@ -181,7 +186,23 @@ class _InformacionMedicoState extends State<InformacionMedico> {
             if(listaCarrucelPersonal.isEmpty)Visibility(visible:false,child:carrucelPersonal())else carrucelPersonal(),
           ],
         ),
-      )
+      ),
+        bottomNavigationBar: CurvedNavigationBar(
+          //color: Color(int.parse(widget.colorEdo)),
+          height: 40,
+          onTap: (index){
+            setState(() {
+              _paginaActual = index;
+              if(_paginaActual == 0){
+                showDialog(context: context, builder: createDialog);
+              }
+            });
+          },
+        //currentIndex: _paginaActual,
+        items: [
+         Icon(Icons.home),
+      ],
+    ),
     );
   }
 
@@ -782,9 +803,25 @@ class _InformacionMedicoState extends State<InformacionMedico> {
 
   }
 
-
-
-
-
+   Widget createDialog(BuildContext context) => CupertinoAlertDialog(
+     title: Text('IR AL MENÚ PRINCIPAL'),
+     actions: [
+       CupertinoDialogAction(
+         child: Text("OK"),
+         onPressed: () {
+           Navigator.pushAndRemoveUntil(
+               context,
+               MaterialPageRoute(
+                 builder: (context) => HomePage(),
+               ),
+               ModalRoute.withName("/HomePage"));
+         },),
+       CupertinoDialogAction(
+         child: Text("CANCEL"),
+         onPressed: () {
+           Navigator.of(context, rootNavigator: true).pop();
+         },),
+     ],
+   );
 
 }

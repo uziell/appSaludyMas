@@ -75,7 +75,7 @@ initState() {
                           /*String nameCd = widget.nombreCiudad;
                            String idCategoria = widget.idCategoria;
                            String idEspeciliad = espe.idespecialidad;*/
-                          return InformacionMedico(nombreMEdico,idCliente,imagenName.toString());
+                          return InformacionMedico(nombreMEdico,idCliente,imagenName.toString(),widget.colorEdo);
                         }));
                     },
                   child: Container(
