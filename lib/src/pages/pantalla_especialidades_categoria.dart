@@ -97,12 +97,15 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
         child: Column(
             children: [
               //imagenGeneral(),
+              //En este if vamos verfiricas las categorias que tienen especialidad y se ejecuta el metodo  _llamarEspecialidadesCategoria()
               if(widget.nombreEspecialidad == "ESPECIALIDADES" ||
                   widget.nombreEspecialidad == "ODONTOLOGÍA" ||
                   widget.nombreEspecialidad == "ESPECIALIDADES PEDIATRICAS" ||
                   widget.nombreEspecialidad == "DIRECTORIOS")
                 Container(child: _llamarEspecialidadesCategoria())
+                //en este if solo sera para las clinicas y se ejecuta el metodo  _llamarCategoriasHospitales()
               else if (widget.nombreEspecialidad == "CLINICAS Y HOSPITALES") Container(child: _llamarCategoriasHospitales())
+                //en este else vamos a ejecutar el metodo y llamar las categorias que no tengan especialidad que muestre directo los clientes
                   else Container(child: llarClientesDeCategoria()),
             ]
         ),
@@ -186,8 +189,10 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
         controller: new ScrollController(keepScrollOffset: false),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
+        //en este children mapeamos la listaClinicas para obtener lo que tiene almacenado
         children: listaClinicas.map((clinicas) {
           return  GestureDetector(
+            //En este ontap le damos para pasar a la siguiente pantalla
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute<Null>(
                     builder:  (BuildContext context){
@@ -245,6 +250,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
         controller: new ScrollController(keepScrollOffset: false),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
+        //en este children mapeamos lista medicos para ver lo que tiene almacenado
         children: listaMedicosEspe.map((medicos) {
           return GestureDetector(
                   onTap: () {

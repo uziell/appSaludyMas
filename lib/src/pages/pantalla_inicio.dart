@@ -68,6 +68,7 @@ class _HomePageState extends State<HomePage> {
          shrinkWrap: true,
         children: nombreEdo.map((e) => InkWell(
           onTap: (){
+            //EN este navigator pasamos a la siguiente pantalla de las categorias por ciudad
             Navigator.of(context).push(
                 MaterialPageRoute(
                     builder: (context) => CategoriasCiudad(e['nombre'], e['colorEdo'])

@@ -849,8 +849,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       await launch(url(),
           forceSafariVC: true, forceWebView: true, enableJavaScript: true);
     } else if (!await canLaunch(url())) {
-      await launch(url(),
-          forceSafariVC: true, forceWebView: true, enableJavaScript: true);
+      await launch(url());
     } else {
       throw 'Could not launch ${url()}';
     }

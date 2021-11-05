@@ -665,13 +665,13 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
   Future<void> googleMaps(@required urls) async {
     String url() {
       if (Platform.isIOS) {
-        return  "google.navigation:q=$urls";
+        return Uri.encodeFull("https://maps.apple.com/?q=$urls");
       } else {
         return "google.navigation:q=$urls";
       }
     }
     if(await canLaunch(url())){
-      await launch(url());
+      await launch(url(),forceSafariVC: true, forceWebView: true, enableJavaScript: true);
     }else if(!await canLaunch(url())){
       await launch(url());
     }else{
