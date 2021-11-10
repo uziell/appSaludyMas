@@ -80,7 +80,8 @@ initState() {
                     },
                   child: Container(
                     decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xff00838f),width: 2),
+                      borderRadius: BorderRadius.circular(9),
+                      border: Border.all(color: Colors.blue,width: 2),
                     ),
                     margin: EdgeInsets.all(4),
                     width: 200,

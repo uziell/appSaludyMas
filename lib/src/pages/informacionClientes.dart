@@ -1,10 +1,10 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:salud_y_mas/src/models/modeloCedulas.dart';
 import 'package:salud_y_mas/src/models/modeloDireccion.dart';
@@ -502,7 +502,12 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
+                        if(widget.nombreMedico == "FARMACIAS DEL AHORRO")
+                          Center(
+                              child: Text('LLAMAR (click)',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.montserrat(fontSize: 13)))
+                        else Center(
                             child: Text('Telefono (Agendar Cita)',
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.montserrat(fontSize: 13))),
@@ -846,8 +851,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     }
 
     if (await canLaunch(url())) {
-      await launch(url(),
-          forceSafariVC: true, forceWebView: true, enableJavaScript: true);
+      await launch(url());
     } else if (!await canLaunch(url())) {
       await launch(url());
     } else {

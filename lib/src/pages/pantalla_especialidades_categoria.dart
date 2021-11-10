@@ -6,7 +6,6 @@ import 'package:salud_y_mas/src/pages/informacionClientes.dart';
 import 'package:salud_y_mas/src/pages/mostrarInformacionClinicasYHospitales.dart';
 import 'package:salud_y_mas/src/pages/pantalla_lista_medicos_especialidades.dart';
 
-
 class EspecialidadCategoria extends StatefulWidget {
   String nombreEspecialidad ='';
   String  idCategoria;
@@ -32,6 +31,7 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
   @override
   void initState() {
     super.initState();
+
 //aqui verificamos si esta entrando a las categorias que tienen especialidades
     if (widget.nombreEspecialidad == "ESPECIALIDADES"
         || widget.nombreEspecialidad == "ODONTOLOGÍA"
@@ -66,7 +66,8 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
         +nombreEstado+"&nameCd="+nombreCiudad+"&idCate="+idCategoria);
     var response = await http.get(urlApi);
     listaEspecialidades = json.decode(response.body);
-    return listaEspecialidades;
+    return listaEspecialidades ;
+
   }
 
   //en este metodo consultamos las clinicas
@@ -112,7 +113,8 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
       ),
     );
   }
-  
+
+
   _llamarEspecialidadesCategoria() {
     var size = MediaQuery.of(context).size;
     final double itemHeight = size.height * 35;
@@ -145,11 +147,21 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
               children: [
                 if(espe['imagen'] == null || espe['imagen'].toString().isEmpty)
                   Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.blue,width: 2),
+                      // color:const Color(0xff00838f),
+                    ),
                     width: 60.0,
                     height: 70.0,
                     child: Image.network(urlApi + 'images/default.png'),
                   ) else
                     Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.blue,width: 2),
+                        // color:const Color(0xff00838f),
+                      ),
                       width: 60.0,
                       height: 70.0,
                       child: Image.network(urlApi +'images/'+espe['imagen']),
@@ -259,12 +271,14 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
                           String nombreMedico = medicos['nombre'];
                           String idCliente = medicos['idcliente'];
                           String? imagenCliente = medicos['imagenName'];
+
                           return InformacionMedico(nombreMedico, idCliente,imagenCliente.toString(),widget.colorEdo);
                         }));
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xff00838f),width: 2),
+                      borderRadius: BorderRadius.circular(9),
+                      border: Border.all(color: Colors.blue,width: 2),
                     ),
                     margin: EdgeInsets.all(4),
                     width: 200,
@@ -318,7 +332,10 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
 
   }
 
+
+
 }
+
 
 
 

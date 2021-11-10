@@ -55,9 +55,6 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
 
   String? dire,tel1,tel2,telE,face,insta,twi,em,what,pagWeb;
 
-  double _progress =0;
-  int _duration=1;
-
   @override
   void initState() {
     // TODO: implement initState
@@ -106,6 +103,8 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
 
 
      }
+
+     //llenamos la lista de informacion medicos
      info.add(new InfMeClinicas(
          id.idcliente.toString(), id.nombre.toString(), id.descripcion_espe.toString(), id.telefono1.toString(),
          id.telefono2.toString(), id.telefono_emergencias.toString(), id.facebook.toString(),
@@ -114,7 +113,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
          id.estatus.toString(), id.serviciosNombre.toString(),
          id.clinicasyhospitales_idclinicasyhospitales.toString(), id.direccion.toString(), cedulas,'','',id.imagenName.toString()));
 
-
+     // es estas variables igualamos dentro de foreach de datos especialidad para poder manejar la vista de los card
      dire = id.direccion.toString();
      tel1 = id.telefono1.toString();
      tel2 = id.telefono2.toString();
@@ -151,7 +150,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Color(int.parse(widget.colorEdo)),
-          title: Text(widget.nameClinica),
+          title: Center(child:Text(widget.nameClinica,textAlign: TextAlign.center,style: GoogleFonts.montserrat(color: Colors.white, fontSize: 14))),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -249,14 +248,14 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       // border: Border.all(color: Colors.black,width: 2),
-                      color:const Color(0xff00838f),
+                     // color:const Color(0xff00838f),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children:[
                        if(value.direccion == 'null' || value.direccion.toString().isEmpty)Visibility(visible:false,child:Text(value.direccion.toString()))else
-                         Text(value.direccion.toString(),style: TextStyle(color: Colors.white, fontSize: 15))
+                        Text(value.direccion.toString(),textAlign: TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13))
                       ],
                     ),
                   ),
@@ -292,14 +291,14 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       // border: Border.all(color: Colors.black,width: 2),
-                      color:const Color(0xff00838f),
+                      color: Colors.white,
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children:[
                         if(value.telefono1 == 'null' || value.telefono1.toString().isEmpty)Visibility(visible:false,child:Text('Telefono'))else
-                          Text('Telefono',style: TextStyle(color: Colors.white, fontSize: 20)),
+                          Text('Telefono (Agendar cita)',textAlign: TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13)),
                       ],
                     ),
                   ),
@@ -335,14 +334,14 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       // border: Border.all(color: Colors.black,width: 2),
-                      color:const Color(0xff00838f),
+                        color:Colors.white
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children:[
                         if(value.telefono2 == 'null' || value.telefono2.toString().isEmpty)Visibility(visible:false,child:Text('Telefono'))else
-                          Text('Telefono 2',style: TextStyle(color: Colors.white, fontSize: 20)),
+                          Text('Telefono 2',textAlign: TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13)),
                       ],
                     ),
                   ),
@@ -379,14 +378,14 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         // border: Border.all(color: Colors.black,width: 2),
-                        color:const Color(0xff00838f),
+                        color:Colors.white,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children:[
                           if(value.telefono_emergencias == 'null' || value.telefono_emergencias.toString().isEmpty)Visibility(visible:false,child:Text('Telefono Emergencias'))else
-                            Text('Telefono Emergencias',style: TextStyle(color: Colors.white, fontSize: 20)),
+                            Text('Telefono Emergencias',textAlign: TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13)),
                         ],
                       ),
                     ),
@@ -425,14 +424,14 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         // border: Border.all(color: Colors.black,width: 2),
-                        color:const Color(0xff00838f),
+                        color:Colors.white,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children:[
                           if(value.whatsapp == 'null' || value.whatsapp.toString().isEmpty)Visibility(visible:false,child:Text('Whatsapp'))else
-                            Text('WhatSapp',style: TextStyle(color: Colors.white, fontSize: 20)),
+                            Text('WhatSapp',textAlign: TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13)),
                         ],
                       ),
                     ),
@@ -470,14 +469,14 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         // border: Border.all(color: Colors.black,width: 2),
-                        color:const Color(0xff00838f),
+                        color:Colors.white,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children:[
                           if(value.facebook == 'null' || value.facebook.toString().isEmpty)Visibility(visible:false,child:Text('Facebook'))
-                          else Text('Facebook',style: TextStyle(color: Colors.white, fontSize: 20)),
+                          else Text('Facebook',textAlign: TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13)),
                         ],
                       ),
                     ),
@@ -515,14 +514,14 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         // border: Border.all(color: Colors.black,width: 2),
-                        color:const Color(0xff00838f),
+                        color:Colors.white,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children:[
                           if(value.instagram == 'null' || value.instagram.toString().isEmpty)Visibility(visible:false,child:Text('Instagram'))
-                          else Text('Instagram',style: TextStyle(color: Colors.white, fontSize: 20)),
+                          else Text('Instagram',textAlign: TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13)),
                         ],
                       ),
                     ),
@@ -560,14 +559,14 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         // border: Border.all(color: Colors.black,width: 2),
-                        color:const Color(0xff00838f),
+                        color:Colors.white,
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children:[
                           if(value.pagina_web == 'null' || value.pagina_web.toString().isEmpty)Visibility(visible:false,child:Text('Pagina Web'))
-                          else Text('Pagina Web',style: TextStyle(color: Colors.white, fontSize: 20)),
+                          else Text('Pagina Web',textAlign: TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13)),
                         ],
                       ),
                     ),
@@ -606,13 +605,13 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         // border: Border.all(color: Colors.black,width: 2),
-                        color:const Color(0xff00838f),
+                        color:Colors.white,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children:[
                           if(value.e_mail == 'null' || value.e_mail.toString().isEmpty)Visibility(visible:false,child:Text('Email'))
-                          else Text('Email',style: TextStyle(color: Colors.white, fontSize: 20),),
+                          else Text('Email',textAlign: TextAlign.center,style: GoogleFonts.montserrat(fontSize: 13)),
                         ],
                       ),
                     ),
@@ -626,42 +625,6 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
     );
   }
 
-  /*facebook() {
-    return Card(
-      child: GestureDetector(
-    onTap: (){
-
-    },
-        child: Row(
-      children: [
-      if(face == 'null' || face.toString().isEmpty)Visibility(visible:false,child:
-    Container(width: 30.0, height: 40.0, child:   Image.asset('assets/email.png')))
-    else Container(width: 30.0, height: 40.0, child: Image.asset('assets/email.png')),
-    SizedBox(
-    width: 2.5,
-    ),
-    Expanded(
-    child: Container(
-    decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(12),
-    // border: Border.all(color: Colors.black,width: 2),
-    color:const Color(0xff00838f),
-    ),
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children:[
-    if(face == 'null' || face.toString().isEmpty)Visibility(visible:false,child:Text('face'))
-    else Text('face',style: TextStyle(color: Colors.white, fontSize: 20),),
-    ],
-    ),
-    ),
-    ),
-    ],
-    ),
-    ),
-    );
-  }*/
-
   Future<void> googleMaps(@required urls) async {
     String url() {
       if (Platform.isIOS) {
@@ -671,7 +634,7 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
       }
     }
     if(await canLaunch(url())){
-      await launch(url(),forceSafariVC: true, forceWebView: true, enableJavaScript: true);
+      await launch(url());
     }else if(!await canLaunch(url())){
       await launch(url());
     }else{
