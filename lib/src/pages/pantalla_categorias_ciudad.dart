@@ -18,7 +18,7 @@ class CategoriasCiudad extends StatefulWidget {
 }
 
 class _CategoriasCiudadState extends State<CategoriasCiudad> {
-  String vistaCiudad = "Seleccione una ciudad";
+  String vistaCiudad='';
   String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
   List<dynamic> nombreCd = [];
   List<dynamic> imagenes = [];
@@ -29,6 +29,10 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
   String idFa='';
 
   IdFarmaciasDelAhorro modeloIdFarmacias = new IdFarmaciasDelAhorro('');
+
+  List<String> ciudadesConsulta = [];
+  String _estadoActual = '', _ciudad = "";
+  List<DropdownMenuItem<String>>_dropDownMenuCiudades = [];
 
 
   Future consultarAPICiudades(String nameEdo) async {
@@ -79,35 +83,61 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
     consultarAPICiudades(widget.nombreEdo).then((value){
       setState(() {
 
+        vistaCiudad = nombreCd[0]['nombre'];
+        //_ciudad = _dropDownMenuCiudades[0].value.toString();
+        print("tiene pos0 ... "+vistaCiudad);
+
+
+       consultarCategorias(widget.nombreEdo,vistaCiudad).then((value){
+          setState(() {
+
+          });
+        });
+
       });
     });
+
+
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Color(int.parse(widget.colorEdo)),
-          title:  new Center(child: new Text(widget.nombreEdo,style: GoogleFonts.abrilFatface(), textAlign: TextAlign.center,)),
-        ),
-        body: ListView(
-            children: [
-              Padding(padding: EdgeInsetsDirectional.all(5)),
-              dropdownCiudades(),
-              SizedBox(
-                height: 5,
-                width: 5,
-              ),
-              carrucelDeImagenes(),
-              SizedBox(
-                height: 5,
-                width: 5,
-              ),
-              categorias(),
-            ],
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/fondoPrincipal.jpg'),
+              fit: BoxFit.cover,
+              //colorFilter: ColorFilter.mode(Colors.white,)
+            ),
           ),
-        ),
+      ),
+     Scaffold(
+       backgroundColor: Colors.transparent,
+      appBar: AppBar(
+      elevation: 0,
+        backgroundColor: Color(int.parse(widget.colorEdo)),
+        title:  new Center(child: new Text(widget.nombreEdo,style: GoogleFonts.abrilFatface(), textAlign: TextAlign.center,)),
+      ),
+         body: ListView(
+           children: [
+             Padding(padding: EdgeInsetsDirectional.all(5)),
+             dropdownCiudades(),
+             //dropCid(),
+             SizedBox(
+               height: 5,
+               width: 5,
+             ),
+             carrucelDeImagenes(),
+             SizedBox(
+               height: 5,
+               width: 5,
+             ),
+             categorias(),
+           ],
+         )
+     )
+    ]
     );
   }
 
@@ -134,7 +164,7 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
           onChanged: (_ciudadActual){
             setState(() {
               vistaCiudad = _ciudadActual.toString();
-              //consultarCategorias(vista,vistaCiudad);
+
               consultarCategorias(widget.nombreEdo,vistaCiudad).then((value){
                 setState(() {
 
@@ -149,7 +179,7 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
     );
   }
 
-  carrucelDeImagenes() {
+   carrucelDeImagenes() {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Color(int.parse(widget.colorEdo)),width: 2),
@@ -175,11 +205,11 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
     final double itemHeight = size.height * 20;
     final double itemWidth = size.width * 50;
 
-    if(vistaCiudad == "Seleccione una ciudad")return CupertinoAlertDialog(
+  /*  if(vistaCiudad == "Seleccione una ciudad")return CupertinoAlertDialog(
       title: Text('Seleccione Una Ciudad'),
-      
+
     );
-    else return GridView.count(
+    else*/ return GridView.count(
       mainAxisSpacing: 5.0,
       crossAxisCount: 2,
       padding: EdgeInsets.all(15),
@@ -212,7 +242,7 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
                 height: 70,
                 width: 70,
                 decoration: BoxDecoration(
-                   // color: const Color(0xff00838f),
+                    //color: Color(int.parse(widget.colorEdo)),
                     borderRadius: BorderRadius.circular(26),
                     image: DecorationImage(
                         image: NetworkImage(urlApi+'images/'+ categ.imagen.toString()),
@@ -232,13 +262,13 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
                       children:[
                         if(categ.nombrecategoria == "ANÁLISIS CLINICOS")
                           Center(child:Text("LABORATORIO DE "+categ.nombrecategoria.toString(),
-                              style: GoogleFonts.montserrat( fontStyle:  FontStyle.normal,fontSize: 12)))
+                              style: GoogleFonts.montserrat( fontStyle:  FontStyle.normal,fontSize: 12,fontWeight: FontWeight.bold),textAlign: TextAlign.center))
                         else if(categ.nombrecategoria == "ULTRASONIDO Y RAYOS X")
                          Center(child: Text("RADIOLOGÍA",
-                              style: GoogleFonts.montserrat( fontStyle:  FontStyle.normal,fontSize: 12)))
+                              style: GoogleFonts.montserrat( fontStyle:  FontStyle.normal,fontSize: 12,fontWeight: FontWeight.bold,),textAlign: TextAlign.center))
                         else
                          Center(child: Text(categ.nombrecategoria.toString(),
-                            style:GoogleFonts.montserrat( fontStyle:  FontStyle.normal, fontSize: 12))
+                            style:GoogleFonts.montserrat( fontStyle:  FontStyle.normal, fontSize: 12,fontWeight: FontWeight.bold),textAlign: TextAlign.center)
                           ),
                       ],
 

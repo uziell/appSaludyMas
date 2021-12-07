@@ -39,22 +39,36 @@ initState() {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(int.parse(widget.colorEdo)),
-        title: Center(child: Text(widget.nameEspecialidad, style: TextStyle(color: Colors.white,fontSize: 15))),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 25,
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/fondoPrincipal.jpg'),
+              fit: BoxFit.cover,
+              //colorFilter: ColorFilter.mode(Colors.white,)
             ),
-            imagenGeneral(),
-            mostrarMedicos(),
-          ],
+          ),
         ),
-      )
+        Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Color(int.parse(widget.colorEdo)),
+              title: Center(child: Text(widget.nameEspecialidad, style: TextStyle(color: Colors.white,fontSize: 15))),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 25,
+                  ),
+                  imagenGeneral(),
+                  mostrarMedicos(),
+                ],
+              ),
+            )
+        )
+      ],
     );
   }
 

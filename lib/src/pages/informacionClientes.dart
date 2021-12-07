@@ -196,83 +196,97 @@ class _InformacionMedicoState extends State<InformacionMedico> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawerEnableOpenDragGesture: false,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 50,
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/fondoPrincipal.jpg'),
+              fit: BoxFit.cover,
+              //colorFilter: ColorFilter.mode(Colors.white,)
             ),
-            //carrucelPersonal(),
-            imagenMedico(),
-            informacionPersonal(),
-            if (modeloDireccion.direccion == null ||
-                modeloDireccion.direccion.toString().isEmpty)
-              Visibility(visible: false, child: direccion())
-            else
-              direccion(),
-            if (modelo.telefono1 == null || modelo.telefono1.toString().isEmpty)
-              Visibility(visible: false, child: telefono1())
-            else
-              telefono1(),
-            if (modelo.telefono2 == null || modelo.telefono2.toString().isEmpty)
-              Visibility(visible: false, child: telefono2())
-            else
-              telefono2(),
-            if (modelo.telefono_emergencias == null ||
-                modelo.telefono_emergencias.toString().isEmpty)
-              Visibility(visible: false, child: telEmergencia())
-            else
-              telEmergencia(),
-            if (modelo.whatsapp == null || modelo.whatsapp.toString().isEmpty)
-              Visibility(visible: false, child: whatSapp())
-            else
-              whatSapp(),
-            if (modelo.facebook == null || modelo.facebook.toString().isEmpty)
-              Visibility(visible: false, child: facebook())
-            else
-              facebook(),
-            if (modelo.instagram == null || modelo.instagram.toString().isEmpty)
-              Visibility(visible: false, child: instragam())
-            else
-              instragam(),
-            if (modelo.twitter == null || modelo.twitter.toString().isEmpty)
-              Visibility(visible: false, child: twitter())
-            else
-              twitter(),
-            if (modelo.pagina_web == null ||
-                modelo.pagina_web.toString().isEmpty)
-              Visibility(visible: false, child: paginaWeb())
-            else
-              paginaWeb(),
-            if (modelo.e_mail == null || modelo.e_mail.toString().isEmpty)
-              Visibility(visible: false, child: email())
-            else
-              email(),
-            if (listaCarrucelPersonal.isEmpty)
-              Visibility(visible: false, child: carrucelPersonal())
-            else
-              carrucelPersonal(),
-          ],
+          ),
         ),
-      ),
-      bottomNavigationBar: CurvedNavigationBar(
-        //color: Color(int.parse(widget.colorEdo)),
-        height: 40,
-        onTap: (index) {
-          setState(() {
-            _paginaActual = index;
-            if (_paginaActual == 0) {
-              showDialog(context: context, builder: createDialog);
-            }
-          });
-        },
-        //currentIndex: _paginaActual,
-        items: [
-          Icon(Icons.home),
-        ],
-      ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          drawerEnableOpenDragGesture: false,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 50,
+                ),
+    //carrucelPersonal(),
+                imagenMedico(),
+                informacionPersonal(),
+                if (modeloDireccion.direccion == null ||
+                    modeloDireccion.direccion.toString().isEmpty)
+                  Visibility(visible: false, child: direccion())
+                else
+                  direccion(),
+                if (modelo.telefono1 == null || modelo.telefono1.toString().isEmpty)
+                  Visibility(visible: false, child: telefono1())
+                else
+                  telefono1(),
+                if (modelo.telefono2 == null || modelo.telefono2.toString().isEmpty)
+                  Visibility(visible: false, child: telefono2())
+                else
+                  telefono2(),
+                if (modelo.telefono_emergencias == null ||
+                    modelo.telefono_emergencias.toString().isEmpty)
+                  Visibility(visible: false, child: telEmergencia())
+                else
+                  telEmergencia(),
+                if (modelo.whatsapp == null || modelo.whatsapp.toString().isEmpty)
+                  Visibility(visible: false, child: whatSapp())
+                else
+                  whatSapp(),
+                if (modelo.facebook == null || modelo.facebook.toString().isEmpty)
+                  Visibility(visible: false, child: facebook())
+                else
+                  facebook(),
+                if (modelo.instagram == null || modelo.instagram.toString().isEmpty)
+                  Visibility(visible: false, child: instragam())
+                else
+                  instragam(),
+                if (modelo.twitter == null || modelo.twitter.toString().isEmpty)
+                  Visibility(visible: false, child: twitter())
+                else
+                twitter(),
+                if (modelo.pagina_web == null ||
+                modelo.pagina_web.toString().isEmpty)
+                Visibility(visible: false, child: paginaWeb())
+                else
+                paginaWeb(),
+                if (modelo.e_mail == null || modelo.e_mail.toString().isEmpty)
+                Visibility(visible: false, child: email())
+                else
+                email(),
+                if (listaCarrucelPersonal.isEmpty)
+                Visibility(visible: false, child: carrucelPersonal())
+                else
+                  carrucelPersonal(),
+              ],
+            ),
+          ),
+          bottomNavigationBar: CurvedNavigationBar(
+    //color: Color(int.parse(widget.colorEdo)),
+            height: 40,
+            onTap: (index) {
+              setState(() {
+                _paginaActual = index;
+                if (_paginaActual == 0) {
+                  showDialog(context: context, builder: createDialog);
+                }
+              });
+              },
+    //currentIndex: _paginaActual,
+            items: [
+              Icon(Icons.home),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -283,7 +297,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
         children: [
           if (widget.imagenCategoria == 'null')
             FadeInImage(
-              image: NetworkImage(urlApi + 'images/default.png'),
+              image: NetworkImage(urlApi + 'images/doctor.png'),
               placeholder: AssetImage('assets/jar-loading.gif'),
               fadeInDuration: Duration(milliseconds: 200),
               //height: 230.0,

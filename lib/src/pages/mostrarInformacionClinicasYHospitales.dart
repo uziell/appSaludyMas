@@ -146,32 +146,43 @@ class _ClinicasInformacionState extends State<ClinicasInformacion> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(int.parse(widget.colorEdo)),
-          title: Center(child:Text(widget.nameClinica,textAlign: TextAlign.center,style: GoogleFonts.montserrat(color: Colors.white, fontSize: 14))),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-             // mostrarImagenPerfil(),
-              mostrarMedicos(),
-              if(dire == null || dire.toString().isEmpty)Visibility(visible:false,child: direccion())else direccion(),
-              if(tel1 == null || tel1.toString().isEmpty)Visibility(visible:false,child: telefono1())else telefono1(),
-              if(tel2 == null || tel2.toString().isEmpty)Visibility(visible:false,child: telefono2())else telefono2(),
-              if(telE == null || telE.toString().isEmpty )Visibility(visible:false,child: telefono_emergencias())else telefono_emergencias(),
-              if(face == null || face.toString().isEmpty)Visibility(visible:false,child:facebook()) else facebook(),
-              if(insta == null || insta.toString().isEmpty) Visibility(visible: false, child: instagram())else instagram(),
-              if(what == null || what.toString().isEmpty)Visibility(visible: false,child: whatSapp())else whatSapp(),
-              if(pagWeb == null || pagWeb.toString().isEmpty)Visibility(visible:false,child: paginaWeb())else paginaWeb(),
-              if(em == null || em.toString().isEmpty)Visibility(visible:false,child: email())else email()
-            ],
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/fondoPrincipal.jpg'),
+              fit: BoxFit.cover,
+              //colorFilter: ColorFilter.mode(Colors.white,)
+            ),
           ),
-        )
-        //mostarMe(),
-      ),
-
+        ),
+        Scaffold(
+            backgroundColor: Colors.transparent,
+              appBar: AppBar(
+                backgroundColor: Color(int.parse(widget.colorEdo)),
+                title: Center(child:Text(widget.nameClinica,textAlign: TextAlign.center,style: GoogleFonts.montserrat(color: Colors.white, fontSize: 14))),
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+    // mostrarImagenPerfil(),
+                    mostrarMedicos(),
+                    if(dire == null || dire.toString().isEmpty)Visibility(visible:false,child: direccion())else direccion(),
+                    if(tel1 == null || tel1.toString().isEmpty)Visibility(visible:false,child: telefono1())else telefono1(),
+                    if(tel2 == null || tel2.toString().isEmpty)Visibility(visible:false,child: telefono2())else telefono2(),
+                    if(telE == null || telE.toString().isEmpty )Visibility(visible:false,child: telefono_emergencias())else telefono_emergencias(),
+                    if(face == null || face.toString().isEmpty)Visibility(visible:false,child:facebook()) else facebook(),
+                    if(insta == null || insta.toString().isEmpty) Visibility(visible: false, child: instagram())else instagram(),
+                    if(what == null || what.toString().isEmpty)Visibility(visible: false,child: whatSapp())else whatSapp(),
+                    if(pagWeb == null || pagWeb.toString().isEmpty)Visibility(visible:false,child: paginaWeb())else paginaWeb(),
+                    if(em == null || em.toString().isEmpty)Visibility(visible:false,child: email())else email()
+                  ],
+                ),
+              )
+    //mostarMe(),
+          ),
+      ],
     );
   }
   mostrarImagenPerfil() {

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -89,28 +90,43 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(int.parse(widget.colorEdo)),
-        title: Center(child: Text(widget.nombreEspecialidad,style: GoogleFonts.montserrat(color: Colors.white, fontSize: 14))),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-            children: [
-              //imagenGeneral(),
-              //En este if vamos verfiricas las categorias que tienen especialidad y se ejecuta el metodo  _llamarEspecialidadesCategoria()
-              if(widget.nombreEspecialidad == "ESPECIALIDADES" ||
-                  widget.nombreEspecialidad == "ODONTOLOGÍA" ||
-                  widget.nombreEspecialidad == "ESPECIALIDADES PEDIATRICAS" ||
-                  widget.nombreEspecialidad == "DIRECTORIOS")
-                Container(child: _llamarEspecialidadesCategoria())
-                //en este if solo sera para las clinicas y se ejecuta el metodo  _llamarCategoriasHospitales()
-              else if (widget.nombreEspecialidad == "CLINICAS Y HOSPITALES") Container(child: _llamarCategoriasHospitales())
-                //en este else vamos a ejecutar el metodo y llamar las categorias que no tengan especialidad que muestre directo los clientes
-                  else Container(child: llarClientesDeCategoria()),
-            ]
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/fondoPrincipal.jpg'),
+              fit: BoxFit.cover,
+    //colorFilter: ColorFilter.mode(Colors.white,)
+            ),
+          ),
         ),
-      ),
+        Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Color(int.parse(widget.colorEdo)),
+              title: Center(child: Text(widget.nombreEspecialidad,style: GoogleFonts.montserrat(color: Colors.white, fontSize: 14))),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                  children: [
+    //imagenGeneral(),
+    //En este if vamos verfiricas las categorias que tienen especialidad y se ejecuta el metodo  _llamarEspecialidadesCategoria()
+                    if(widget.nombreEspecialidad == "ESPECIALIDADES" ||
+                        widget.nombreEspecialidad == "ODONTOLOGÍA" ||
+                        widget.nombreEspecialidad == "ESPECIALIDADES PEDIATRICAS" ||
+                        widget.nombreEspecialidad == "DIRECTORIOS")
+                      Container(child: _llamarEspecialidadesCategoria())
+          //en este if solo sera para las clinicas y se ejecuta el metodo  _llamarCategoriasHospitales()
+                    else if (widget.nombreEspecialidad == "CLINICAS Y HOSPITALES")
+                      Container(child: _llamarCategoriasHospitales())
+          //en este else vamos a ejecutar el metodo y llamar las categorias que no tengan especialidad que muestre directo los clientes
+                     else Container(child: llarClientesDeCategoria()),
+                  ]
+              ),
+            )
+        )
+      ],
     );
   }
 
@@ -119,6 +135,18 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
     var size = MediaQuery.of(context).size;
     final double itemHeight = size.height * 35;
     final double itemWidth = size.width * 160;
+
+    if(listaEspecialidades.isEmpty)
+      return  Container(
+          child: Column(
+            children: [
+              Image.asset('assets/sDat.png'),
+              Text("No hay "+widget.nombreEspecialidad+ " agregados...",textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(fontSize: 13) )
+            ],
+          )
+      );
+    else
     return GridView.count(
       mainAxisSpacing: 2.0,
       crossAxisCount: 2,
@@ -194,6 +222,17 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
     var size = MediaQuery.of(context).size;
     final double itemHeight = size.height * 35;
     final double itemWidth = size.width * 160;
+    if(listaClinicas.isEmpty)
+      return  Container(
+          child: Column(
+            children: [
+              Image.asset('assets/sDat.png'),
+              Text("No hay "+widget.nombreEspecialidad+ " agregados...",textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(fontSize: 13) )
+            ],
+          )
+      );
+    else
     return Container(
       child: new GridView.count(
         crossAxisCount: 2,
@@ -257,7 +296,18 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
   }
 
   llarClientesDeCategoria() {
-    return Container(
+    if(listaMedicosEspe.isEmpty)
+      return  Container(
+          child: Column(
+            children: [
+              Image.asset('assets/sDat.png'),
+              Text("No hay "+widget.nombreEspecialidad+ " agregados...",textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(fontSize: 13) )
+            ],
+          )
+      );
+    else
+      return Container(
       child: new ListView(
         controller: new ScrollController(keepScrollOffset: false),
         shrinkWrap: true,
