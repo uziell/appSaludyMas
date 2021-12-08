@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> {
   List<dynamic> nombreEdo = [];
   String vistaCiudad = "Seleccione una ciudad";
 
-
   @override
   initState() {
     super.initState();
@@ -30,7 +29,6 @@ class _HomePageState extends State<HomePage> {
       setState(() {});
     });
   }
-
 
 //METODO PARA CONSULTAR LOS ESTADOS LOS CUAL CONTIENE NOMBRE, IMAGEN Y UN COLOR ASIGANDO POR EL ADMINISTRADOR
 // GUARDA LOS DATOS EN LA VARIBALE nombreEdo
@@ -43,69 +41,61 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children:[
-        Container(
+    return Stack(children: [
+      Container(
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/fondoPrincipal.jpg'),
             fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(Colors.white, BlendMode.darken)
+            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.9), BlendMode.dstATop),
           ),
         ),
-        ),
-
-        Scaffold(
-         backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
-            child: Column(
-                children: [
-                  Padding(padding: EdgeInsetsDirectional.all(38)),
-                  Card(
-                    margin: EdgeInsets.symmetric(horizontal: 40,vertical: 4),
-                    color: Colors.transparent,
-                    elevation: 0,
-                    child: Row(
-                      children: [
-                        Container(
-                          color: Colors.transparent,
-                          width: 120.0,
-                          height: 80.0,
-                          child: Image.asset('assets/ubicacionPantallaPrincipal.png'),
-                        ),
-                        SizedBox(
-                          width: 2.5,
-                        ),
-                        Expanded(
-                          child: Container(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('UBICACIÓN',
-                                    style: GoogleFonts.montserrat(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+      ),
+      Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Container(
+              child: SingleChildScrollView(
+            child: Column(children: [
+              Padding(padding: EdgeInsetsDirectional.all(38)),
+              Card(
+                margin: EdgeInsets.symmetric(horizontal: 40, vertical: 4),
+                color: Colors.transparent,
+                elevation: 0,
+                child: Row(
+                  children: [
+                    Container(
+                      color: Colors.transparent,
+                      width: 120.0,
+                      height: 80.0,
+                      child: Image.asset('assets/ubicacionPantallaPrincipal.png'),
                     ),
-                  ),
-                  CardCiudad(),
-                  //listaEstados(),
-                ]
-            ),
-          ),
-        )
-    ]
-    );
+                    SizedBox(
+                      width: 2.5,
+                    ),
+                    Expanded(
+                      child: Container(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('UBICACIÓN', style: GoogleFonts.montserrat(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              cardCiudad(),
+              //listaEstados(),
+            ]),
+          )))
+    ]);
   }
 
   //METODO PARA PINTAR LAS IMAGENES DENTRO DE UN GRIDVIEW
-  Widget CardCiudad() {
-    var size = MediaQuery
-        .of(context)
-        .size;
+  Widget cardCiudad() {
+    var size = MediaQuery.of(context).size;
     final double itemHeight = size.height * 38;
     final double itemWidth = size.width * 80;
     return GridView.count(
@@ -115,55 +105,34 @@ class _HomePageState extends State<HomePage> {
       childAspectRatio: (itemWidth / itemHeight),
       controller: new ScrollController(keepScrollOffset: false),
       shrinkWrap: true,
-      children: nombreEdo.map((e) =>
-          InkWell(
-            onTap: () {
-              //EN este navigator pasamos a la siguiente pantalla de las categorias por ciudad
-              Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          CategoriasCiudad(e['nombre'], e['colorEdo'])
-                  )
-              );
-            },
-            child: Card(
-              margin: EdgeInsets.all(2),
-              color: Colors.transparent,
-              elevation: 0,
-              child: Column(
-                children: [
-                  Container(
-                    height: size.height / nombreEdo.length,
-                    width: 140,
-                    decoration: BoxDecoration(
-                      //color: const Color(0xff00838f),
-                        border: Border.all(color: Color(int.parse(
-                            e['colorEdo'])), width: 2),
-                        borderRadius: BorderRadius.circular(26),
-                        image: DecorationImage(
-                            image: NetworkImage(
-                                urlApi + 'images/' + e['imagenEstado']),
-                            fit: BoxFit.fill
-                        )
-                    ),
-
-                  )
-                  //Text(e['nombre'], style: TextStyle(color: Colors.blue),)
-                ],
-              ),
-            ),
-          )).toList(),
+      children: nombreEdo
+          .map((e) => InkWell(
+                onTap: () {
+                  //EN este navigator pasamos a la siguiente pantalla de las categorias por ciudad
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CategoriasCiudad(e['nombre'], e['colorEdo'])));
+                },
+                child: Card(
+                  margin: EdgeInsets.all(2),
+                  color: Colors.transparent,
+                  elevation: 0,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: size.height / nombreEdo.length,
+                        width: 140,
+                        decoration: BoxDecoration(
+                            boxShadow: [BoxShadow(blurRadius: 0.5, spreadRadius: 0.5, offset: Offset(6, 6))],
+                            //color: const Color(0xff00838f),
+                            border: Border.all(color: Colors.grey.shade300, width: 2),
+                            borderRadius: BorderRadius.circular(26),
+                            image: DecorationImage(image: NetworkImage(urlApi + 'images/' + e['imagenEstado']), fit: BoxFit.fill)),
+                      )
+                      //Text(e['nombre'], style: TextStyle(color: Colors.blue),)
+                    ],
+                  ),
+                ),
+              ))
+          .toList(),
     );
   }
-
-
 }
-
-
-
-
-
-
-
-
-

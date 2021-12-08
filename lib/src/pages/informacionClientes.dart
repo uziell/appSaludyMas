@@ -19,10 +19,7 @@ class InformacionMedico extends StatefulWidget {
   String idCliente;
   String imagenCategoria;
   String colorEdo;
-  InformacionMedico(
-      this.nombreMedico, this.idCliente, this.imagenCategoria, this.colorEdo,
-      {Key? key})
-      : super(key: key);
+  InformacionMedico(this.nombreMedico, this.idCliente, this.imagenCategoria, this.colorEdo, {Key? key}) : super(key: key);
 
   @override
   _InformacionMedicoState createState() => _InformacionMedicoState();
@@ -30,8 +27,7 @@ class InformacionMedico extends StatefulWidget {
 
 class _InformacionMedicoState extends State<InformacionMedico> {
   String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
-  ModeloInformacionMedico modelo = new ModeloInformacionMedico(
-      '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+  ModeloInformacionMedico modelo = new ModeloInformacionMedico('', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
   ModeloDireccion modeloDireccion = new ModeloDireccion('', '');
   List<ModeloCedulas> clieEs = [];
   List<String> listaCedulas = [];
@@ -45,7 +41,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
 
   List<dynamic> listaCarrucelPersonal = [];
   List<String> listImagenes = [];
-
+  bool cargando = false;
   int _paginaActual = 0;
   @override
   void initState() {
@@ -67,14 +63,14 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     });
     consultarCarruceCliente(widget.idCliente).then((value) {
       setState(() {
+        this.cargando = true;
         llenarCarrucel(listaCarrucelPersonal);
       });
     });
   }
 
   consultarCarruceCliente(String idCliente) async {
-    final url =
-        Uri.parse(urlApi + 'consultas_carrucel_cliente?idCliente=' + idCliente);
+    final url = Uri.parse(urlApi + 'consultas_carrucel_cliente?idCliente=' + idCliente);
     var response = await http.get(url);
     var respuestaImagen = jsonDecode(response.body);
     for (var valor in respuestaImagen) {
@@ -90,9 +86,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
   }
 
   consultaInformacion(String idCliente) async {
-    final urlApi = Uri.parse(
-        "https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_general?idCliente=" +
-            idCliente);
+    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_general?idCliente=" + idCliente);
     var response = await http.get(urlApi);
     List<dynamic> resp = json.decode(response.body);
     Map<String, dynamic> decodedResp = resp.first;
@@ -103,33 +97,17 @@ class _InformacionMedicoState extends State<InformacionMedico> {
   }
 
   consultarCedulas(String idCliente) async {
-    final urlApi = Uri.parse(
-        "https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_cedula?idCliente=" +
-            idCliente);
+    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_cedula?idCliente=" + idCliente);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
     for (var data in jsonBody) {
-      clieEs.add(new ModeloCedulas(
-          data['idcliente'],
-          data['idcedula'],
-          data['tipoCedula'],
-          data['cedula'],
-          data['escuela'],
-          data['cliente_idcliente']));
+      clieEs.add(new ModeloCedulas(data['idcliente'], data['idcedula'], data['tipoCedula'], data['cedula'], data['escuela'], data['cliente_idcliente']));
     }
     for (int i = 0; i < clieEs.length; i++) {
       if (clieEs.elementAt(i).escuela == null)
-        listaCedulas.add(clieEs.elementAt(i).tipoCedula.toString() +
-            "//" +
-            clieEs.elementAt(i).cedula.toString() +
-            "\n");
+        listaCedulas.add(clieEs.elementAt(i).tipoCedula.toString() + "//" + clieEs.elementAt(i).cedula.toString() + "\n");
       else
-        listaCedulas.add(clieEs.elementAt(i).tipoCedula.toString() +
-            "//" +
-            clieEs.elementAt(i).cedula.toString() +
-            "//" +
-            clieEs.elementAt(i).escuela.toString() +
-            "\n");
+        listaCedulas.add(clieEs.elementAt(i).tipoCedula.toString() + "//" + clieEs.elementAt(i).cedula.toString() + "//" + clieEs.elementAt(i).escuela.toString() + "\n");
       for (int j = 0; j < listaCedulas.length; j++) {
         resultados += listaCedulas.elementAt(j);
         listaCedulas.clear();
@@ -138,19 +116,11 @@ class _InformacionMedicoState extends State<InformacionMedico> {
   }
 
   consultarServicios(String idCliente) async {
-    final urlApi = Uri.parse(
-        "https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_servicios?idCliente=" +
-            idCliente);
+    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_servicios?idCliente=" + idCliente);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
     for (var data in jsonBody) {
-      modeloServ.add(new ModeloServicios(
-          data['idcliente'],
-          data['idservicios'],
-          data['nombre'],
-          data['descripcion'],
-          data['costo'],
-          data['cliente_idcliente']));
+      modeloServ.add(new ModeloServicios(data['idcliente'], data['idservicios'], data['nombre'], data['descripcion'], data['costo'], data['cliente_idcliente']));
     }
     for (int i = 0; i < modeloServ.length; i++) {
       listaServicios.add(modeloServ.elementAt(i).nombre.toString() + ",");
@@ -162,17 +132,11 @@ class _InformacionMedicoState extends State<InformacionMedico> {
   }
 
   conusultarFormasDePago(String idCliente) async {
-    final urlApi = Uri.parse(
-        "https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_formaPago?idCliente=" +
-            idCliente);
+    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_formaPago?idCliente=" + idCliente);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
     for (var data in jsonBody) {
-      modeloFp.add(new ModeloFormasPago(
-          data['idcliente'],
-          data['formasPago_idformasPago'],
-          data['cliente_idcliente'],
-          data['nombre']));
+      modeloFp.add(new ModeloFormasPago(data['idcliente'], data['formasPago_idformasPago'], data['cliente_idcliente'], data['nombre']));
     }
     for (int i = 0; i < modeloFp.length; i++) {
       listaFomasPago.add(modeloFp.elementAt(i).nombre.toString() + "\n");
@@ -184,14 +148,21 @@ class _InformacionMedicoState extends State<InformacionMedico> {
   }
 
   consultarDireccion(String idCliente) async {
-    final urlApi = Uri.parse(
-        "https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_direcciones?idCliente=" +
-            idCliente);
+    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_direcciones?idCliente=" + idCliente);
     var response = await http.get(urlApi);
     List<dynamic> resp = json.decode(response.body);
-    Map<String, dynamic> decodedResp = resp.first;
-    modeloDireccion = ModeloDireccion.jsonFrom(decodedResp);
-    print(modeloDireccion.direccion);
+    // Map<String, dynamic> decodedResp;
+    // print("reesp");
+    // print(resp);
+
+    // if (resp.length > 0) {
+    //   decodedResp = resp.first;
+    // } else {
+    //   decodedResp = Map<String, dynamic>();
+    // }
+    if (resp.length > 0) {
+      modeloDireccion = ModeloDireccion.jsonFrom(resp[0]);
+    }
   }
 
   @override
@@ -203,6 +174,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
             image: DecorationImage(
               image: AssetImage('assets/fondoPrincipal.jpg'),
               fit: BoxFit.cover,
+              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.8), BlendMode.dstATop),
               //colorFilter: ColorFilter.mode(Colors.white,)
             ),
           ),
@@ -210,67 +182,71 @@ class _InformacionMedicoState extends State<InformacionMedico> {
         Scaffold(
           backgroundColor: Colors.transparent,
           drawerEnableOpenDragGesture: false,
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 50,
-                ),
-    //carrucelPersonal(),
-                imagenMedico(),
-                informacionPersonal(),
-                if (modeloDireccion.direccion == null ||
-                    modeloDireccion.direccion.toString().isEmpty)
-                  Visibility(visible: false, child: direccion())
-                else
-                  direccion(),
-                if (modelo.telefono1 == null || modelo.telefono1.toString().isEmpty)
-                  Visibility(visible: false, child: telefono1())
-                else
-                  telefono1(),
-                if (modelo.telefono2 == null || modelo.telefono2.toString().isEmpty)
-                  Visibility(visible: false, child: telefono2())
-                else
-                  telefono2(),
-                if (modelo.telefono_emergencias == null ||
-                    modelo.telefono_emergencias.toString().isEmpty)
-                  Visibility(visible: false, child: telEmergencia())
-                else
-                  telEmergencia(),
-                if (modelo.whatsapp == null || modelo.whatsapp.toString().isEmpty)
-                  Visibility(visible: false, child: whatSapp())
-                else
-                  whatSapp(),
-                if (modelo.facebook == null || modelo.facebook.toString().isEmpty)
-                  Visibility(visible: false, child: facebook())
-                else
-                  facebook(),
-                if (modelo.instagram == null || modelo.instagram.toString().isEmpty)
-                  Visibility(visible: false, child: instragam())
-                else
-                  instragam(),
-                if (modelo.twitter == null || modelo.twitter.toString().isEmpty)
-                  Visibility(visible: false, child: twitter())
-                else
-                twitter(),
-                if (modelo.pagina_web == null ||
-                modelo.pagina_web.toString().isEmpty)
-                Visibility(visible: false, child: paginaWeb())
-                else
-                paginaWeb(),
-                if (modelo.e_mail == null || modelo.e_mail.toString().isEmpty)
-                Visibility(visible: false, child: email())
-                else
-                email(),
-                if (listaCarrucelPersonal.isEmpty)
-                Visibility(visible: false, child: carrucelPersonal())
-                else
-                  carrucelPersonal(),
-              ],
-            ),
-          ),
+          body: this.cargando
+              ? SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 50,
+                      ),
+                      //carrucelPersonal(),
+                      imagenMedico(),
+                      (resultados.isEmpty && resServicios.isEmpty && resFp.isEmpty) ? Container() : informacionPersonal(),
+
+                      Card(
+                          child: Column(
+                        children: [
+                          Container(
+                              margin: EdgeInsets.only(top: 5), child: Center(child: Text("Contactanos", style: GoogleFonts.montserrat(fontSize: 13, color: Colors.blue, fontWeight: FontWeight.bold)))),
+                          if (modeloDireccion.direccion == null || modeloDireccion.direccion.toString().isEmpty) Visibility(visible: false, child: direccion()) else direccion(),
+                          if (modelo.telefono1 == null || modelo.telefono1.toString().isEmpty) ...[Visibility(visible: false, child: telefono1())] else ...[telefono1()],
+                          if (modelo.telefono2 == null || modelo.telefono2.toString().isEmpty) ...[
+                            Visibility(visible: false, child: telefono2())
+                          ] else ...[
+                            Divider(color: Colors.grey.shade500),
+                            telefono2()
+                          ],
+                          if (modelo.telefono_emergencias == null || modelo.telefono_emergencias.toString().isEmpty) ...[
+                            Visibility(visible: false, child: telEmergencia())
+                          ] else ...[
+                            Divider(color: Colors.grey.shade500),
+                            telEmergencia()
+                          ],
+                          if (modelo.whatsapp == null || modelo.whatsapp.toString().isEmpty) ...[
+                            Visibility(visible: false, child: whatSapp())
+                          ] else ...[
+                            Divider(color: Colors.grey.shade500),
+                            whatSapp()
+                          ],
+                          if (modelo.facebook == null || modelo.facebook.toString().isEmpty) ...[
+                            Visibility(visible: false, child: facebook())
+                          ] else ...[
+                            Divider(color: Colors.grey.shade500),
+                            facebook()
+                          ],
+                          if (modelo.instagram == null || modelo.instagram.toString().isEmpty) ...[
+                            Visibility(visible: false, child: instragam())
+                          ] else ...[
+                            Divider(color: Colors.grey.shade500),
+                            instragam()
+                          ],
+                          if (modelo.twitter == null || modelo.twitter.toString().isEmpty) ...[Visibility(visible: false, child: twitter())] else ...[Divider(color: Colors.grey.shade500), twitter()],
+                          if (modelo.pagina_web == null || modelo.pagina_web.toString().isEmpty) ...[
+                            Visibility(visible: false, child: paginaWeb())
+                          ] else ...[
+                            Divider(color: Colors.grey.shade500),
+                            paginaWeb()
+                          ],
+                          if (modelo.e_mail == null || modelo.e_mail.toString().isEmpty) ...[Visibility(visible: false, child: email())] else ...[Divider(color: Colors.grey.shade500), email()],
+                          if (listaCarrucelPersonal.isEmpty) ...[Visibility(visible: false, child: carrucelPersonal())] else ...[Divider(color: Colors.grey.shade500), carrucelPersonal()],
+                        ],
+                      ))
+                    ],
+                  ),
+                )
+              : Center(child: CircularProgressIndicator(color: Colors.white)),
           bottomNavigationBar: CurvedNavigationBar(
-    //color: Color(int.parse(widget.colorEdo)),
+            //color: Color(int.parse(widget.colorEdo)),
             height: 40,
             onTap: (index) {
               setState(() {
@@ -279,8 +255,8 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                   showDialog(context: context, builder: createDialog);
                 }
               });
-              },
-    //currentIndex: _paginaActual,
+            },
+            //currentIndex: _paginaActual,
             items: [
               Icon(Icons.home),
             ],
@@ -292,61 +268,50 @@ class _InformacionMedicoState extends State<InformacionMedico> {
 
   imagenMedico() {
     final card = Container(
+      width: MediaQuery.of(context).size.width,
       //clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           if (widget.imagenCategoria == 'null')
             FadeInImage(
+              height: 140,
               image: NetworkImage(urlApi + 'images/doctor.png'),
               placeholder: AssetImage('assets/jar-loading.gif'),
               fadeInDuration: Duration(milliseconds: 200),
               //height: 230.0,
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
             )
           else
             FadeInImage(
+              height: 140,
               image: NetworkImage(urlApi + 'images/' + widget.imagenCategoria),
               placeholder: AssetImage('assets/jar-loading.gif'),
               fadeInDuration: Duration(milliseconds: 200),
               //height: 230.0,
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
             ),
           Container(
               padding: EdgeInsets.all(10.0),
               child: Column(
                 children: [
-                  Text(widget.nombreMedico,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.montserrat(
-                          fontSize: 12, color: Colors.blue)),
-                  if (modelo.descripcion_espe == null ||
-                      modelo.descripcion_espe.toString().isEmpty)
-                    Visibility(
-                        visible: false,
-                        child: Text(modelo.descripcion_espe.toString()))
+                  Text(widget.nombreMedico, textAlign: TextAlign.center, style: GoogleFonts.montserrat(fontSize: 12, color: Colors.blue, fontWeight: FontWeight.bold)),
+                  if (modelo.descripcion_espe == null || modelo.descripcion_espe.toString().isEmpty)
+                    Visibility(visible: false, child: Text(modelo.descripcion_espe.toString()))
                   else
-                    Text(modelo.descripcion_espe.toString(),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.montserrat(
-                            fontSize: 12, color: Colors.blue)),
-                  if (modelo.datos_extra == null ||
-                      modelo.datos_extra.toString().isEmpty)
-                    Visibility(
-                        visible: false,
-                        child: Text(modelo.datos_extra.toString()))
+                    Text(modelo.descripcion_espe.toString(), textAlign: TextAlign.center, style: GoogleFonts.montserrat(fontSize: 12, color: Colors.black)),
+                  if (modelo.datos_extra == null || modelo.datos_extra.toString().isEmpty)
+                    Visibility(visible: false, child: Text(modelo.datos_extra.toString()))
                   else
-                    Text(modelo.datos_extra.toString(),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.montserrat(
-                            fontSize: 12, color: Colors.blue)),
+                    Text(modelo.datos_extra.toString(), textAlign: TextAlign.center, style: GoogleFonts.montserrat(fontSize: 12, color: Colors.black)),
                 ],
               )),
         ],
       ),
     );
     return Container(
+      margin: EdgeInsets.only(left: 4, right: 4),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(10.0),
         color: Colors.white,
         boxShadow: <BoxShadow>[
           BoxShadow(
@@ -358,7 +323,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(10.0),
         child: card,
       ),
     );
@@ -372,71 +337,40 @@ class _InformacionMedicoState extends State<InformacionMedico> {
             children: [
               Expanded(
                 child: Container(
+                  padding: EdgeInsets.all(12),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (resultados.isEmpty)
-                        Visibility(visible: false, child: Text("Cedulas:"))
+                        Visibility(visible: false, child: Text("Cedulas:", style: TextStyle(fontWeight: FontWeight.bold)))
                       else
-                        Center(
-                            child: Text("Cedulas:",
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 13, color: Colors.blue))),
+                        Center(child: Text("Cedulas:", style: GoogleFonts.montserrat(fontSize: 13, color: Colors.blue, fontWeight: FontWeight.bold))),
                       if (resultados.isEmpty)
                         Visibility(visible: false, child: Text(resultados))
                       else
-                        Center(
-                            child: Text(resultados,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.montserrat(fontSize: 13))),
+                        Center(child: Text(resultados, textAlign: TextAlign.center, style: GoogleFonts.montserrat(fontSize: 13))),
                       if (resServicios.isEmpty)
-                        Visibility(visible: false, child: Text("Servicios:"))
+                        Visibility(visible: false, child: Text("Servicios:", style: TextStyle(fontWeight: FontWeight.bold)))
                       else
-                        Center(
-                            child: Text("Servicios:",
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 13, color: Colors.blue))),
+                        Center(child: Text("Servicios:", style: GoogleFonts.montserrat(fontSize: 13, color: Colors.blue, fontWeight: FontWeight.bold))),
                       if (resServicios.isEmpty)
-                        Visibility(visible: false, child: Text(resServicios))
+                        Visibility(visible: false, child: Text(resServicios, textAlign: TextAlign.left))
                       else
-                        Center(
-                            child: Text(resServicios,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.montserrat(fontSize: 13))),
+                        Center(child: Text(resServicios, textAlign: TextAlign.left, style: GoogleFonts.montserrat(fontSize: 13))),
                       if (resFp.isEmpty)
-                        Visibility(
-                            visible: false, child: Text("Formas de pago :"))
+                        Visibility(visible: false, child: Text("Formas de pago :", style: TextStyle(fontWeight: FontWeight.bold)))
                       else
-                        Center(
-                            child: Text("Formas de pago:",
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 13, color: Colors.blue))),
-                      if (resFp.isEmpty)
-                        Visibility(visible: false, child: Text(resFp))
-                      else
-                        Center(
-                            child: Text(resFp,
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.montserrat(fontSize: 13))),
-                      if (modelo.horario == null ||
-                          modelo.horario.toString().isEmpty)
+                        Center(child: Text("Formas de pago:", style: GoogleFonts.montserrat(fontSize: 13, color: Colors.blue, fontWeight: FontWeight.bold))),
+                      if (resFp.isEmpty) Visibility(visible: false, child: Text(resFp)) else Center(child: Text(resFp, textAlign: TextAlign.center, style: GoogleFonts.montserrat(fontSize: 13))),
+                      if (modelo.horario == null || modelo.horario.toString().isEmpty)
                         Visibility(visible: false, child: Text("Horarios:"))
                       else
-                        Center(
-                            child: Text("Horarios:",
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 13, color: Colors.blue))),
-                      if (modelo.horario == null ||
-                          modelo.horario.toString().isEmpty)
-                        Visibility(
-                            visible: false,
-                            child: Text(modelo.horario.toString()))
+                        Center(child: Text("Horarios:", style: GoogleFonts.montserrat(fontSize: 13, color: Colors.blue, fontWeight: FontWeight.bold))),
+                      if (modelo.horario == null || modelo.horario.toString().isEmpty)
+                        Visibility(visible: false, child: Text(modelo.horario.toString()))
                       else
-                        Center(
-                            child: Text(modelo.horario.toString(),
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.montserrat(fontSize: 13))),
+                        Center(child: Text(modelo.horario.toString(), textAlign: TextAlign.center, style: GoogleFonts.montserrat(fontSize: 13))),
                     ],
                   ),
                 ),
@@ -474,9 +408,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(modeloDireccion.direccion.toString(),
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.montserrat(fontSize: 13)),
+                        Text(modeloDireccion.direccion.toString(), textAlign: TextAlign.center, style: GoogleFonts.montserrat(fontSize: 13)),
                       ],
                     ),
                   ),
@@ -497,43 +429,42 @@ class _InformacionMedicoState extends State<InformacionMedico> {
           //launch()
         });
       },
-      child: Column(
+      child: Container(
+          // margin: EdgeInsets.only(left: 16, right: 16),
+          child: Column(
         children: [
           Card(
-            child: Row(
-              children: [
-                Container(
-                  width: 30.0,
-                  height: 40.0,
-                  child: Image.asset('assets/telefono.png'),
-                ),
-                SizedBox(
-                  width: 2.5,
-                ),
-                Expanded(
-                  child: Container(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if(widget.nombreMedico == "FARMACIAS DEL AHORRO")
-                          Center(
-                              child: Text('LLAMAR (click)',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.montserrat(fontSize: 13)))
-                        else Center(
-                            child: Text('Telefono (Agendar Cita)',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.montserrat(fontSize: 13))),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+              elevation: 0,
+              child: Container(
+                  padding: EdgeInsets.all(5),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 30.0,
+                        height: 40.0,
+                        child: Image.asset('assets/telefono.png'),
+                      ),
+                      SizedBox(
+                        width: 2.5,
+                      ),
+                      Expanded(
+                        child: Container(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (widget.nombreMedico == "FARMACIAS DEL AHORRO")
+                                Center(child: Text('LLAMAR', textAlign: TextAlign.center, style: GoogleFonts.montserrat(fontSize: 13)))
+                              else
+                                Center(child: Text('Telefono (Agendar Cita)', textAlign: TextAlign.center, style: GoogleFonts.montserrat(fontSize: 13))),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ))),
         ],
-      ),
+      )),
     );
   }
 
@@ -561,9 +492,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                            child: Text('Telefono',
-                                style: GoogleFonts.montserrat(fontSize: 13))),
+                        Center(child: Text('Telefono', style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -584,6 +513,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       child: Column(
         children: [
           Card(
+            elevation: 0,
             child: Row(
               children: [
                 Container(
@@ -600,9 +530,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                            child: Text('Telefono Emergencia',
-                                style: GoogleFonts.montserrat(fontSize: 13))),
+                        Center(child: Text('Telefono Emergencia', style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -625,6 +553,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       child: Column(
         children: [
           Card(
+            elevation: 0,
             child: Row(
               children: [
                 Container(
@@ -641,9 +570,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                            child: Text('Whatsapp',
-                                style: GoogleFonts.montserrat(fontSize: 13))),
+                        Center(child: Text('Whatsapp', style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -666,6 +593,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       child: Column(
         children: [
           Card(
+            elevation: 0,
             child: Row(
               children: [
                 Container(
@@ -682,9 +610,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                            child: Text('Facebook',
-                                style: GoogleFonts.montserrat(fontSize: 13))),
+                        Center(child: Text('Facebook', style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -723,9 +649,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                            child: Text('Instagram',
-                                style: GoogleFonts.montserrat(fontSize: 13))),
+                        Center(child: Text('Instagram', style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -758,9 +682,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(
-                          child: Text('Twitter',
-                              style: GoogleFonts.montserrat(fontSize: 13))),
+                      Center(child: Text('Twitter', style: GoogleFonts.montserrat(fontSize: 13))),
                     ],
                   ),
                 ),
@@ -799,9 +721,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                            child: Text('Pagina Web',
-                                style: GoogleFonts.montserrat(fontSize: 13))),
+                        Center(child: Text('Pagina Web', style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
@@ -824,6 +744,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       child: Column(
         children: [
           Card(
+            elevation: 0,
             child: Row(
               children: [
                 Container(
@@ -840,9 +761,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                            child: Text('E-mail',
-                                style: GoogleFonts.montserrat(fontSize: 13))),
+                        Center(child: Text('E-mail', style: GoogleFonts.montserrat(fontSize: 13))),
                       ],
                     ),
                   ),
