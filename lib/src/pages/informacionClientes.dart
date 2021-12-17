@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:salud_y_mas/apps/ui/pages/home/home_page.dart';
 import 'package:salud_y_mas/src/models/modeloCedulas.dart';
 import 'package:salud_y_mas/src/models/modeloDireccion.dart';
 import 'package:salud_y_mas/src/models/modeloFormasPago.dart';
@@ -386,7 +387,8 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          googleMaps(modeloDireccion.direccion.toString());
+          //googleMaps(modeloDireccion.direccion.toString());
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePageGoogle()));
         });
       },
       child: Column(
