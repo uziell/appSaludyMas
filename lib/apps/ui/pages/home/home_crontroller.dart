@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart' as permission;
 import 'package:salud_y_mas/apps/helpers/image_to_bytes.dart';
 import 'package:salud_y_mas/apps/ui/utils/map_style.dart';
 import 'package:salud_y_mas/src/models/modeloDireccion.dart';
+import 'dart:math';
 
 class HomeController extends ChangeNotifier {
   final Map<MarkerId, Marker> _markers = {};
@@ -35,6 +36,10 @@ class HomeController extends ChangeNotifier {
 
   String _polylineId = '0';
   String _polygonId = '0';
+  double _distancia = 0;
+  double get distancia => _distancia;
+  double _tiempo = 0;
+  double get tiempo => _tiempo;
 
   HomeController(String? latitudDestino, String? longitudDestino, ModeloDireccion? direccion) {
     _init(latitudDestino, longitudDestino, direccion);
@@ -46,6 +51,7 @@ class HomeController extends ChangeNotifier {
     );
     _gpsEnable = await Geolocator.isLocationServiceEnabled();
     _loading = false;
+    notifyListeners();
     _gpssubscription = Geolocator.getServiceStatusStream().listen((status) async {
       _gpsEnable = status == ServiceStatus.enabled;
       if (_gpsEnable) {
@@ -128,7 +134,28 @@ class HomeController extends ChangeNotifier {
     _markers[markerId] = marker;
     _lastPosition = position;
 
+    // _distancia = Geolocator.distanceBetween(position.latitude, position.longitude, double.parse(latitudDestino), double.parse(longitudDestino));
+    _distancia = calcularDistancia(position.latitude, position.longitude, double.parse(latitudDestino), double.parse(longitudDestino));
+
+    print("distancia a ${position.latitude}, ${position.longitude}");
+    print("distancia b $latitudDestino, $longitudDestino");
+    _tiempo = (_distancia * 1000) / 100;
+
+    if (tiempo >= 60) {
+      _tiempo = _tiempo / 60;
+    }
+
+    print("tiempo");
+    print(tiempo);
+
     onTap(position, latitudDestino, longitudDestino);
+  }
+
+  double calcularDistancia(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 - c((lat2 - lat1) * p) / 2 + c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
   }
 
   void onMapCreated(GoogleMapController controller) {
@@ -160,6 +187,7 @@ class HomeController extends ChangeNotifier {
     } else {
       final color = Colors.primaries[_polylies.length];
       polyline = Polyline(
+        geodesic: true,
         visible: true,
         polylineId: polylineId,
         points: [LatLng(position.latitude, position.longitude), LatLng(double.parse(latitudDestino), double.parse(longitudDestino))],
