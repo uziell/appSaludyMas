@@ -1,6 +1,3 @@
-
-
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -23,12 +20,10 @@ class _RequestPermissionPageState extends State<RequestPermissionPage> {
     // TODO: implement initState
     super.initState();
     _subscription = _controller.onStatusChanged.listen((status) {
-
-      if(status == PermissionStatus.granted){
+      if (status == PermissionStatus.granted) {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePageGoogle()));
       }
     });
-
   }
 
   @override
@@ -38,6 +33,7 @@ class _RequestPermissionPageState extends State<RequestPermissionPage> {
     _controller.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +44,7 @@ class _RequestPermissionPageState extends State<RequestPermissionPage> {
           alignment: Alignment.center,
           child: ElevatedButton(
             child: Text("Allow"),
-            onPressed: (){
+            onPressed: () {
               _controller.request();
             },
           ),

@@ -1,55 +1,83 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:salud_y_mas/apps/ui/pages/home/home_crontroller.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:salud_y_mas/src/models/modeloDireccion.dart';
 
 class MapView extends StatefulWidget {
-  const MapView({Key? key}) : super(key: key);
+  final ModeloDireccion? direccion;
+  const MapView({Key? key, this.direccion}) : super(key: key);
 
   @override
   _MapViewState createState() => _MapViewState();
 }
 
 class _MapViewState extends State<MapView> {
+  bool verificarPermiso = false;
+  @override
+  void initState() {
+    print("hola");
+    this.verificarPermisos();
+    super.initState();
+  }
+
+  verificarPermisos() async {
+    //Verifico si aceptó o no los permisos
+    final status = await Permission.location.request();
+
+    if (status.isGranted) {
+      verificarPermiso = true;
+    } else {
+      verificarPermiso = false;
+    }
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeController>(
-      builder: (_,controller,gpsMessageWidget){
-        if(!controller.gpsEnable){
+      builder: (_, controller, gpsMessageWidget) {
+        if (!controller.gpsEnable) {
           return gpsMessageWidget!;
         }
-        final initialCamaraPosition = CameraPosition(target:
-        LatLng(
-          controller.initialPosition!.latitude,
-          controller.initialPosition!.longitude,
-        ),
-          zoom: 15,
+
+        if (!verificarPermiso) {
+          this.verificarPermisos();
+        }
+        final initialCamaraPosition = CameraPosition(
+          target: LatLng(double.parse(widget.direccion!.latitud.toString()), double.parse(widget.direccion!.longitud.toString())),
+          zoom: 14,
         );
+
+        print("pasa por aqui");
+
+        for (var c in controller.polylies) {
+          print(c.points);
+        }
         return GoogleMap(
           onMapCreated: controller.onMapCreated,
-         // polygons: controller.polygons,
+          // polygons: controller.polygons,
           polylines: controller.polylies,
           initialCameraPosition: initialCamaraPosition,
           myLocationButtonEnabled: true,
           myLocationEnabled: true,
-          markers:controller.markers,
-          onTap: controller.onTap,
+          markers: controller.markers,
+          // onTap: controller.onTap,
         );
       },
       child: Center(
         child: Column(
-          mainAxisSize:  MainAxisSize.min,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text("PARA UTILIZAR LA APLICACION DEBE ENCENDER SU GPS"),
             ElevatedButton(
-                onPressed: (){
+                onPressed: () {
                   final controller = context.read<HomeController>();
                   controller.turnGPS();
                 },
-                child: Text("Turn GPS")
-            ),
+                child: Text("Encender GPS")),
           ],
         ),
       ),

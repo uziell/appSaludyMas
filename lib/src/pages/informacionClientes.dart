@@ -29,7 +29,7 @@ class InformacionMedico extends StatefulWidget {
 class _InformacionMedicoState extends State<InformacionMedico> {
   String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
   ModeloInformacionMedico modelo = new ModeloInformacionMedico('', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
-  ModeloDireccion modeloDireccion = new ModeloDireccion('', '');
+  ModeloDireccion modeloDireccion = new ModeloDireccion('', '', '0', '0');
   List<ModeloCedulas> clieEs = [];
   List<String> listaCedulas = [];
   String resultados = "";
@@ -92,15 +92,13 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     List<dynamic> resp = json.decode(response.body);
     Map<String, dynamic> decodedResp = resp.first;
     modelo = ModeloInformacionMedico.fromJson(decodedResp);
-
-    print('json: ' + resp.toString());
-    print(modelo.descripcion_espe);
   }
 
   consultarCedulas(String idCliente) async {
     final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_cedula?idCliente=" + idCliente);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
+
     for (var data in jsonBody) {
       clieEs.add(new ModeloCedulas(data['idcliente'], data['idcedula'], data['tipoCedula'], data['cedula'], data['escuela'], data['cliente_idcliente']));
     }
@@ -120,6 +118,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_servicios?idCliente=" + idCliente);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
+
     for (var data in jsonBody) {
       modeloServ.add(new ModeloServicios(data['idcliente'], data['idservicios'], data['nombre'], data['descripcion'], data['costo'], data['cliente_idcliente']));
     }
@@ -136,6 +135,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_formaPago?idCliente=" + idCliente);
     var response = await http.get(urlApi);
     var jsonBody = json.decode(response.body);
+
     for (var data in jsonBody) {
       modeloFp.add(new ModeloFormasPago(data['idcliente'], data['formasPago_idformasPago'], data['cliente_idcliente'], data['nombre']));
     }
@@ -152,6 +152,8 @@ class _InformacionMedicoState extends State<InformacionMedico> {
     final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consulta_cliente_direcciones?idCliente=" + idCliente);
     var response = await http.get(urlApi);
     List<dynamic> resp = json.decode(response.body);
+    print("Dirección");
+    print(resp);
     // Map<String, dynamic> decodedResp;
     // print("reesp");
     // print(resp);
@@ -388,7 +390,7 @@ class _InformacionMedicoState extends State<InformacionMedico> {
       onTap: () {
         setState(() {
           //googleMaps(modeloDireccion.direccion.toString());
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePageGoogle()));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePageGoogle(direccion: modeloDireccion)));
         });
       },
       child: Column(
