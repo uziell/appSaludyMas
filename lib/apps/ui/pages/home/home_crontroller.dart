@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart' show ChangeNotifier, ImageConfiguration, Offset;
@@ -9,6 +10,7 @@ import 'package:salud_y_mas/apps/helpers/image_to_bytes.dart';
 import 'package:salud_y_mas/apps/ui/utils/map_style.dart';
 import 'package:salud_y_mas/src/models/modeloDireccion.dart';
 import 'dart:math';
+import 'package:http/http.dart' as http;
 
 class HomeController extends ChangeNotifier {
   final Map<MarkerId, Marker> _markers = {};
@@ -81,33 +83,25 @@ class HomeController extends ChangeNotifier {
     }
     bool _initialized = false;
     await _positionsubscription?.cancel();
-    _positionsubscription = Geolocator.getPositionStream().listen((position) async {
-      _setMyPositionMarker(position, latitudDestino, longitudDestino, direccion);
-      if (_initialized) {
-        notifyListeners();
-      }
-      if (!_initialized) {
-        _setInitialPosition(position);
-        _initialized = true;
-        notifyListeners();
-      }
 
-      if (_mapController != null) {
-        final zoom = await _mapController!.getZoomLevel();
-        final cameraUpdate = CameraUpdate.newLatLngZoom(
-          LatLng(position.latitude, position.longitude),
-          zoom,
-        );
-        _mapController!.animateCamera(cameraUpdate);
-      }
-    }, onError: (e) {
-      print("Erroor....");
-      print(e);
-      if (e is LocationServiceDisabledException) {
-        _gpsEnable = false;
-        notifyListeners();
-      }
-    });
+    var position = await Geolocator.getCurrentPosition();
+    // _positionsubscription = Geolocator.getPositionStream().((position) async {
+    _setMyPositionMarker(position, latitudDestino, longitudDestino, direccion);
+
+    if (!_initialized) {
+      _setInitialPosition(position);
+      _initialized = true;
+      notifyListeners();
+    }
+
+    if (_mapController != null) {
+      final zoom = await _mapController!.getZoomLevel();
+      final cameraUpdate = CameraUpdate.newLatLngZoom(
+        LatLng(position.latitude, position.longitude),
+        zoom,
+      );
+      _mapController!.animateCamera(cameraUpdate);
+    }
   }
 
   void _setInitialPosition(Position position) {
@@ -117,7 +111,7 @@ class HomeController extends ChangeNotifier {
     }
   }
 
-  void _setMyPositionMarker(Position position, latitudDestino, longitudDestino, ModeloDireccion? direccion) {
+  void _setMyPositionMarker(Position position, latitudDestino, longitudDestino, ModeloDireccion? direccion) async {
     double rotation = 0;
     if (_lastPosition != null) {
       rotation = Geolocator.bearingBetween(_lastPosition!.latitude, _lastPosition!.longitude, position.latitude, position.longitude);
@@ -135,20 +129,46 @@ class HomeController extends ChangeNotifier {
     _lastPosition = position;
 
     // _distancia = Geolocator.distanceBetween(position.latitude, position.longitude, double.parse(latitudDestino), double.parse(longitudDestino));
-    _distancia = calcularDistancia(position.latitude, position.longitude, double.parse(latitudDestino), double.parse(longitudDestino));
+    // _distancia = calcularDistancia(position.latitude, position.longitude, double.parse(latitudDestino), double.parse(longitudDestino));
 
-    print("distancia a ${position.latitude}, ${position.longitude}");
-    print("distancia b $latitudDestino, $longitudDestino");
-    _tiempo = (_distancia * 1000) / 100;
+    var objDis = await obtenerDistanciaTiempoMapbox(position.latitude, position.longitude, double.parse(latitudDestino), double.parse(longitudDestino));
 
-    if (tiempo >= 60) {
+    _distancia = objDis['routes'][0]['distance'] / 1000;
+    _tiempo = objDis['routes'][0]['duration'] / 60;
+
+    print("geometry");
+    print(objDis['routes'][0]['geometry']['coordinates']);
+
+    List coordenadas = objDis['routes'][0]['geometry']['coordinates'];
+
+    if (_tiempo >= 60) {
       _tiempo = _tiempo / 60;
     }
 
-    print("tiempo");
-    print(tiempo);
+    List<LatLng> puntos = [];
 
-    onTap(position, latitudDestino, longitudDestino);
+    for (int i = 0; i < coordenadas.length; i++) {
+      var latitudSplit = coordenadas[i].toString().split(',');
+      var longitudSplit = coordenadas[i].toString().split(',');
+
+      var latitud = latitudSplit[1].split(']');
+      var longitud = longitudSplit[0].split('[');
+      print("primer split");
+      print("${latitud[0]}");
+      print("${longitud[1]}");
+
+      puntos.add(LatLng(double.parse(latitud[0].toString()), double.parse(longitud[1].toString())));
+    }
+    onTap(position, latitudDestino, longitudDestino, puntos);
+  }
+
+  obtenerDistanciaTiempoMapbox(latitud, longitud, latitudDestino, longitudDestino) async {
+    final urlApi = Uri.parse(
+        "https://api.mapbox.com/directions/v5/mapbox/driving/$longitud,$latitud;$longitudDestino,$latitudDestino?geometries=geojson&access_token=pk.eyJ1IjoidXppZWxsIiwiYSI6ImNreGdzdTBrNjAxMzUydm84cGVuYjhsdTIifQ.NV5w6a3syc4AwKQ-V4FKDQ");
+    var response = await http.get(urlApi);
+    var resp = json.decode(response.body);
+
+    return resp;
   }
 
   double calcularDistancia(lat1, lon1, lat2, lon2) {
@@ -175,7 +195,7 @@ class HomeController extends ChangeNotifier {
     _polylineId = DateTime.now().microsecondsSinceEpoch.toString();
   }
 
-  void onTap(Position position, String latitudDestino, String longitudDestino) async {
+  void onTap(Position position, String latitudDestino, String longitudDestino, List<LatLng> puntos) async {
     final PolylineId polylineId = PolylineId(_polylineId);
     late Polyline polyline;
     if (_polylies.containsKey(polylineId)) {
@@ -190,9 +210,9 @@ class HomeController extends ChangeNotifier {
         geodesic: true,
         visible: true,
         polylineId: polylineId,
-        points: [LatLng(position.latitude, position.longitude), LatLng(double.parse(latitudDestino), double.parse(longitudDestino))],
+        points: puntos,
         width: 5,
-        color: color,
+        color: Colors.blue,
         startCap: Cap.roundCap,
         endCap: Cap.roundCap,
       );
