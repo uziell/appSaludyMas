@@ -21,12 +21,15 @@ class _HomePageState extends State<HomePage> {
   //VARIBLE PARA ALMACENAR LOS DATOS DEL JSON DE CONSULTAR ESTADOS
   List<dynamic> nombreEdo = [];
   String vistaCiudad = "Seleccione una ciudad";
+  bool _cargando = false;
 
   @override
   initState() {
     super.initState();
     consultarAPIEstados().then((resultado) {
-      setState(() {});
+      setState(() {
+        this._cargando = true;
+      });
     });
   }
 
@@ -53,43 +56,45 @@ class _HomePageState extends State<HomePage> {
       ),
       Scaffold(
           backgroundColor: Colors.transparent,
-          body: Container(
-              child: SingleChildScrollView(
-            child: Column(children: [
-              Padding(padding: EdgeInsetsDirectional.all(38)),
-              Card(
-                margin: EdgeInsets.symmetric(horizontal: 40, vertical: 4),
-                color: Colors.transparent,
-                elevation: 0,
-                child: Row(
-                  children: [
-                    Container(
+          body: _cargando
+              ? Container(
+                  child: SingleChildScrollView(
+                  child: Column(children: [
+                    Padding(padding: EdgeInsetsDirectional.all(38)),
+                    Card(
+                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 4),
                       color: Colors.transparent,
-                      width: 120.0,
-                      height: 80.0,
-                      child: Image.asset('assets/ubicacionPantallaPrincipal.png'),
-                    ),
-                    SizedBox(
-                      width: 2.5,
-                    ),
-                    Expanded(
-                      child: Container(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('UBICACIÓN', style: GoogleFonts.montserrat(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold)),
-                          ],
-                        ),
+                      elevation: 0,
+                      child: Row(
+                        children: [
+                          Container(
+                            color: Colors.transparent,
+                            width: 120.0,
+                            height: 80.0,
+                            child: Image.asset('assets/ubicacionPantallaPrincipal.png'),
+                          ),
+                          SizedBox(
+                            width: 2.5,
+                          ),
+                          Expanded(
+                            child: Container(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('UBICACIÓN', style: GoogleFonts.montserrat(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-              cardCiudad(),
-              //listaEstados(),
-            ]),
-          )))
+                    cardCiudad(),
+                    //listaEstados(),
+                  ]),
+                ))
+              : Center(child: CircularProgressIndicator()))
     ]);
   }
 
@@ -121,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                         height: size.height / nombreEdo.length,
                         width: 140,
                         decoration: BoxDecoration(
-                            boxShadow: [BoxShadow(blurRadius: 0.5, spreadRadius: 0.5, offset: Offset(6, 6))],
+                            boxShadow: [BoxShadow(blurRadius: 0.1, spreadRadius: 0.1, offset: Offset(6, 6), color: Colors.grey.shade400)],
                             //color: const Color(0xff00838f),
                             border: Border.all(color: Colors.grey.shade300, width: 2),
                             borderRadius: BorderRadius.circular(26),
