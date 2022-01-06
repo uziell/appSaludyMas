@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:salud_y_mas/src/pages/login_page.dart';
 import 'dart:convert';
 import 'package:salud_y_mas/src/pages/pantalla_categorias_ciudad.dart';
 
@@ -22,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   List<dynamic> nombreEdo = [];
   String vistaCiudad = "Seleccione una ciudad";
   bool _cargando = false;
+  int _paginaActual = 0;
 
   @override
   initState() {
@@ -44,7 +48,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
+    return Stack(
+        children: [
       Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -94,7 +99,24 @@ class _HomePageState extends State<HomePage> {
                     //listaEstados(),
                   ]),
                 ))
-              : Center(child: CircularProgressIndicator()))
+              : Center(
+              child: CircularProgressIndicator()),
+        bottomNavigationBar: CurvedNavigationBar(
+          height: 40,
+          onTap: (index) {
+          setState(() {
+            _paginaActual = index;
+            if (_paginaActual == 0) {
+              showDialog(context: context, builder: createDialog);
+            }
+          });
+        },
+        //currentIndex: _paginaActual,
+           items: [
+          Icon(Icons.person),
+           ],
+        ),
+      ),
     ]);
   }
 
@@ -140,4 +162,18 @@ class _HomePageState extends State<HomePage> {
           .toList(),
     );
   }
+
+  Widget createDialog(BuildContext context) => CupertinoAlertDialog(
+    title: Text('Ir al login'),
+    actions: [
+      CupertinoDialogAction(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+            return LoginPage();
+          }));
+        },
+      ),
+    ],
+  );
 }
