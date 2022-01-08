@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:salud_y_mas/src/pages/login_page.dart';
 
 class RegistrarUsuarios extends StatefulWidget {
   const RegistrarUsuarios({Key? key}) : super(key: key);
@@ -243,7 +244,10 @@ class _RegistrarUsuariosState extends State<RegistrarUsuarios> {
                     + " "+usuario.toString() + "" +pass.toString() + " "+idciudad.toString() + " "+ idestado.toString());
                 insertarUsuario();
                 if(res != 0){
-
+                  Navigator.of(context).push(
+                      MaterialPageRoute<Null>(builder: (BuildContext context) {
+                        return LoginPage();
+                      }));
                 }
               }
 
