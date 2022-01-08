@@ -9,10 +9,10 @@ import 'package:salud_y_mas/src/pages/login_page.dart';
 import 'dart:convert';
 import 'package:salud_y_mas/src/pages/pantalla_categorias_ciudad.dart';
 
-void main() => runApp(HomePage());
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+
+   HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _paginaActual = index;
             if (_paginaActual == 0) {
-              showDialog(context: context, builder: createDialog);
+              //showDialog(context: context, builder: createDialog);
             }
           });
         },

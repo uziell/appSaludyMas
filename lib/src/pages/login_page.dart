@@ -1,8 +1,13 @@
 
 
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:salud_y_mas/src/pages/pantalla_inicio.dart';
 import 'package:salud_y_mas/src/pages/registrarClientes.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -12,6 +17,22 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
+  String usuario='';
+  String pass = '';
+  var datos;
+  String? nombre;
+  String? paterno;
+
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    mostrarDatos();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -113,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                   )
               ),
               onChanged: (value){
-
+                usuario = value.toString();
               },
             ),
           );
@@ -142,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                 )
               ),
               onChanged: (value){
-
+                pass = value.toString();
               },
             ),
           );
@@ -160,8 +181,23 @@ class _LoginPageState extends State<LoginPage> {
               "Ingresar"
             ),
               onPressed: (){
+              if(usuario.toString().isEmpty && pass.toString().isEmpty){
+                print("USUARIO O PASSWORD INCORRECTOS");
+                showDialog(context: context, builder: createDialog);
+              }else{
+                ingresar(usuario.toString(), pass.toString());
 
+                if(datos != '0'){
+
+                    guardar_datos(datos[0]['nombre'], datos[0]['paterno']);
+                    Navigator.of(context).push(
+                        MaterialPageRoute<Null>(builder: (BuildContext context) {
+                          return HomePage();
+                        }));
+
+                }
               }
+            }
 
           );
         }
@@ -176,11 +212,12 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(width: 10),
         GestureDetector(
          onTap: (){
-           Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+           Navigator.of(context).push(
+               MaterialPageRoute<Null>(builder: (BuildContext context) {
              return RegistrarUsuarios();
            }));
          },
-         child: Text("Registrase", style: TextStyle(
+         child: Text("Registrarse", style: TextStyle(
            color: Colors.blue,
            fontWeight: FontWeight.bold,
          ),),
@@ -188,4 +225,55 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
   }
+
+  void ingresar(String string, String string2) async {
+
+    final url = Uri.parse(urlApi+'login');
+    var response = await http.post(url,
+        body:
+        "{"
+            +"\"usuario\":\""+usuario.toString()+"\""
+            +","
+            +"\"pass\":\""+pass.toString()+"\"}"
+    );
+
+    datos = json.decode(response.body);
+    print(datos);
+  }
+
+  Future<void> guardar_datos(String? nombre,String? paterno) async {
+    print("esto hay en guardar datos  "+ nombre.toString());
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString('nombre', nombre.toString());
+    await pref.setString('paterno', paterno.toString());
+  }
+
+  Future<void> mostrarDatos() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    nombre = await pref.get('nombre') as String?;
+    paterno = await pref.get('paterno') as String?;
+
+
+      if(nombre != null){
+        MaterialPageRoute<Null>(builder: (BuildContext context) {
+          return HomePage();
+        });
+
+    }
+
+    print(nombre.toString()+ " " +paterno.toString());
+  }
+
+  Widget createDialog(BuildContext context) => CupertinoAlertDialog(
+    title: Text('USUARIO O PASSWORD INCORRECTOS'),
+    actions: [
+      CupertinoDialogAction(
+        child: Text("OK"),
+        onPressed: () {
+          Navigator.of(context, rootNavigator: true).pop();
+        },
+      ),
+    ],
+  );
+
 }
