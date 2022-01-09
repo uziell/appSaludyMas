@@ -37,10 +37,6 @@ class _LandingState extends State<Landing> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-            child: Image.asset(
-      'assets/Saludymas.png',
-      color: Color.fromRGBO(23, 27, 68, 1),
-      width: 200,
-    )));
+            child: CircularProgressIndicator()));
   }
 }
