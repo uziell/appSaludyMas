@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:salud_y_mas/preferences/preferences.dart';
 import 'package:salud_y_mas/src/pages/pantalla_inicio.dart';
 import 'package:salud_y_mas/src/pages/registrarClientes.dart';
 import 'package:http/http.dart' as http;
@@ -16,7 +17,11 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> 
+
+{
+
+  AppPreferences prefs = AppPreferences();
   String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
   String usuario='';
   String pass = '';
@@ -180,16 +185,23 @@ class _LoginPageState extends State<LoginPage> {
             child: Text(
               "Ingresar"
             ),
-              onPressed: (){
+              onPressed: ()async {
               if(usuario.toString().isEmpty && pass.toString().isEmpty){
                 print("USUARIO O PASSWORD INCORRECTOS");
                 showDialog(context: context, builder: createDialog);
               }else{
-                ingresar(usuario.toString(), pass.toString());
+                await ingresar(usuario.toString(), pass.toString());
 
                 if(datos != '0'){
 
-                    guardar_datos(datos[0]['nombre'], datos[0]['paterno']);
+                    prefs.logIn = true;
+
+                    print("da");
+                    print(datos[0]['nombre']);
+                    print(datos[0]['paterno']);
+                    prefs.nombre = datos[0]['nombre'];
+                    prefs.paterno = datos[0]['paterno'];
+                    // guardar_datos(datos[0]['nombre'], datos[0]['paterno']);
                     Navigator.of(context).push(
                         MaterialPageRoute<Null>(builder: (BuildContext context) {
                           return HomePage();
@@ -226,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void ingresar(String string, String string2) async {
+  Future ingresar(String string, String string2) async {
 
     final url = Uri.parse(urlApi+'login');
     var response = await http.post(url,
