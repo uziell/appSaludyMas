@@ -14,8 +14,7 @@ import 'package:salud_y_mas/src/pages/pantalla_categorias_ciudad.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class HomePage extends StatefulWidget {
-
-   HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -31,9 +30,8 @@ class _HomePageState extends State<HomePage> {
   int _paginaActual = 0;
   AppPreferences prefs = AppPreferences();
 
-
   @override
-  initState()  {
+  initState() {
     super.initState();
     consultarAPIEstados().then((resultado) {
       setState(() {
@@ -46,18 +44,18 @@ class _HomePageState extends State<HomePage> {
       alerta(message);
       print(message);
     });
-
   }
+
   alerta(String s) {
     return CupertinoAlertDialog(
       title: Text(s),
-      actions: [
-      ],
+      actions: [],
     );
   }
+
   void main() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await PushNotificationProvider.initialAPP();
+    // await PushNotificationProvider.initialAPP();
   }
 
 //METODO PARA CONSULTAR LOS ESTADOS LOS CUAL CONTIENE NOMBRE, IMAGEN Y UN COLOR ASIGANDO POR EL ADMINISTRADOR
@@ -71,8 +69,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-        children: [
+    return Stack(children: [
       Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -83,61 +80,60 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       Scaffold(
-          backgroundColor: Colors.transparent,
-          body: _cargando
-              ? Container(
-                  child: SingleChildScrollView(
-                  child: Column(children: [
-                    Padding(padding: EdgeInsetsDirectional.all(38)),
-                    Card(
-                      margin: EdgeInsets.symmetric(horizontal: 40, vertical: 4),
-                      color: Colors.transparent,
-                      elevation: 0,
-                      child: Row(
-                        children: [
-                          Container(
-                            color: Colors.transparent,
-                            width: 120.0,
-                            height: 80.0,
-                            child: Image.asset('assets/ubicacionPantallaPrincipal.png'),
-                          ),
-                          SizedBox(
-                            width: 2.5,
-                          ),
-                          Expanded(
-                            child: Container(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('UBICACIÓN', style: GoogleFonts.montserrat(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold)),
-                                ],
-                              ),
+        backgroundColor: Colors.transparent,
+        body: _cargando
+            ? Container(
+                child: SingleChildScrollView(
+                child: Column(children: [
+                  Padding(padding: EdgeInsetsDirectional.all(38)),
+                  Card(
+                    margin: EdgeInsets.symmetric(horizontal: 40, vertical: 4),
+                    color: Colors.transparent,
+                    elevation: 0,
+                    child: Row(
+                      children: [
+                        Container(
+                          color: Colors.transparent,
+                          width: 120.0,
+                          height: 80.0,
+                          child: Image.asset('assets/ubicacionPantallaPrincipal.png'),
+                        ),
+                        SizedBox(
+                          width: 2.5,
+                        ),
+                        Expanded(
+                          child: Container(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('UBICACIÓN', style: GoogleFonts.montserrat(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold)),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    cardCiudad(),
-                    //listaEstados(),
-                  ]),
-                ))
-              : Center(
-              child: CircularProgressIndicator()),
+                  ),
+                  cardCiudad(),
+                  //listaEstados(),
+                ]),
+              ))
+            : Center(child: CircularProgressIndicator()),
         bottomNavigationBar: CurvedNavigationBar(
           height: 40,
           onTap: (index) {
-          setState(() {
-            _paginaActual = index;
-            if (_paginaActual == 0) {
-              showDialog(context: context, builder: createDialog);
-            }
-          });
-        },
-        //currentIndex: _paginaActual,
-           items: [
-          Icon(Icons.close),
-           ],
+            setState(() {
+              _paginaActual = index;
+              if (_paginaActual == 0) {
+                showDialog(context: context, builder: createDialog);
+              }
+            });
+          },
+          //currentIndex: _paginaActual,
+          items: [
+            Icon(Icons.close),
+          ],
         ),
       ),
     ]);
@@ -187,24 +183,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget createDialog(BuildContext context) => CupertinoAlertDialog(
-    title: Text('¿Desea cerrar sesión?'),
-    actions: [
-      CupertinoDialogAction(
-        child: Text("Ok"),
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-            prefs.clear();
-            return LoginPage();
-          }));
-
-        },
-      ),
-      CupertinoDialogAction(
-        child: Text("Cancelar"),
-        onPressed: () {
-          Navigator.of(context, rootNavigator: true).pop();
-        },
-      ),
-    ],
-  );
+        title: Text('¿Desea cerrar sesión?'),
+        actions: [
+          CupertinoDialogAction(
+            child: Text("Ok"),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+                prefs.clear();
+                return LoginPage();
+              }));
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text("Cancelar"),
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop();
+            },
+          ),
+        ],
+      );
 }

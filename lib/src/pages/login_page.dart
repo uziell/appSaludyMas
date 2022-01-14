@@ -198,6 +198,8 @@ class _LoginPageState extends State<LoginPage> {
                 prefs.nombre = datos[0]['nombre'];
                 prefs.paterno = datos[0]['paterno'];
 
+                //Necesito inicializarlo aquí ya que si no, no agarrará lo del topic
+                await PushNotificationProvider.initialAPP();
                 //Utilizo esto para que pueda ingresarse en un topic (tag) es decir si es YUCATAN a todos los de YUCATAN les llegará la notificación
                 await PushNotificationProvider.firebaseMessaging.subscribeToTopic("${datos[0]['estado_idestado']}");
                 // guardar_datos(datos[0]['nombre'], datos[0]['paterno']);
