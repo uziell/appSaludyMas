@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:salud_y_mas/preferences/preferences.dart';
@@ -36,7 +37,9 @@ class _LoginPageState extends State<LoginPage>
     // TODO: implement initState
     super.initState();
     mostrarDatos();
+
   }
+
 
   @override
   Widget build(BuildContext context) {

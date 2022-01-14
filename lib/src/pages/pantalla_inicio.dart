@@ -1,14 +1,17 @@
 import 'dart:async';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:salud_y_mas/notification_providers/push_notification_providers.dart';
+import 'package:salud_y_mas/preferences/preferences.dart';
 import 'package:salud_y_mas/src/pages/login_page.dart';
 import 'dart:convert';
 import 'package:salud_y_mas/src/pages/pantalla_categorias_ciudad.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -26,15 +29,35 @@ class _HomePageState extends State<HomePage> {
   String vistaCiudad = "Seleccione una ciudad";
   bool _cargando = false;
   int _paginaActual = 0;
+  AppPreferences prefs = AppPreferences();
+
 
   @override
-  initState() {
+  initState()  {
     super.initState();
     consultarAPIEstados().then((resultado) {
       setState(() {
         this._cargando = true;
       });
     });
+
+    main();
+    PushNotificationProvider.messageStream.listen((message) {
+      alerta(message);
+      print(message);
+    });
+
+  }
+  alerta(String s) {
+    return CupertinoAlertDialog(
+      title: Text(s),
+      actions: [
+      ],
+    );
+  }
+  void main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await PushNotificationProvider.initialAPP();
   }
 
 //METODO PARA CONSULTAR LOS ESTADOS LOS CUAL CONTIENE NOMBRE, IMAGEN Y UN COLOR ASIGANDO POR EL ADMINISTRADOR
@@ -107,13 +130,13 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _paginaActual = index;
             if (_paginaActual == 0) {
-              //showDialog(context: context, builder: createDialog);
+              showDialog(context: context, builder: createDialog);
             }
           });
         },
         //currentIndex: _paginaActual,
            items: [
-          Icon(Icons.person),
+          Icon(Icons.close),
            ],
         ),
       ),
@@ -164,14 +187,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget createDialog(BuildContext context) => CupertinoAlertDialog(
-    title: Text('Ir al login'),
+    title: Text('¿Desea cerrar sesión?'),
     actions: [
       CupertinoDialogAction(
-        child: Text("OK"),
+        child: Text("Ok"),
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+            prefs.clear();
             return LoginPage();
           }));
+
+        },
+      ),
+      CupertinoDialogAction(
+        child: Text("Cancelar"),
+        onPressed: () {
+          Navigator.of(context, rootNavigator: true).pop();
         },
       ),
     ],
