@@ -13,6 +13,8 @@
 
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyASUyPEqyl3x3d2eirIxKrTjJAao9NqcrA"/>
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_launcher" />
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -40,6 +42,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

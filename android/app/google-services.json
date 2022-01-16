@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "909682687135",
+    "project_id": "saludymas-e48b8",
+    "storage_bucket": "saludymas-e48b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:909682687135:android:0befe63bbf07564fc976aa",
+        "android_client_info": {
+          "package_name": "com.saludymas.appsaludymas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "909682687135-e8gjj508r2nuqsq2oqtk0hrkrq07u1s1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.saludymas.appsaludymas",
+            "certificate_hash": "eba87212a56216b5153bd2caed0a2418a48c2ac3"
+          }
+        },
+        {
+          "client_id": "909682687135-unenomot6dqs9ngrn4lsr0k20l6cm697.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdJAje8Au0e-NIHxgv4Vh4QSmQTsXnPic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "909682687135-unenomot6dqs9ngrn4lsr0k20l6cm697.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

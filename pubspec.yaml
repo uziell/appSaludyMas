@@ -41,6 +41,11 @@ dependencies:
   geolocator: ^8.0.1
   flutter_lints: ^1.0.4
   flutter_cache_manager: ^3.3.0
+  shared_preferences: ^2.0.5
+  firebase_messaging: ^11.2.5
+  firebase_core : ^1.10.0
+  flutter_pdfview: ^1.2.1
+  path_provider: ^2.0.8
 
 
 dev_dependencies:
@@ -54,6 +59,7 @@ flutter_icons:
   ios: true
   image_path: "assets/icon/Saludymas.png"
   adaptive_icon_background: "assets/icon/Saludymas.png"
+  
 
 flutter:
 
