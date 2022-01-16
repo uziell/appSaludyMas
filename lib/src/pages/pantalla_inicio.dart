@@ -38,20 +38,18 @@ class _HomePageState extends State<HomePage> {
         this._cargando = true;
       });
     });
-
     main();
     PushNotificationProvider.messageStream.listen((message) {
-      alerta(message);
-      print(message);
+    //  showDialog(context: context, builder: createDialog);
+      //si mando a llamar aca el metodo de cerrar secion si lo hace
+      //pero si le paso mis argumentos no lo acepta
+     // showDialog(context: context, builder: );
+
+
     });
   }
 
-  alerta(String s) {
-    return CupertinoAlertDialog(
-      title: Text(s),
-      actions: [],
-    );
-  }
+
 
   void main() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -190,6 +188,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
                 prefs.clear();
+
                 return LoginPage();
               }));
             },
@@ -202,4 +201,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       );
+
+
 }

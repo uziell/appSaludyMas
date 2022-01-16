@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,15 +12,24 @@ class PushNotificationProvider {
   static Stream<String> get messageStream => _stramController.stream;
 
   static Future _backgroundHandler(RemoteMessage message) async {
+   // print(message.notification?.title);
+  //  alert(message);
     _stramController.sink.add(message.notification?.body ?? 'No title');
   }
 
-  static Future _onMessaggeHandler(RemoteMessage message) async {
-    _stramController.sink.add(message.notification?.body ?? 'No title');
+  static  _onMessaggeHandler(RemoteMessage message) async {
+    print("ebtra ");
+    alert(message.notification?.body);
+    //print(message.notification?.body);
+    _stramController.sink.add(message.notification?.title ?? 'No title');
+    //alert();
   }
 
   static Future _onMessageOpenHandler(RemoteMessage message) async {
-    _stramController.sink.add(message.notification?.body ?? 'No title');
+   print("entra en funcion ");
+   print(message.notification?.body);
+  // alert("tu eres");
+    _stramController.sink.add(message.notification?.title ?? 'No title');
   }
 
   static Future initialAPP() async {
@@ -29,9 +37,7 @@ class PushNotificationProvider {
     token = await FirebaseMessaging.instance.getToken();
     print(":::: token ;;;;");
     print(token);
-
     //handlers
-
     FirebaseMessaging.onBackgroundMessage(_backgroundHandler);
     FirebaseMessaging.onMessage.listen(_onMessaggeHandler);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenHandler);
@@ -39,5 +45,21 @@ class PushNotificationProvider {
 
   static closeStrems() {
     _stramController.close();
+  }
+
+  static  alert(String? body) {
+    print("Metodo Alert");
+    return CupertinoAlertDialog(
+      title: Text(body!.toString()),
+      content: Text(body.toString()),
+      actions: [
+        CupertinoDialogAction(
+          child: Text("Cancelar"),
+          onPressed: () {
+            //Navigator.of(context, rootNavigator: true).pop();
+          },
+        ),
+      ],
+    );
   }
 }
