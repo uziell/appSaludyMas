@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salud_y_mas/notification_providers/push_notification_providers.dart';
 import 'package:salud_y_mas/preferences/preferences.dart';
 import 'package:salud_y_mas/src/pages/pantalla_inicio.dart';
 
@@ -15,17 +16,15 @@ class _LandingState extends State<Landing> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) => {
-           this.autentication()
-        });
-    
-   
+    WidgetsBinding.instance!
+        .addPostFrameCallback((_) => {this.autentication()});
   }
 
   Future<void> autentication() async {
     if (prefs.logIn) {
-      Navigator.of(context).push(
-          MaterialPageRoute<Null>(builder: (BuildContext context) {
+      await PushNotificationProvider.initialAPP();
+      Navigator.of(context)
+          .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
         return HomePage();
       }));
     } else {
@@ -35,8 +34,6 @@ class _LandingState extends State<Landing> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-            child: CircularProgressIndicator()));
+    return Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }

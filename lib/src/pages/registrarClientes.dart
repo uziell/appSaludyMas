@@ -162,7 +162,7 @@ class _RegistrarUsuariosState extends State<RegistrarUsuarios> {
   dropdownEstados() {
     return Container(
       color: Colors.white,
-      width: 350,
+     
       height: 70,
       padding: EdgeInsets.only(top: 5, bottom: 5, left: 0, right: 4),
       child: DropdownButtonFormField(

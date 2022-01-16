@@ -12,6 +12,7 @@ import 'package:salud_y_mas/src/pages/login_page.dart';
 import 'dart:convert';
 import 'package:salud_y_mas/src/pages/pantalla_categorias_ciudad.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:salud_y_mas/src/widgtes/alerts.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -40,18 +41,12 @@ class _HomePageState extends State<HomePage> {
     });
     main();
     PushNotificationProvider.messageStream.listen((message) {
-
       print("entra notificacióne");
       //si mando a llamar aca el metodo de cerrar secion si lo hace
       //pero si le paso mis argumentos no lo acepta
-     showDialog(context: context, builder: createDialog);
-
-
+       Alerts().dialogDinamico(context, 'Pones aqui tu titulo');
     });
   }
-
-
-
 
   void main() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -75,7 +70,8 @@ class _HomePageState extends State<HomePage> {
           image: DecorationImage(
             image: AssetImage('assets/fondoPrincipal.jpg'),
             fit: BoxFit.cover,
-            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.9), BlendMode.dstATop),
+            colorFilter: new ColorFilter.mode(
+                Colors.black.withOpacity(0.9), BlendMode.dstATop),
           ),
         ),
       ),
@@ -96,7 +92,8 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.transparent,
                           width: 120.0,
                           height: 80.0,
-                          child: Image.asset('assets/ubicacionPantallaPrincipal.png'),
+                          child: Image.asset(
+                              'assets/ubicacionPantallaPrincipal.png'),
                         ),
                         SizedBox(
                           width: 2.5,
@@ -107,7 +104,11 @@ class _HomePageState extends State<HomePage> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('UBICACIÓN', style: GoogleFonts.montserrat(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold)),
+                                Text('UBICACIÓN',
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 24,
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold)),
                               ],
                             ),
                           ),
@@ -126,7 +127,8 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               _paginaActual = index;
               if (_paginaActual == 0) {
-                showDialog(context: context, builder: createDialog);
+                showDialog(
+                    context: context, builder: Alerts().dialogCerrarSesion);
               }
             });
           },
@@ -155,7 +157,9 @@ class _HomePageState extends State<HomePage> {
           .map((e) => InkWell(
                 onTap: () {
                   //EN este navigator pasamos a la siguiente pantalla de las categorias por ciudad
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CategoriasCiudad(e['nombre'], e['colorEdo'])));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          CategoriasCiudad(e['nombre'], e['colorEdo'])));
                 },
                 child: Card(
                   margin: EdgeInsets.all(2),
@@ -167,11 +171,21 @@ class _HomePageState extends State<HomePage> {
                         height: size.height / nombreEdo.length,
                         width: 140,
                         decoration: BoxDecoration(
-                            boxShadow: [BoxShadow(blurRadius: 0.1, spreadRadius: 0.1, offset: Offset(6, 6), color: Colors.grey.shade400)],
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 0.1,
+                                  spreadRadius: 0.1,
+                                  offset: Offset(6, 6),
+                                  color: Colors.grey.shade400)
+                            ],
                             //color: const Color(0xff00838f),
-                            border: Border.all(color: Colors.grey.shade300, width: 2),
+                            border: Border.all(
+                                color: Colors.grey.shade300, width: 2),
                             borderRadius: BorderRadius.circular(26),
-                            image: DecorationImage(image: NetworkImage(urlApi + 'images/' + e['imagenEstado']), fit: BoxFit.fill)),
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                    urlApi + 'images/' + e['imagenEstado']),
+                                fit: BoxFit.fill)),
                       )
                       //Text(e['nombre'], style: TextStyle(color: Colors.blue),)
                     ],
@@ -181,28 +195,4 @@ class _HomePageState extends State<HomePage> {
           .toList(),
     );
   }
-
-  Widget createDialog(BuildContext context) => CupertinoAlertDialog(
-        title: Text('¿Desea cerrar sesión?'),
-        actions: [
-          CupertinoDialogAction(
-            child: Text("Ok"),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-                prefs.clear();
-
-                return LoginPage();
-              }));
-            },
-          ),
-          CupertinoDialogAction(
-            child: Text("Cancelar"),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
-            },
-          ),
-        ],
-      );
-
-
 }
