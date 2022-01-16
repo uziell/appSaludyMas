@@ -10,7 +10,7 @@ class PushNotificationProvider {
   static FirebaseApp? firebaseApp;
   static StreamController<String> _stramController = new StreamController.broadcast();
   static Stream<String> get messageStream => _stramController.stream;
-
+  static BuildContext? context;
   static Future _backgroundHandler(RemoteMessage message) async {
    // print(message.notification?.title);
   //  alert(message);
@@ -19,7 +19,7 @@ class PushNotificationProvider {
 
   static  _onMessaggeHandler(RemoteMessage message) async {
     print("ebtra ");
-    alert(message.notification?.body);
+   // alert(message.notification?.body);
     //print(message.notification?.body);
     _stramController.sink.add(message.notification?.title ?? 'No title');
     //alert();
@@ -28,7 +28,7 @@ class PushNotificationProvider {
   static Future _onMessageOpenHandler(RemoteMessage message) async {
    print("entra en funcion ");
    print(message.notification?.body);
-  // alert("tu eres");
+   alert(message);
     _stramController.sink.add(message.notification?.title ?? 'No title');
   }
 
@@ -47,18 +47,12 @@ class PushNotificationProvider {
     _stramController.close();
   }
 
-  static  alert(String? body) {
-    print("Metodo Alert");
-    return CupertinoAlertDialog(
-      title: Text(body!.toString()),
-      content: Text(body.toString()),
+  static alert(RemoteMessage message){
+    print("entra aqui");
+    return AlertDialog(
+      title: Text(message.notification?.title ?? 'title'),
+      content: Text(message.notification?.body ?? 'title'),
       actions: [
-        CupertinoDialogAction(
-          child: Text("Cancelar"),
-          onPressed: () {
-            //Navigator.of(context, rootNavigator: true).pop();
-          },
-        ),
       ],
     );
   }

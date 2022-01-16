@@ -40,7 +40,6 @@ class _HomePageState extends State<HomePage> {
     });
     main();
     PushNotificationProvider.messageStream.listen((message) {
-    //  showDialog(context: context, builder: createDialog);
       //si mando a llamar aca el metodo de cerrar secion si lo hace
       //pero si le paso mis argumentos no lo acepta
      // showDialog(context: context, builder: );
@@ -48,6 +47,7 @@ class _HomePageState extends State<HomePage> {
 
     });
   }
+
 
 
 
