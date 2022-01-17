@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>909682687135-nmcag3afsqoj9pj7jim11ukau6ekjt47.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.909682687135-nmcag3afsqoj9pj7jim11ukau6ekjt47</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>909682687135-e8gjj508r2nuqsq2oqtk0hrkrq07u1s1.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAlElx8UgcaoTR5UK0kHR2nPZjj2zTWAkw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>909682687135</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.saludymas.appsaludymas</string>
+	<key>PROJECT_ID</key>
+	<string>saludymas-e48b8</string>
+	<key>STORAGE_BUCKET</key>
+	<string>saludymas-e48b8.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:909682687135:ios:56a88b341d049129c976aa</string>
+</dict>
+</plist>

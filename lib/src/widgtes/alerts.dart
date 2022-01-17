@@ -12,13 +12,10 @@ class Alerts {
           CupertinoDialogAction(
             child: Text("Ok"),
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute<Null>(builder: (BuildContext context) {
-                FirebaseMessaging.instance.unsubscribeFromTopic(_prefs.estado);
-                _prefs.clear();
-
-                return LoginPage();
-              }));
+              FirebaseMessaging.instance.unsubscribeFromTopic(_prefs.estado);
+              _prefs.clear();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, 'login', (route) => false);
             },
           ),
           CupertinoDialogAction(

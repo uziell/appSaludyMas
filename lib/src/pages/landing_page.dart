@@ -22,7 +22,7 @@ class _LandingState extends State<Landing> {
 
   Future<void> autentication() async {
     if (prefs.logIn) {
-      await PushNotificationProvider.initialAPP();
+      //await PushNotificationProvider.initialAPP();
       Navigator.of(context)
           .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
         return HomePage();

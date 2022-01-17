@@ -159,7 +159,6 @@ class _LoginPageState extends State<LoginPage> {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 40.0),
         child: TextFormField(
-          keyboardType: TextInputType.number,
           obscureText: true,
           decoration: InputDecoration(
               hintText: ("Passsword"),
@@ -207,8 +206,6 @@ class _LoginPageState extends State<LoginPage> {
                   });
                   await ingresar(usuario.toString(), pass.toString());
 
-                 
-
                   if (datos != '0' && datos != 0) {
                     prefs.logIn = true;
 
@@ -221,22 +218,33 @@ class _LoginPageState extends State<LoginPage> {
                     prefs.paterno = datos[0]['paterno'];
                     prefs.estado = datos[0]['estado_idestado'];
 
-                    //Necesito inicializarlo aquí ya que si no, no agarrará lo del topic
-                    await PushNotificationProvider.initialAPP();
+                    print("subscribe");
+
+                    FirebaseMessaging.instance.requestPermission(
+                        sound: true,
+                        badge: true,
+                        alert: true,
+                        provisional: false);
+
                     //Utilizo esto para que pueda ingresarse en un topic (tag) es decir si es YUCATAN a todos los de YUCATAN les llegará la notificación
                     await PushNotificationProvider.firebaseMessaging
                         .subscribeToTopic("${prefs.estado}");
+
+                    print("termina subscribe");
+
                     // guardar_datos(datos[0]['nombre'], datos[0]['paterno']);
 
-
-                     this.setState(() {
-                    this.loading = false;
-                  });
+                    this.setState(() {
+                      this.loading = false;
+                    });
                     Navigator.of(context).push(MaterialPageRoute<Null>(
                         builder: (BuildContext context) {
                       return HomePage();
                     }));
                   } else {
+                    this.setState(() {
+                      this.loading = false;
+                    });
                     showDialog(context: context, builder: createDialog);
                   }
                 }
