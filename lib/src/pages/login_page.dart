@@ -19,6 +19,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool? loading = false;
   AppPreferences prefs = AppPreferences();
   String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
   String usuario = '';
@@ -43,7 +44,8 @@ class _LoginPageState extends State<LoginPage> {
             image: DecorationImage(
               image: AssetImage('assets/fondoPrincipal.jpg'),
               fit: BoxFit.cover,
-              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.9), BlendMode.dstATop),
+              colorFilter: new ColorFilter.mode(
+                  Colors.black.withOpacity(0.9), BlendMode.dstATop),
             ),
           ),
         ),
@@ -86,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           _crearCuenta(),
           SizedBox(
-            height: 15.0,
+            height: 45.0,
           ),
         ],
       ),
@@ -97,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
         color: Colors.white,
-        border: Border.all(color: Colors.blue, width: 2),
+        // border: Border.all(color: Colors.blue, width: 2),
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: Colors.black12,
@@ -127,9 +129,10 @@ class _LoginPageState extends State<LoginPage> {
 
   _TexFieldUser() {
     Size size = MediaQuery.of(context).size;
-    return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
+    return StreamBuilder(
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
       return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        padding: EdgeInsets.symmetric(horizontal: 40.0),
         child: TextFormField(
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
@@ -151,9 +154,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _TexfeldPassword() {
-    return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
+    return StreamBuilder(
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
       return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
+        padding: EdgeInsets.symmetric(horizontal: 40.0),
         child: TextFormField(
           keyboardType: TextInputType.number,
           obscureText: true,
@@ -176,41 +180,66 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _buttonAceptar() {
-    return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
-      return ElevatedButton(
-          style: ElevatedButton.styleFrom(primary: Colors.teal, textStyle: TextStyle(color: Colors.white)),
-          child: Text("Ingresar"),
-          onPressed: () async {
-            if (usuario.toString().isEmpty && pass.toString().isEmpty) {
-              print("USUARIO O PASSWORD INCORRECTOS");
-              showDialog(context: context, builder: createDialog);
-            } else {
-              await ingresar(usuario.toString(), pass.toString());
+    return StreamBuilder(
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+      return Container(
+          width: 400,
+          height: 45,
+          padding: EdgeInsets.symmetric(horizontal: 40.0),
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.teal,
+                  textStyle: TextStyle(color: Colors.white)),
+              child: !loading!
+                  ? Text("Iniciar sesión")
+                  : SizedBox(
+                      child: CircularProgressIndicator(color: Colors.white),
+                      height: 20.0,
+                      width: 20.0,
+                    ),
+              onPressed: () async {
+                if (usuario.toString().isEmpty && pass.toString().isEmpty) {
+                  print("USUARIO O PASSWORD INCORRECTOS");
+                  showDialog(context: context, builder: createDialog);
+                } else {
+                  this.setState(() {
+                    this.loading = true;
+                  });
+                  await ingresar(usuario.toString(), pass.toString());
 
-              if (datos != '0' && datos != 0) {
-                prefs.logIn = true;
+                 
 
-                print("datos");
-                print(datos[0]['estado_idestado']);
-                print(datos[0]['nombre']);
-                print(datos[0]['paterno']);
+                  if (datos != '0' && datos != 0) {
+                    prefs.logIn = true;
 
-                prefs.nombre = datos[0]['nombre'];
-                prefs.paterno = datos[0]['paterno'];
+                    print("datos");
+                    print(datos[0]['estado_idestado']);
+                    print(datos[0]['nombre']);
+                    print(datos[0]['paterno']);
 
-                //Necesito inicializarlo aquí ya que si no, no agarrará lo del topic
-                await PushNotificationProvider.initialAPP();
-                //Utilizo esto para que pueda ingresarse en un topic (tag) es decir si es YUCATAN a todos los de YUCATAN les llegará la notificación
-                await PushNotificationProvider.firebaseMessaging.subscribeToTopic("${datos[0]['estado_idestado']}");
-                // guardar_datos(datos[0]['nombre'], datos[0]['paterno']);
-                Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-                  return HomePage();
-                }));
-              } else {
-                showDialog(context: context, builder: createDialog);
-              }
-            }
-          });
+                    prefs.nombre = datos[0]['nombre'];
+                    prefs.paterno = datos[0]['paterno'];
+
+                    //Necesito inicializarlo aquí ya que si no, no agarrará lo del topic
+                    await PushNotificationProvider.initialAPP();
+                    //Utilizo esto para que pueda ingresarse en un topic (tag) es decir si es YUCATAN a todos los de YUCATAN les llegará la notificación
+                    await PushNotificationProvider.firebaseMessaging
+                        .subscribeToTopic("${datos[0]['estado_idestado']}");
+                    // guardar_datos(datos[0]['nombre'], datos[0]['paterno']);
+
+
+                     this.setState(() {
+                    this.loading = false;
+                  });
+                    Navigator.of(context).push(MaterialPageRoute<Null>(
+                        builder: (BuildContext context) {
+                      return HomePage();
+                    }));
+                  } else {
+                    showDialog(context: context, builder: createDialog);
+                  }
+                }
+              }));
     });
   }
 
@@ -222,7 +251,8 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(width: 10),
         GestureDetector(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+            Navigator.of(context)
+                .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
               return RegistrarUsuarios();
             }));
           },
@@ -240,7 +270,15 @@ class _LoginPageState extends State<LoginPage> {
 
   Future ingresar(String string, String string2) async {
     final url = Uri.parse(urlApi + 'login');
-    var response = await http.post(url, body: "{" + "\"usuario\":\"" + usuario.toString() + "\"" + "," + "\"pass\":\"" + pass.toString() + "\"}");
+    var response = await http.post(url,
+        body: "{" +
+            "\"usuario\":\"" +
+            usuario.toString() +
+            "\"" +
+            "," +
+            "\"pass\":\"" +
+            pass.toString() +
+            "\"}");
 
     datos = json.decode(response.body);
     print(datos);
