@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:salud_y_mas/preferences/preferences.dart';
@@ -13,6 +14,7 @@ class Alerts {
             onPressed: () {
               Navigator.of(context).push(
                   MaterialPageRoute<Null>(builder: (BuildContext context) {
+                FirebaseMessaging.instance.unsubscribeFromTopic(_prefs.estado);
                 _prefs.clear();
 
                 return LoginPage();
@@ -30,10 +32,9 @@ class Alerts {
 
   dialogNotificaciones(BuildContext context, text) {
     showDialog(
-      barrierDismissible: false,
+        barrierDismissible: false,
         context: context,
-        builder: (context) =>
-            CupertinoAlertDialog(
+        builder: (context) => CupertinoAlertDialog(
               title: Text(text),
               actions: [
                 CupertinoDialogAction(
@@ -45,29 +46,26 @@ class Alerts {
               ],
             ));
   }
-   dialogDinamico(BuildContext context, text){
-     showDialog(
-          context: context,
-          builder:(context)=> CupertinoAlertDialog(
-            title: Text(text),
-            actions: [
-              CupertinoDialogAction(
-                child: Text("Si"),
-                onPressed: () {
-              //Aqui pones lo que pondrás al picarl el botón
 
-                },
-              ),
-              CupertinoDialogAction(
-                child: Text("No"),
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop();
+  dialogDinamico(BuildContext context, text) {
+    showDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+              title: Text(text),
+              actions: [
+                CupertinoDialogAction(
+                  child: Text("Si"),
+                  onPressed: () {
+                    //Aqui pones lo que pondrás al picarl el botón
                   },
-              ),
-            ],
-          ));
-
-   }
-   
-
+                ),
+                CupertinoDialogAction(
+                  child: Text("No"),
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                ),
+              ],
+            ));
+  }
 }

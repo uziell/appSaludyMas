@@ -38,6 +38,12 @@ class AppPreferences {
     this.prefs!.setString('paterno', paterno);
   }
 
+  
+  String get estado => this.prefs!.getString('estado') ?? '';
+  set estado(String estado) {
+    this.prefs!.setString('estado', estado);
+  }
+
   //Metodo para limpiar todas las preferencias
   Future<bool> clear() async {
     var r = await prefs!.clear();
