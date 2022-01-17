@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
       print("entra notificacióne");
       //si mando a llamar aca el metodo de cerrar secion si lo hace
       //pero si le paso mis argumentos no lo acepta
-       Alerts().dialogDinamico(context, 'Pones aqui tu titulo');
+       Alerts().dialogNotificaciones(context, message);
     });
   }
 

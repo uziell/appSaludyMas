@@ -28,26 +28,44 @@ class Alerts {
         ],
       );
 
+  dialogNotificaciones(BuildContext context, text) {
+    showDialog(
+      barrierDismissible: false,
+        context: context,
+        builder: (context) =>
+            CupertinoAlertDialog(
+              title: Text(text),
+              actions: [
+                CupertinoDialogAction(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                ),
+              ],
+            ));
+  }
    dialogDinamico(BuildContext context, text){
      showDialog(
           context: context,
           builder:(context)=> CupertinoAlertDialog(
-        title: Text(text),
-        actions: [
-          CupertinoDialogAction(
-            child: Text("Si"),
-            onPressed: () {
+            title: Text(text),
+            actions: [
+              CupertinoDialogAction(
+                child: Text("Si"),
+                onPressed: () {
               //Aqui pones lo que pondrás al picarl el botón
-            },
-          ),
-          CupertinoDialogAction(
-            child: Text("No"),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
-            },
-          ),
-        ],
-      ));
+
+                },
+              ),
+              CupertinoDialogAction(
+                child: Text("No"),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  },
+              ),
+            ],
+          ));
 
    }
    
