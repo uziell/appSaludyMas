@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:badges/badges.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -119,12 +120,26 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
       Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-              elevation: 0,
-              backgroundColor: Color(int.parse(widget.colorEdo)),
-              title: Text(
-                widget.nombreEdo,
-                style: GoogleFonts.abrilFatface(),
-              )),
+            elevation: 0,
+            backgroundColor: Color(int.parse(widget.colorEdo)),
+            title: Text(
+              widget.nombreEdo,
+              style: GoogleFonts.abrilFatface(),
+            ),
+            actions: [
+              Badge(
+                position: BadgePosition.topEnd(top: 5, end: 3),
+                badgeColor: Colors.red,
+                badgeContent: Text('3', style: TextStyle(color: Colors.white)),
+                child: IconButton(
+                  icon: Icon(Icons.notifications),
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'notificaciones');
+                  },
+                ),
+              ),
+            ],
+          ),
           body: Container(
               padding: EdgeInsets.all(5),
               child: ListView(

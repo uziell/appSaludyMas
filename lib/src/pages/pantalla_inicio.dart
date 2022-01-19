@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:badges/badges.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage> {
       print("entra notificacióne");
       //si mando a llamar aca el metodo de cerrar secion si lo hace
       //pero si le paso mis argumentos no lo acepta
-       Alerts().dialogNotificaciones(context, message);
+      Alerts().dialogNotificaciones(context, message);
     });
   }
 
@@ -70,20 +71,38 @@ class _HomePageState extends State<HomePage> {
           image: DecorationImage(
             image: AssetImage('assets/fondoPrincipal.jpg'),
             fit: BoxFit.cover,
-            colorFilter: new ColorFilter.mode(
-                Colors.black.withOpacity(0.9), BlendMode.dstATop),
+            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.9), BlendMode.dstATop),
           ),
         ),
       ),
       Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Bienvenido: ${prefs.nombre} ${prefs.paterno}',
+            style: GoogleFonts.oswald(fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            Badge(
+              position: BadgePosition.topEnd(top: 5, end: 3),
+              badgeColor: Colors.red,
+              badgeContent: Text('3', style: TextStyle(color: Colors.white)),
+              child: IconButton(
+                icon: Icon(Icons.notifications),
+                onPressed: () {
+                  Navigator.pushNamed(context, 'notificaciones');
+                },
+              ),
+            ),
+          ],
+        ),
         backgroundColor: Colors.transparent,
         body: _cargando
             ? Container(
                 child: SingleChildScrollView(
                 child: Column(children: [
-                  Padding(padding: EdgeInsetsDirectional.all(38)),
+                  Padding(padding: EdgeInsets.only(left: 38, right: 38, top: 12)),
                   Card(
-                    margin: EdgeInsets.symmetric(horizontal: 40, vertical: 4),
+                    margin: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
                     color: Colors.transparent,
                     elevation: 0,
                     child: Row(
@@ -92,8 +111,7 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.transparent,
                           width: 120.0,
                           height: 80.0,
-                          child: Image.asset(
-                              'assets/ubicacionPantallaPrincipal.png'),
+                          child: Image.asset('assets/ubicacionPantallaPrincipal.png'),
                         ),
                         SizedBox(
                           width: 2.5,
@@ -104,11 +122,7 @@ class _HomePageState extends State<HomePage> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('UBICACIÓN',
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 24,
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.bold)),
+                                Text('UBICACIÓN', style: GoogleFonts.montserrat(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold)),
                               ],
                             ),
                           ),
@@ -127,8 +141,7 @@ class _HomePageState extends State<HomePage> {
             setState(() {
               _paginaActual = index;
               if (_paginaActual == 0) {
-                showDialog(
-                    context: context, builder: Alerts().dialogCerrarSesion);
+                showDialog(context: context, builder: Alerts().dialogCerrarSesion);
               }
             });
           },
@@ -157,9 +170,7 @@ class _HomePageState extends State<HomePage> {
           .map((e) => InkWell(
                 onTap: () {
                   //EN este navigator pasamos a la siguiente pantalla de las categorias por ciudad
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          CategoriasCiudad(e['nombre'], e['colorEdo'])));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CategoriasCiudad(e['nombre'], e['colorEdo'])));
                 },
                 child: Card(
                   margin: EdgeInsets.all(2),
@@ -171,21 +182,11 @@ class _HomePageState extends State<HomePage> {
                         height: size.height / nombreEdo.length,
                         width: 140,
                         decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 0.1,
-                                  spreadRadius: 0.1,
-                                  offset: Offset(6, 6),
-                                  color: Colors.grey.shade400)
-                            ],
+                            boxShadow: [BoxShadow(blurRadius: 0.1, spreadRadius: 0.1, offset: Offset(6, 6), color: Colors.grey.shade400)],
                             //color: const Color(0xff00838f),
-                            border: Border.all(
-                                color: Colors.grey.shade300, width: 2),
+                            border: Border.all(color: Colors.grey.shade300, width: 2),
                             borderRadius: BorderRadius.circular(26),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    urlApi + 'images/' + e['imagenEstado']),
-                                fit: BoxFit.fill)),
+                            image: DecorationImage(image: NetworkImage(urlApi + 'images/' + e['imagenEstado']), fit: BoxFit.fill)),
                       )
                       //Text(e['nombre'], style: TextStyle(color: Colors.blue),)
                     ],
