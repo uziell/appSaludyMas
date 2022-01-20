@@ -14,6 +14,8 @@ import 'dart:convert';
 import 'package:salud_y_mas/src/pages/pantalla_categorias_ciudad.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:salud_y_mas/src/widgtes/alerts.dart';
+import 'package:salud_y_mas/src/widgtes/appBarNotificaciones.dart';
+import 'package:salud_y_mas/src/widgtes/menu.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -42,10 +44,10 @@ class _HomePageState extends State<HomePage> {
     });
     main();
     PushNotificationProvider.messageStream.listen((message) {
-      print("entra notificacióne");
+      print("entra notificaciónes inicio");
       //si mando a llamar aca el metodo de cerrar secion si lo hace
       //pero si le paso mis argumentos no lo acepta
-      Alerts().dialogNotificaciones(context, message);
+      // Alerts().dialogNotificaciones(context, message);
     });
   }
 
@@ -76,25 +78,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Bienvenido: ${prefs.nombre} ${prefs.paterno}',
-            style: GoogleFonts.oswald(fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            Badge(
-              position: BadgePosition.topEnd(top: 5, end: 3),
-              badgeColor: Colors.red,
-              badgeContent: Text('3', style: TextStyle(color: Colors.white)),
-              child: IconButton(
-                icon: Icon(Icons.notifications),
-                onPressed: () {
-                  Navigator.pushNamed(context, 'notificaciones');
-                },
-              ),
-            ),
-          ],
-        ),
+        drawer: MenuPage(),
+        appBar: PreferredSize(preferredSize: Size.fromHeight(50.0), child: AppBarNotificaciones(titulo: 'Salud y más')),
         backgroundColor: Colors.transparent,
         body: _cargando
             ? Container(
@@ -135,21 +120,21 @@ class _HomePageState extends State<HomePage> {
                 ]),
               ))
             : Center(child: CircularProgressIndicator()),
-        bottomNavigationBar: CurvedNavigationBar(
-          height: 40,
-          onTap: (index) {
-            setState(() {
-              _paginaActual = index;
-              if (_paginaActual == 0) {
-                showDialog(context: context, builder: Alerts().dialogCerrarSesion);
-              }
-            });
-          },
-          //currentIndex: _paginaActual,
-          items: [
-            Icon(Icons.close),
-          ],
-        ),
+        // bottomNavigationBar: CurvedNavigationBar(
+        //   height: 40,
+        //   onTap: (index) {
+        //     setState(() {
+        //       _paginaActual = index;
+        //       if (_paginaActual == 0) {
+        //         showDialog(context: context, builder: Alerts().dialogCerrarSesion);
+        //       }
+        //     });
+        //   },
+        //   //currentIndex: _paginaActual,
+        //   items: [
+        //     Icon(Icons.close),
+        //   ],
+        // ),
       ),
     ]);
   }

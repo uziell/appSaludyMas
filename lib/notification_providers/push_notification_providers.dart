@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:salud_y_mas/src/requests/notificaciones_request.dart';
 
 class PushNotificationProvider {
   static late AndroidNotificationChannel channel;
@@ -12,8 +13,7 @@ class PushNotificationProvider {
   static FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   static String? token;
   static FirebaseApp? firebaseApp;
-  static StreamController<String> _stramController =
-      new StreamController.broadcast();
+  static StreamController<String> _stramController = new StreamController.broadcast();
   static Stream<String> get messageStream => _stramController.stream;
   static BuildContext? context;
 
@@ -23,17 +23,24 @@ class PushNotificationProvider {
     _stramController.sink.add(message.notification?.body ?? 'No title');
   }
 
-  /*static  _onMessaggeHandler(RemoteMessage message) async {
+  static _onMessaggeHandler(RemoteMessage message) async {
     print("ebtra ");
-   // alert(message.notification?.body);
+    // alert(message.notification?.body);
     //print(message.notification?.body);
-    _stramController.sink.add(message.notification?.title ?? 'No title');
+
+    var p = await NotificacionesRequest.registrarNotificacion(message.notification?.title, message.notification?.body);
+    print("notificacion re");
+    print(p);
+    _stramController.sink.add(message.notification?.body ?? 'No title');
     //alert();
-  }*/
+  }
 
   static Future _onMessageOpenHandler(RemoteMessage message) async {
     print("entra en funcion ");
     print(message.notification?.body);
+    var p = await NotificacionesRequest.registrarNotificacion(message.notification?.title, message.notification?.body);
+    print("notificacion on");
+    print(p);
     _stramController.sink.add(message.notification?.body ?? 'No title');
   }
 
@@ -62,8 +69,7 @@ class PushNotificationProvider {
       channel = const AndroidNotificationChannel(
         'high_importance_channel', // id
         'High Importance Notifications', // title
-        description:
-            'This channel is used for important notifications.', // description
+        description: 'This channel is used for important notifications.', // description
         importance: Importance.high,
       );
 
@@ -73,21 +79,17 @@ class PushNotificationProvider {
       ///
       /// We use this channel in the `AndroidManifest.xml` file to override the
       /// default FCM channel to enable heads up notifications.
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(channel);
+      await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
 
       /// Update the iOS foreground notification presentation options to allow
       /// heads up notifications.
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
+      await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
         alert: true,
         badge: true,
         sound: true,
       );
     }
-    //FirebaseMessaging.onMessage.listen(_onMessaggeHandler);
+    FirebaseMessaging.onMessage.listen(_onMessaggeHandler);
     FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenHandler);
   }
 

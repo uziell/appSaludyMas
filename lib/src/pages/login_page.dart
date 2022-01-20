@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   var datos;
   String? nombre;
   String? paterno;
-
+  bool visibilty = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -44,8 +44,7 @@ class _LoginPageState extends State<LoginPage> {
             image: DecorationImage(
               image: AssetImage('assets/fondoPrincipal.jpg'),
               fit: BoxFit.cover,
-              colorFilter: new ColorFilter.mode(
-                  Colors.black.withOpacity(0.9), BlendMode.dstATop),
+              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.9), BlendMode.dstATop),
             ),
           ),
         ),
@@ -129,8 +128,7 @@ class _LoginPageState extends State<LoginPage> {
 
   _TexFieldUser() {
     Size size = MediaQuery.of(context).size;
-    return StreamBuilder(
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
+    return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 40.0),
         child: TextFormField(
@@ -154,17 +152,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _TexfeldPassword() {
-    return StreamBuilder(
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
+    return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 40.0),
         child: TextFormField(
-          obscureText: true,
+          obscureText: !visibilty,
           decoration: InputDecoration(
               hintText: ("Passsword"),
               labelText: 'Password',
               fillColor: Colors.blue,
-              prefixIcon: Icon(Icons.password),
+              prefixIcon: Icon(Icons.lock),
+              suffixIcon: InkWell(
+                onTap: () => setState(() => visibilty = !visibilty),
+                child: Icon(!visibilty ? Icons.visibility : Icons.visibility_off),
+              ),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(10),
@@ -179,16 +180,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _buttonAceptar() {
-    return StreamBuilder(
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
+    return StreamBuilder(builder: (BuildContext context, AsyncSnapshot snapshot) {
       return Container(
           width: 400,
           height: 45,
           padding: EdgeInsets.symmetric(horizontal: 40.0),
           child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.teal,
-                  textStyle: TextStyle(color: Colors.white)),
+              style: ElevatedButton.styleFrom(primary: Colors.teal, textStyle: TextStyle(color: Colors.white)),
               child: !loading!
                   ? Text("Iniciar sesión")
                   : SizedBox(
@@ -220,15 +218,10 @@ class _LoginPageState extends State<LoginPage> {
 
                     print("subscribe");
 
-                    FirebaseMessaging.instance.requestPermission(
-                        sound: true,
-                        badge: true,
-                        alert: true,
-                        provisional: false);
+                    FirebaseMessaging.instance.requestPermission(sound: true, badge: true, alert: true, provisional: false);
 
                     //Utilizo esto para que pueda ingresarse en un topic (tag) es decir si es YUCATAN a todos los de YUCATAN les llegará la notificación
-                    await PushNotificationProvider.firebaseMessaging
-                        .subscribeToTopic("${prefs.estado}");
+                    await PushNotificationProvider.firebaseMessaging.subscribeToTopic("${prefs.estado}");
 
                     print("termina subscribe");
 
@@ -237,10 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                     this.setState(() {
                       this.loading = false;
                     });
-                    Navigator.of(context).push(MaterialPageRoute<Null>(
-                        builder: (BuildContext context) {
-                      return HomePage();
-                    }));
+                    Navigator.of(context).popAndPushNamed('inicio');
                   } else {
                     this.setState(() {
                       this.loading = false;
@@ -260,8 +250,7 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(width: 10),
         GestureDetector(
           onTap: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
+            Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
               return RegistrarUsuarios();
             }));
           },
@@ -279,15 +268,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future ingresar(String string, String string2) async {
     final url = Uri.parse(urlApi + 'login');
-    var response = await http.post(url,
-        body: "{" +
-            "\"usuario\":\"" +
-            usuario.toString() +
-            "\"" +
-            "," +
-            "\"pass\":\"" +
-            pass.toString() +
-            "\"}");
+    var response = await http.post(url, body: "{" + "\"usuario\":\"" + usuario.toString() + "\"" + "," + "\"pass\":\"" + pass.toString() + "\"}");
 
     datos = json.decode(response.body);
     print(datos);

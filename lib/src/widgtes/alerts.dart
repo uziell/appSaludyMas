@@ -14,8 +14,7 @@ class Alerts {
             onPressed: () {
               FirebaseMessaging.instance.unsubscribeFromTopic(_prefs.estado);
               _prefs.clear();
-              Navigator.pushNamedAndRemoveUntil(
-                  context, 'login', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
             },
           ),
           CupertinoDialogAction(

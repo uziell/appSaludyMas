@@ -1,15 +1,17 @@
 class Notificaciones {
-  final int? id;
+  final String? id;
   final String? titulo;
   final String? descripcion;
   final String? fechaHora;
+  final String? estadoNot;
 
-  Notificaciones({this.id, this.titulo, this.descripcion, this.fechaHora});
+  Notificaciones({this.id, this.titulo, this.descripcion, this.fechaHora, this.estadoNot});
 
   Notificaciones.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = json['idNotificacion'],
         titulo = json['titulo'],
-        descripcion = json['descripcion'],
+        descripcion = json['mensaje'],
+        estadoNot = json['estadoNot'],
         fechaHora = json['fechaHora'];
 
   static List<Notificaciones> toJsonList(List<dynamic> lista) {
