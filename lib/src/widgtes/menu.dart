@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:salud_y_mas/preferences/preferences.dart';
 import 'package:salud_y_mas/src/models/notificaciones_model.dart';
 import 'package:salud_y_mas/src/pages/notificaciones/notificaciones_page.dart';
+import 'package:salud_y_mas/src/pages/perfilUsuario.dart';
 
 import 'alerts.dart';
 
@@ -91,7 +92,7 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                       onTap: () {
                         if (ModalRoute.of(context)!.settings.name != "perfil") {
-                          Navigator.of(context).pushReplacementNamed('perfil');
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PerfilUsuario(_prefs.nombre)));
                         }
                       },
                     )),
@@ -99,8 +100,8 @@ class _MenuPageState extends State<MenuPage> {
                         child: ListTile(
                       hoverColor: Colors.purple,
                       contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      leading: Icon(Icons.notifications),
-                      title: Text(
+                          leading: Icon(Icons.notifications),
+                          title: Text(
                         "Notificaciones",
                         style: TextStyle(),
                       ),
