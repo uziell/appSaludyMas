@@ -17,7 +17,6 @@ class _RequestPermissionPageState extends State<RequestPermissionPage> {
   late StreamSubscription _subscription;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _subscription = _controller.onStatusChanged.listen((status) {
       if (status == PermissionStatus.granted) {
@@ -28,7 +27,6 @@ class _RequestPermissionPageState extends State<RequestPermissionPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _subscription.cancel();
     _controller.dispose();
     super.dispose();

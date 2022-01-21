@@ -1,7 +1,4 @@
-
-
-class InfMeClinicas{
-
+class InfMeClinicas {
   String? idCliente;
   String? nombreMedico;
   String? descripcion_espe;
