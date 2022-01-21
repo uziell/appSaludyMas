@@ -34,7 +34,7 @@ class _MapViewState extends State<MapView> {
     if (await Permission.location.isGranted) {
       verificarPermiso = true;
     } else {
-      final status = await Permission.location.request();
+      await Permission.location.request();
 
       verificarPermiso = false;
       verificarPermisos();
@@ -55,8 +55,7 @@ class _MapViewState extends State<MapView> {
           this.verificarPermisos();
         }
         final initialCamaraPosition = CameraPosition(
-          target: LatLng(double.parse(widget.direccion!.latitud.toString()),
-              double.parse(widget.direccion!.longitud.toString())),
+          target: LatLng(double.parse(widget.direccion!.latitud.toString()), double.parse(widget.direccion!.longitud.toString())),
           zoom: 14,
         );
 

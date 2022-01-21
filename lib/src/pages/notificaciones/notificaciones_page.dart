@@ -15,18 +15,7 @@ class NotificacionesPage extends StatefulWidget {
 class _NotificacionesPageState extends State<NotificacionesPage> {
   List<bool> isExpandedList = [];
   bool cargando = false;
-  List<Notificaciones> notificacionesList = [
-    // Notificaciones(titulo: 'Titulo 1', descripcion: "Descripción de la notificación 1 jaisdjiasdjiasdjiasdjiasdjiasdjiasdjiasdjiasdjiasdjiasdjas", fechaHora: '19-01-2022 05:37 p.m'),
-    // Notificaciones(titulo: 'Titulo 2', descripcion: "Descripción de la notificación 2 ahuidasjidasjidasjidasjidasjidasjidasjidasjidasjidasjidasj", fechaHora: '19-01-2022 05:37 p.m'),
-    // Notificaciones(titulo: 'Titulo 3', descripcion: "Descripción de la notificación 3", fechaHora: '19-01-2022 05:37 p.m'),
-    // Notificaciones(titulo: 'Titulo 4', descripcion: "Descripción de la notificación 4", fechaHora: '19-01-2022 05:37 p.m'),
-    // Notificaciones(titulo: 'Titulo 5', descripcion: "Descripción de la notificación 5", fechaHora: '19-01-2022 05:37 p.m'),
-    // Notificaciones(titulo: 'Titulo 6', descripcion: "Descripción de la notificación 6", fechaHora: '19-01-2022 05:37 p.m'),
-    // Notificaciones(titulo: 'Titulo 7', descripcion: "Descripción de la notificación 7", fechaHora: '19-01-2022 05:37 p.m'),
-    // Notificaciones(titulo: 'Titulo 8', descripcion: "Descripción de la notificación 8", fechaHora: '19-01-2022 05:37 p.m'),
-    // Notificaciones(titulo: 'Titulo 9', descripcion: "Descripción de la notificación 9", fechaHora: '19-01-2022 05:37 p.m'),
-    // Notificaciones(titulo: 'Titulo 10', descripcion: "Descripción de la notificación 10", fechaHora: '19-01-2022 05:37 p.m'),
-  ];
+  List<Notificaciones> notificacionesList = [];
 
   @override
   void initState() {

@@ -54,7 +54,9 @@ class _AppBarNotificacionesState extends State<AppBarNotificaciones> {
           child: IconButton(
             icon: Icon(Icons.notifications),
             onPressed: () {
-              Navigator.pushNamed(context, 'notificaciones');
+              Navigator.pushNamed(context, 'notificaciones').then((value) {
+                obtenerNumeroNotificacionesNoVistas();
+              });
             },
           ),
         ),

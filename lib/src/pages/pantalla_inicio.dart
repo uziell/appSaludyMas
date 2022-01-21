@@ -161,18 +161,35 @@ class _HomePageState extends State<HomePage> {
                   margin: EdgeInsets.all(2),
                   color: Colors.transparent,
                   elevation: 0,
-                  child: Column(
+                  child: Stack(
                     children: [
+                      // Container(
+                      //     height: size.height / nombreEdo.length,
+                      //     width: 140,
+                      //     decoration: BoxDecoration(
+                      //       boxShadow: [BoxShadow(blurRadius: 0.1, spreadRadius: 0.1, offset: Offset(6, 6), color: Colors.grey.shade400)],
+                      //       //color: const Color(0xff00838f),
+                      //       // border: Border.all(color: Colors.grey.shade300, width: 2),
+                      //       borderRadius: BorderRadius.circular(26),
+                      //       // image: DecorationImage(image: NetworkImage(urlApi + 'images/' + e['imagenEstado']), fit: BoxFit.fill)),
+                      //     )),
                       Container(
-                        height: size.height / nombreEdo.length,
-                        width: 140,
-                        decoration: BoxDecoration(
+                          height: size.height / nombreEdo.length - 15,
+                          width: 135,
+                          decoration: BoxDecoration(
                             boxShadow: [BoxShadow(blurRadius: 0.1, spreadRadius: 0.1, offset: Offset(6, 6), color: Colors.grey.shade400)],
                             //color: const Color(0xff00838f),
-                            border: Border.all(color: Colors.grey.shade300, width: 2),
+                            // border: Border.all(color: Colors.grey.shade300, width: 2),
                             borderRadius: BorderRadius.circular(26),
-                            image: DecorationImage(image: NetworkImage(urlApi + 'images/' + e['imagenEstado']), fit: BoxFit.fill)),
-                      )
+                            // image: DecorationImage(image: NetworkImage(urlApi + 'images/' + e['imagenEstado']), fit: BoxFit.fill)),
+                          ),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(26.0),
+                              child: FadeInImage(
+                                fit: BoxFit.cover,
+                                placeholder: AssetImage("assets/jar-loading.gif"),
+                                image: NetworkImage(urlApi + 'images/' + e['imagenEstado']),
+                              )))
                       //Text(e['nombre'], style: TextStyle(color: Colors.blue),)
                     ],
                   ),
