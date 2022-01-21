@@ -11,10 +11,10 @@ class NotificacionesRequest {
   }
 
   static Future<dynamic> cambiarEstatusNotificacion(notificacionId) async {
-    Map jsonData = {'notificacionId': notificacionId};
+    Map jsonData = {'idNotificacion': notificacionId};
 
     print(jsonData);
-    http.Response response = await http.post(Uri.parse('https://www.salumas.com/Salud_Y_Mas_Api/updateStatusNotificacion'), body: jsonData);
+    http.Response response = await http.post(Uri.parse('https://www.salumas.com/Salud_Y_Mas_Api/updateStatusNotificacion'), body: json.encode(jsonData));
 
     if (response.statusCode != 200) throw Exception('Error del servidor');
 
