@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   var datos;
   String? nombre;
   String? paterno;
+  int? idusuario;
   bool visibilty = false;
   @override
   void initState() {
@@ -208,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                     prefs.logIn = true;
 
                     print("datos");
-                    print(datos[0]);
+                    print(datos[0]['idusuario']);
                     print(datos[0]['nombre']);
                     print(datos[0]['paterno']);
                     prefs.id = datos[0]['idusuario'];
