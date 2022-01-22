@@ -23,12 +23,9 @@ class _LandingState extends State<Landing> {
   Future<void> autentication() async {
     if (prefs.logIn) {
       //await PushNotificationProvider.initialAPP();
-      Navigator.of(context)
-          .push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-        return HomePage();
-      }));
+      Navigator.pushNamedAndRemoveUntil(context, "inicio", (Route<dynamic> route) => false);
     } else {
-      Navigator.popAndPushNamed(context, 'login');
+      Navigator.pushNamedAndRemoveUntil(context, "login", (Route<dynamic> route) => false);
     }
   }
 
