@@ -208,10 +208,10 @@ class _LoginPageState extends State<LoginPage> {
                     prefs.logIn = true;
 
                     print("datos");
-                    print(datos[0]['estado_idestado']);
+                    print(datos[0]);
                     print(datos[0]['nombre']);
                     print(datos[0]['paterno']);
-
+                    prefs.id = datos[0]['idusuario'];
                     prefs.nombre = datos[0]['nombre'];
                     prefs.paterno = datos[0]['paterno'];
                     prefs.estado = datos[0]['estado_idestado'];
@@ -230,7 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                     this.setState(() {
                       this.loading = false;
                     });
-                    Navigator.of(context).popAndPushNamed('inicio');
+                  Navigator.pushNamedAndRemoveUntil(context, "inicio", (Route<dynamic> route) => false);
                   } else {
                     this.setState(() {
                       this.loading = false;
