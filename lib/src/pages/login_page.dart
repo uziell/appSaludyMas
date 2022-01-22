@@ -301,7 +301,7 @@ class _LoginPageState extends State<LoginPage> {
           CupertinoDialogAction(
             child: Text("OK"),
             onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
+              Navigator.pop(context);
             },
           ),
         ],
