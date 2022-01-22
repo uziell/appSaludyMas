@@ -16,8 +16,10 @@ class PerfilUsuario extends StatefulWidget {
 }
 
 class _PerfilUsuarioState extends State<PerfilUsuario> {
+
+
   final _formKey = GlobalKey<FormState>();
-  AppPreferences prefs = AppPreferences();
+  AppPreferences _prefs = AppPreferences();
   String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
   List<dynamic> listaUsuarios = [];
   bool cargando = false;
@@ -26,10 +28,16 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   bool isUpdate = false;
   bool noEnable = false;
   bool? loading = false;
-  bool resultadoAct= false;
+  var resultadoAct;
 
 
   String? nombres, apaterno, amaterno, usuario, pass, idestado, idciudad;
+
+  TextEditingController _controllerNombre =  TextEditingController();
+  TextEditingController _controllerApPaterno =  TextEditingController();
+  TextEditingController _controllerApMaterno = TextEditingController();
+  TextEditingController _controllerUsuario = TextEditingController();
+  TextEditingController _controllerPass = TextEditingController();
 
   @override
   initState() {
@@ -48,6 +56,18 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     var response = await http.get(url);
     listaUsuarios = json.decode(response.body);
     print("lista de usuario" + listaUsuarios.toString());
+
+    _controllerNombre.text = listaUsuarios[0]["nombre"];
+    _controllerApPaterno.text = listaUsuarios[0]["paterno"];
+    _controllerApMaterno.text = listaUsuarios[0]["materno"];
+    _controllerUsuario.text = listaUsuarios[0]['usuario'];
+    _controllerPass.text = listaUsuarios[0]['pass'];
+
+    nombres =listaUsuarios[0]["nombre"];
+    apaterno = listaUsuarios[0]["paterno"];
+    amaterno = listaUsuarios[0]["materno"];
+    usuario = listaUsuarios[0]['usuario'];
+    pass = listaUsuarios[0]['pass'];
     return listaUsuarios;
   }
 
@@ -89,7 +109,9 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     final card = Container(
       width: MediaQuery.of(context).size.width,
       // clipBehavior: Clip.antiAlias,
-      child: Column(
+      child: Form(
+        key: _formKey,
+        child: Column(
         children: [
           SizedBox(
             height: 50.0,
@@ -126,7 +148,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
           SizedBox(height: 15)
         ],
       ),
-    );
+    ));
 
     return Container(
       margin: EdgeInsets.only(left: 10, right: 10),
@@ -154,7 +176,15 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
-          controller: _controller = new TextEditingController(text: listaUsuarios[0]["nombre"]),
+
+          validator: (value){
+            if(value!.trim().isEmpty){
+              return "El nombre es obligatorio";
+            }
+
+            return null;
+          },
+          controller: _controllerNombre,
           keyboardType: TextInputType.text,
           enabled: noEnable,
           decoration: InputDecoration(
@@ -165,8 +195,8 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 bottomLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ))),
-          onChanged: (value) {
-
+          onChanged: (value){
+              nombres = value.toString();
           },
         ),
       );
@@ -178,7 +208,14 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
-          controller: _controller = new TextEditingController(text: listaUsuarios[0]["paterno"]),
+          controller: _controllerApPaterno,
+          validator: (value){
+            if(value!.trim().isEmpty){
+              return "El apellido paterno es obligatorio";
+            }
+
+            return null;
+          },
           keyboardType: TextInputType.text,
           enabled: noEnable,
           decoration: InputDecoration(
@@ -189,7 +226,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 bottomLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ))),
-          onChanged: (value) {
+          onChanged: (value){
             apaterno = value.toString();
           },
         ),
@@ -202,11 +239,10 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
-          controller: _controller = new TextEditingController(text: listaUsuarios[0]["materno"]),
+          controller: _controllerApMaterno,
           keyboardType: TextInputType.text,
           enabled: noEnable,
           decoration: InputDecoration(
-              labelText: listaUsuarios[0]["materno"],
               fillColor: Colors.blue,
               prefixIcon: Icon(Icons.person),
               border: OutlineInputBorder(
@@ -227,7 +263,14 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
-          controller: _controller = new TextEditingController(text: listaUsuarios[0]["usuario"]),
+          controller: _controllerUsuario,
+          validator: (value){
+            if(value!.trim().isEmpty){
+              return "El usuario es obligatorio";
+
+            }
+            return null;
+          },
           keyboardType: TextInputType.text,
           enabled: noEnable,
           decoration: InputDecoration(
@@ -251,8 +294,17 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0),
         child: TextFormField(
-          controller: _controller = new TextEditingController(text: listaUsuarios[0]["pass"]),
+          controller: _controllerPass,
           obscureText: !visibilty,
+          validator: (value){
+            if(value!.trim().isEmpty){
+
+              return "La contraseña es obligatorio";
+
+            }
+
+            return null;
+          },
           keyboardType: TextInputType.text,
           enabled: noEnable,
           decoration: InputDecoration(
@@ -267,7 +319,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 bottomLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ))),
-          onChanged: (value) {
+          onChanged: (value){
             pass = value.toString();
           },
         ),
@@ -347,15 +399,15 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                       this.setState(() {
                         this.loading = true;
                       });
-                      await insertarUsuario();
+                      await actualizarUsuario();
 
                       this.setState(() {
                         this.loading = false;
                       });
-                      if (resultadoAct == true) {
+                      if (resultadoAct == "true") {
                         Navigator.of(context).push(MaterialPageRoute<Null>(
                             builder: (BuildContext context) {
-                              prefs.clear();
+                              _prefs.clear();
                               return LoginPage();
                             }));
                       } else {
@@ -368,9 +420,11 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
         });
   }
 
-  insertarUsuario() async{
+  actualizarUsuario() async{
 
     final url = Uri.parse(urlApi + 'updateUsuario');
+    Map jsonData = {"idusuario": _prefs.id, "nombre": _controllerNombre.text, "paterno": _controllerApPaterno.text, "materno": _controllerApMaterno.text, "usuario": _controllerUsuario.text, "pass": _controllerPass.text};
+    print(jsonData);
     var response = await http.post(url,
         body: "{" +
             "\"nombre\":\"" +
@@ -393,8 +447,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
             pass.toString() +
             "\"}");
 
-     resultadoAct = response.body as bool;
-    print(response.body);
-
+     body: json.encode(jsonData);
+     resultadoAct = response.body;
   }
 }

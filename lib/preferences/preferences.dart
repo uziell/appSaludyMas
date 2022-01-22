@@ -33,10 +33,18 @@ class AppPreferences {
     this.prefs!.setString('nombre', nombre);
   }
 
+
+  String get id => this.prefs!.getString('id') ?? '';
+  set id(String id) {
+    this.prefs!.setString('id', id);
+  }
+
   String get paterno => this.prefs!.getString('paterno') ?? '';
   set paterno(String paterno) {
     this.prefs!.setString('paterno', paterno);
   }
+
+  
 
   
   String get estado => this.prefs!.getString('estado') ?? '';

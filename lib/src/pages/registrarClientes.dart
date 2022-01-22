@@ -268,21 +268,7 @@ class _RegistrarUsuariosState extends State<RegistrarUsuarios> {
                       width: 20.0,
                     ),
               onPressed: () async {
-                print("tiene registrarse:  " +
-                    nombres.toString() +
-                    " " +
-                    apaterno.toString() +
-                    " " +
-                    amaterno.toString() +
-                    " " +
-                    usuario.toString() +
-                    "" +
-                    pass.toString() +
-                    " " +
-                    idciudad.toString() +
-                    " " +
-                    idestado.toString());
-
+            
                 //Esto es para verificar que esten bien todos tus inputs
 
                 if (idestado == null) {

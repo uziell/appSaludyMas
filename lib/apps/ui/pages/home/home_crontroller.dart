@@ -43,6 +43,9 @@ class HomeController extends ChangeNotifier {
   double _tiempo = 0;
   double get tiempo => _tiempo;
 
+  String _tiempoLabel  = "";
+  String get tiempoLabel => _tiempoLabel;
+
   HomeController(String? latitudDestino, String? longitudDestino, ModeloDireccion? direccion) {
     _init(latitudDestino, longitudDestino, direccion);
   }
@@ -134,8 +137,12 @@ class HomeController extends ChangeNotifier {
 
     var objDis = await obtenerDistanciaTiempoMapbox(position.latitude, position.longitude, double.parse(latitudDestino), double.parse(longitudDestino));
 
+
+    print("distance");
     _distancia = objDis['routes'][0]['distance'] / 1000;
     _tiempo = objDis['routes'][0]['duration'] / 60;
+
+  
 
     print("geometry");
     print(objDis['routes'][0]['geometry']['coordinates']);
@@ -145,6 +152,12 @@ class HomeController extends ChangeNotifier {
     if (_tiempo >= 60) {
       _tiempo = _tiempo / 60;
     }
+
+    List<String> _tiempoTemp =_tiempo.toStringAsFixed(2).split('.');
+
+    _tiempoLabel ="${_tiempoTemp[0]}:${_tiempoTemp[1]}";
+
+  
 
     List<LatLng> puntos = [];
 

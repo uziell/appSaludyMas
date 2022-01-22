@@ -169,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                       //     )),
                       Container(
                           height: size.height / nombreEdo.length - 15,
-                          width: 135,
+                          width: 140,
                           decoration: BoxDecoration(
                             boxShadow: [BoxShadow(blurRadius: 0.1, spreadRadius: 0.1, offset: Offset(6, 6), color: Colors.grey.shade400)],
                             //color: const Color(0xff00838f),
