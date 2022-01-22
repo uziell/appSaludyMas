@@ -67,51 +67,64 @@ class _HomePageState extends State<HomePage> {
           image: DecorationImage(
             image: AssetImage('assets/fondoPrincipal.jpg'),
             fit: BoxFit.cover,
-            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.9), BlendMode.dstATop),
+            colorFilter: new ColorFilter.mode(
+                Colors.black.withOpacity(0.9), BlendMode.dstATop),
           ),
         ),
       ),
       Scaffold(
         drawer: MenuPage(),
-        appBar: PreferredSize(preferredSize: Size.fromHeight(50.0), child: AppBarNotificaciones(titulo: 'Salud y más')),
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(50.0),
+            child: AppBarNotificaciones(titulo: 'Salud y más')),
         backgroundColor: Colors.transparent,
         body: _cargando
             ? Container(
                 child: SingleChildScrollView(
-                child: Column(children: [
-                  Padding(padding: EdgeInsets.only(left: 38, right: 38, top: 12)),
-                  Card(
-                    margin: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
-                    color: Colors.transparent,
-                    elevation: 0,
-                    child: Row(
-                      children: [
-                        Container(
-                          color: Colors.transparent,
-                          width: 120.0,
-                          height: 80.0,
-                          child: Image.asset('assets/ubicacionPantallaPrincipal.png'),
-                        ),
-                        SizedBox(
-                          width: 2.5,
-                        ),
-                        Expanded(
-                          child: Container(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('UBICACIÓN', style: GoogleFonts.montserrat(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold)),
-                              ],
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                          padding:
+                              EdgeInsets.only(left: 38, right: 38, top: 12)),
+                      Card(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 40, vertical: 0),
+                        color: Colors.transparent,
+                        elevation: 0,
+                        child: Row(
+                          children: [
+                            Container(
+                              color: Colors.transparent,
+                              width: 120.0,
+                              height: 80.0,
+                              child: Image.asset(
+                                  'assets/ubicacionPantallaPrincipal.png'),
                             ),
-                          ),
+                            SizedBox(
+                              width: 2.5,
+                            ),
+                            Expanded(
+                              child: Container(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('UBICACIÓN',
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 24,
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  cardCiudad(),
-                  //listaEstados(),
-                ]),
+                      ),
+                      cardCiudad(),
+                      //listaEstados(),
+                    ]),
               ))
             : Center(child: CircularProgressIndicator()),
         // bottomNavigationBar: CurvedNavigationBar(
@@ -140,7 +153,7 @@ class _HomePageState extends State<HomePage> {
     final double itemWidth = size.width * 80;
     return GridView.count(
       crossAxisCount: 2,
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.only(left: 30, top: 15, bottom: 15),
       scrollDirection: Axis.vertical,
       childAspectRatio: (itemWidth / itemHeight),
       controller: new ScrollController(keepScrollOffset: false),
@@ -149,7 +162,9 @@ class _HomePageState extends State<HomePage> {
           .map((e) => InkWell(
                 onTap: () {
                   //EN este navigator pasamos a la siguiente pantalla de las categorias por ciudad
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CategoriasCiudad(e['nombre'], e['colorEdo'])));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          CategoriasCiudad(e['nombre'], e['colorEdo'])));
                 },
                 child: Card(
                   margin: EdgeInsets.all(2),
@@ -168,10 +183,17 @@ class _HomePageState extends State<HomePage> {
                       //       // image: DecorationImage(image: NetworkImage(urlApi + 'images/' + e['imagenEstado']), fit: BoxFit.fill)),
                       //     )),
                       Container(
+                          alignment: Alignment.center,
                           height: size.height / nombreEdo.length - 15,
                           width: 140,
                           decoration: BoxDecoration(
-                            boxShadow: [BoxShadow(blurRadius: 0.1, spreadRadius: 0.1, offset: Offset(6, 6), color: Colors.grey.shade400)],
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 0.1,
+                                  spreadRadius: 0.1,
+                                  offset: Offset(6, 6),
+                                  color: Colors.grey.shade400)
+                            ],
                             //color: const Color(0xff00838f),
                             // border: Border.all(color: Colors.grey.shade300, width: 2),
                             borderRadius: BorderRadius.circular(26),
@@ -181,8 +203,10 @@ class _HomePageState extends State<HomePage> {
                               borderRadius: BorderRadius.circular(26.0),
                               child: FadeInImage(
                                 fit: BoxFit.cover,
-                                placeholder: AssetImage("assets/jar-loading.gif"),
-                                image: NetworkImage(urlApi + 'images/' + e['imagenEstado']),
+                                placeholder:
+                                    AssetImage("assets/jar-loading.gif"),
+                                image: NetworkImage(
+                                    urlApi + 'images/' + e['imagenEstado']),
                               )))
                       //Text(e['nombre'], style: TextStyle(color: Colors.blue),)
                     ],

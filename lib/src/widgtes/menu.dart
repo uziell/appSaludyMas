@@ -25,31 +25,45 @@ class _MenuPageState extends State<MenuPage> {
                 Expanded(
                     child: Column(
                   children: [
-                    DrawerHeader(
-                        padding: EdgeInsets.all(0),
-                        child: Container(
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                              image: AssetImage('assets/fondo.jpeg'),
-                              fit: BoxFit.cover,
-                              colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
-                            )),
-                            alignment: Alignment.center,
-                            child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Container(
+                        padding: EdgeInsets.only(top: 40, bottom: 20),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                          image: AssetImage('assets/fondo.jpeg'),
+                          fit: BoxFit.cover,
+                          colorFilter: ColorFilter.mode(
+                              Colors.black.withOpacity(0.3), BlendMode.darken),
+                        )),
+                        alignment: Alignment.center,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
                               GestureDetector(
                                 child: Container(
                                     child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(100.0),
-                                        child: FadeInImage(fit: BoxFit.cover, placeholder: AssetImage("assets/Saludymas.png"), width: 90, height: 90, image: AssetImage('assets/Saludymas.png')))),
+                                        borderRadius:
+                                            BorderRadius.circular(100.0),
+                                        child: FadeInImage(
+                                            fit: BoxFit.cover,
+                                            placeholder: AssetImage(
+                                                "assets/Saludymas.png"),
+                                            width: 90,
+                                            height: 90,
+                                            image: AssetImage(
+                                                'assets/Saludymas.png')))),
                               ),
                               Container(
                                 margin: EdgeInsets.only(top: 7),
                                 child: Text(
                                   "Bienvenido(a) ${_prefs.nombre} ${_prefs.paterno}",
-                                  style: GoogleFonts.firaSans(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
+                                  style: GoogleFonts.firaSans(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 16),
                                 ),
                               ),
-                            ]))),
+                            ])),
                     Container(
                         child: ListTile(
                       hoverColor: Colors.purple,
@@ -75,8 +89,10 @@ class _MenuPageState extends State<MenuPage> {
                         style: TextStyle(),
                       ),
                       onTap: () {
-                        if (ModalRoute.of(context)!.settings.name != "revistas") {
-                          Navigator.of(context).pushReplacementNamed('revistas');
+                        if (ModalRoute.of(context)!.settings.name !=
+                            "revistas") {
+                          Navigator.of(context)
+                              .pushReplacementNamed('revistas');
                         }
                       },
                     )),
@@ -91,7 +107,9 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                       onTap: () {
                         if (ModalRoute.of(context)!.settings.name != "perfil") {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PerfilUsuario(_prefs.nombre)));
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  PerfilUsuario(_prefs.nombre)));
                         }
                       },
                     )),
@@ -105,10 +123,12 @@ class _MenuPageState extends State<MenuPage> {
                         style: TextStyle(),
                       ),
                       onTap: () {
-                        if (ModalRoute.of(context)!.settings.name != "notificaciones") {
+                        if (ModalRoute.of(context)!.settings.name !=
+                            "notificaciones") {
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) => NotificacionesPage(isMenu: true),
+                              builder: (context) =>
+                                  NotificacionesPage(isMenu: true),
                             ),
                           );
                         }
@@ -122,7 +142,9 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                       title: Text('Cerrar sesión'),
                       onTap: () async {
-                        showDialog(context: context, builder: Alerts().dialogCerrarSesion);
+                        showDialog(
+                            context: context,
+                            builder: Alerts().dialogCerrarSesion);
                       },
                     )
                   ],
