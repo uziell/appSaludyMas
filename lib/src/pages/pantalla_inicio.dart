@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'package:badges/badges.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:salud_y_mas/notification_providers/push_notification_providers.dart';
 import 'package:salud_y_mas/preferences/preferences.dart';
-import 'package:salud_y_mas/src/pages/login_page.dart';
 import 'dart:convert';
 import 'package:salud_y_mas/src/pages/pantalla_categorias_ciudad.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:salud_y_mas/src/widgtes/alerts.dart';
 import 'package:salud_y_mas/src/widgtes/appBarNotificaciones.dart';
 import 'package:salud_y_mas/src/widgtes/menu.dart';
 

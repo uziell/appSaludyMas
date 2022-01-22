@@ -393,7 +393,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
             pass.toString() +
             "\"}");
 
-     //resultadoAct = response.body;
+     resultadoAct = response.body as bool;
     print(response.body);
 
   }
