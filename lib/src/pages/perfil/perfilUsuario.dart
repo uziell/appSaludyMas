@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:salud_y_mas/preferences/preferences.dart';
+import 'package:salud_y_mas/src/pages/login_page.dart';
 import 'package:salud_y_mas/src/widgtes/appBarNotificaciones.dart';
 import 'package:salud_y_mas/src/widgtes/menu.dart';
 
@@ -15,6 +17,7 @@ class PerfilUsuario extends StatefulWidget {
 
 class _PerfilUsuarioState extends State<PerfilUsuario> {
   final _formKey = GlobalKey<FormState>();
+  AppPreferences prefs = AppPreferences();
   String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
   List<dynamic> listaUsuarios = [];
   bool cargando = false;
@@ -22,12 +25,16 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   TextEditingController? _controller;
   bool isUpdate = false;
   bool noEnable = false;
+  bool? loading = false;
+  bool resultadoAct= false;
+
+
   String? nombres, apaterno, amaterno, usuario, pass, idestado, idciudad;
 
   @override
   initState() {
     super.initState();
-
+    print(widget.nombre.toString());
     consultarUsusarios(widget.nombre.toString()).then((value) {
       setState(() {
         this.cargando = true;
@@ -112,6 +119,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
             height: 10.0,
           ),
           _checkBoxActualizar(),
+          _btonActualizar(),
           SizedBox(
             height: 10.0,
           ),
@@ -157,7 +165,9 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 bottomLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ))),
-          onChanged: (value) {},
+          onChanged: (value) {
+
+          },
         ),
       );
     });
@@ -179,7 +189,9 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 bottomLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ))),
-          onChanged: (value) {},
+          onChanged: (value) {
+            apaterno = value.toString();
+          },
         ),
       );
     });
@@ -202,7 +214,9 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 bottomLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ))),
-          onChanged: (value) {},
+          onChanged: (value) {
+            amaterno = value.toString();
+          },
         ),
       );
     });
@@ -224,7 +238,9 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 bottomLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ))),
-          onChanged: (value) {},
+          onChanged: (value) {
+            usuario = value.toString();
+          },
         ),
       );
     });
@@ -251,7 +267,9 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 bottomLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ))),
-          onChanged: (value) {},
+          onChanged: (value) {
+            pass = value.toString();
+          },
         ),
       );
     });
@@ -288,5 +306,95 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
         Text('Actualizar Datos', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold))
       ],
     );
+  }
+
+  _btonActualizar() {
+    return StreamBuilder(
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          return Container(
+              width: 400,
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0)),
+                      primary: Colors.teal,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                      )),
+                  child: !loading!
+                      ? Text("Actualizar")
+                      : SizedBox(
+                    child: CircularProgressIndicator(color: Colors.white),
+                    height: 20.0,
+                    width: 20.0,
+                  ),
+                  onPressed: () async {
+                    print("tiene registrarse:  " +
+                        nombres.toString() +
+                        " " +
+                        apaterno.toString() +
+                        " " +
+                        amaterno.toString() +
+                        " " +
+                        usuario.toString() +
+                        "" +
+                        pass.toString());
+
+                    //Esto es para verificar que esten bien todos tus inputs
+
+                    if (_formKey.currentState!.validate()) {
+                      this.setState(() {
+                        this.loading = true;
+                      });
+                      await insertarUsuario();
+
+                      this.setState(() {
+                        this.loading = false;
+                      });
+                      if (resultadoAct == true) {
+                        Navigator.of(context).push(MaterialPageRoute<Null>(
+                            builder: (BuildContext context) {
+                              prefs.clear();
+                              return LoginPage();
+                            }));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Hubo un problema al Actualizar'),
+                            backgroundColor: Colors.red));
+                      }
+                    }
+                  }));
+        });
+  }
+
+  insertarUsuario() async{
+
+    final url = Uri.parse(urlApi + 'updateUsuario');
+    var response = await http.post(url,
+        body: "{" +
+            "\"nombre\":\"" +
+            nombres.toString() +
+            "\"" +
+            "," +
+            "\"paterno\":\"" +
+            apaterno.toString() +
+            "\"" +
+            "," +
+            "\"materno\":\"" +
+            amaterno.toString() +
+            "\"" +
+            "," +
+            "\"usuario\":\"" +
+            usuario.toString() +
+            "\"" +
+            "," +
+            "\"pass\":\"" +
+            pass.toString() +
+            "\"}");
+
+     //resultadoAct = response.body;
+    print(response.body);
+
   }
 }
