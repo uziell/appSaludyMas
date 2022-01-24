@@ -47,7 +47,7 @@ class AppPreferences {
   
 
   
-  String get estado => this.prefs!.getString('estado') ?? '';
+  String get estado => this.prefs!.getString('estado') ?? 'Seleccione el estado';
   set estado(String estado) {
     this.prefs!.setString('estado', estado);
   }
