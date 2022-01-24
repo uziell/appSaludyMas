@@ -29,7 +29,7 @@ class _AppBarNotificacionesState extends State<AppBarNotificaciones> {
 
   obtenerNumeroNotificacionesNoVistas() async {
     numeroNotificaciones = 0;
-    List<dynamic> notificaciones = await NotificacionesRequest.obtenerNotificaciones();
+    List<dynamic> notificaciones = await NotificacionesRequest().obtenerNotificaciones();
     if (this.mounted) {
       setState(() {
         for (int i = 0; i < notificaciones.length; i++) {

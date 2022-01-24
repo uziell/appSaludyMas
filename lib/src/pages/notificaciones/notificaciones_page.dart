@@ -25,7 +25,7 @@ class _NotificacionesPageState extends State<NotificacionesPage> {
 
   getNotificaciones() async {
     cargando = false;
-    List<dynamic> notificaciones = await NotificacionesRequest.obtenerNotificaciones();
+    List<dynamic> notificaciones = await NotificacionesRequest().obtenerNotificaciones();
 
     print(notificaciones);
     notificacionesList = notificaciones.map((e) => Notificaciones.fromJson(e)).toList();

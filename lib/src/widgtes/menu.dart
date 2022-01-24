@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:salud_y_mas/notification_providers/push_notification_providers.dart';
 import 'package:salud_y_mas/preferences/preferences.dart';
 import 'package:salud_y_mas/src/pages/notificaciones/notificaciones_page.dart';
 import 'package:salud_y_mas/src/pages/perfil/perfilUsuario.dart';
@@ -70,9 +72,11 @@ class _MenuPageState extends State<MenuPage> {
                                           fontSize: 16),
                                     ),
                                   ),
-                                  ElevatedButton(onPressed: (){
-                                     dialogCambiarEstado(context);
-                                  }, child: Text('Cambiar estado'))
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        dialogCambiarEstado(context);
+                                      },
+                                      child: Text('Cambiar estado'))
                                 ]))),
                     Container(
                         child: ListTile(
@@ -181,9 +185,7 @@ class _MenuPageState extends State<MenuPage> {
     }));
   }
 
-   dropdownEstados(List<dynamic>nombreEdo)  {
-    
-
+  dropdownEstados(List<dynamic> nombreEdo) {
     return Container(
       color: Colors.white,
       height: 70,
@@ -200,8 +202,15 @@ class _MenuPageState extends State<MenuPage> {
         }).toList(),
         iconSize: 20,
         icon: Icon(Icons.arrow_drop_down, color: Colors.white),
-        onChanged: (estadoActual) {
+        onChanged: (estadoActual) async {
           _prefs.estado = estadoActual.toString();
+
+          FirebaseMessaging.instance.requestPermission(
+              sound: true, badge: true, alert: true, provisional: false);
+
+          //Utilizo esto para que pueda ingresarse en un topic (tag) es decir si es YUCATAN a todos los de YUCATAN les llegará la notificación
+          await PushNotificationProvider.firebaseMessaging
+              .subscribeToTopic("${_prefs.estado}");
         },
         hint: Text(
           _prefs.estado,
@@ -221,24 +230,18 @@ class _MenuPageState extends State<MenuPage> {
     return nombreEdo;
   }
 
-    dialogCambiarEstado(BuildContext context) async{
-
-   List<dynamic> nombreEdo = await consultarAPIEstados();
+  dialogCambiarEstado(BuildContext context) async {
+    List<dynamic> nombreEdo = await consultarAPIEstados();
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
               title: Text("Seleccione el estado en el que se encuentra",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                     
-                      fontWeight: FontWeight.bold)),
-
+                      fontSize: 12, fontWeight: FontWeight.bold)),
               content: dropdownEstados(nombreEdo),
               actions: [
-              
-
-                   TextButton(
+                TextButton(
                   child: Text('Cerrar'),
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true).pop();
