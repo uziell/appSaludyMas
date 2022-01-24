@@ -47,7 +47,7 @@ class _NotificacionesPageState extends State<NotificacionesPage> {
     return Scaffold(
         backgroundColor: Colors.grey.shade300,
         drawer: widget.isMenu == true ? MenuPage() : null,
-        appBar: AppBar(title: Text('Notificaciones')),
+        appBar: AppBar(title: Text('NOTIFICACIONES DE ${_prefs.estado}', style: TextStyle(fontSize: 14))),
         body: cargando
             ? notificacionesList.length >0 ?  Container(
                 margin: EdgeInsets.only(top: 7),

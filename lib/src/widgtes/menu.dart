@@ -72,6 +72,18 @@ class _MenuPageState extends State<MenuPage> {
                                           fontSize: 16),
                                     ),
                                   ),
+
+                                    Container(
+                                    margin: EdgeInsets.only(top: 7),
+                                    child: Text(
+                                      "Estado: ${_prefs.estado}",
+                                      style: GoogleFonts.firaSans(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          fontSize: 16),
+                                    ),
+                                  ),
+                             
                                   ElevatedButton(
                                       onPressed: () {
                                         dialogCambiarEstado(context);
@@ -220,6 +232,10 @@ class _MenuPageState extends State<MenuPage> {
           //Utilizo esto para que pueda ingresarse en un topic (tag) es decir si es YUCATAN a todos los de YUCATAN les llegará la notificación
           await PushNotificationProvider.firebaseMessaging
               .subscribeToTopic(_prefs.estado);
+
+              setState(() {
+                
+              });
         },
         hint: Text(
           _prefs.estado,
