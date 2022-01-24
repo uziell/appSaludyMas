@@ -24,8 +24,8 @@ class NotificacionesRequest {
     return json.decode(response.body);
   }
 
-  static Future<dynamic> registrarNotificacion(titulo, mensaje) async {
-    Map jsonData = {'titulo': titulo, 'mensaje': mensaje};
+   Future<dynamic> registrarNotificacion(titulo, mensaje) async {
+    Map jsonData = {'titulo': titulo, 'mensaje': mensaje, 'nombre_estado': _prefs.estado};
     http.Response response = await http.post(Uri.parse('https://www.salumas.com/Salud_Y_Mas_Api/registrarNotificacion'), body: json.encode(jsonData));
 
     if (response.statusCode != 200) throw Exception('Error del servidor');

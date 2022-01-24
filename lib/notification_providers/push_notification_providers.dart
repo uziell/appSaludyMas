@@ -28,7 +28,7 @@ class PushNotificationProvider {
     // alert(message.notification?.body);
     //print(message.notification?.body);
 
-    var p = await NotificacionesRequest.registrarNotificacion(message.notification?.title, message.notification?.body);
+    var p = await NotificacionesRequest().registrarNotificacion(message.notification?.title, message.notification?.body);
     print("notificacion re");
     print(p);
     _stramController.sink.add(message.notification?.body ?? 'No title');
@@ -38,7 +38,7 @@ class PushNotificationProvider {
   static Future _onMessageOpenHandler(RemoteMessage message) async {
     print("entra en funcion ");
     print(message.notification?.body);
-    var p = await NotificacionesRequest.registrarNotificacion(message.notification?.title, message.notification?.body);
+    var p = await NotificacionesRequest().registrarNotificacion(message.notification?.title, message.notification?.body);
     print("notificacion on");
     print(p);
     _stramController.sink.add(message.notification?.body ?? 'No title');
