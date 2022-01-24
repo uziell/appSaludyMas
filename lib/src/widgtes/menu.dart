@@ -142,6 +142,9 @@ class _MenuPageState extends State<MenuPage> {
                       onTap: () {
                         if (ModalRoute.of(context)!.settings.name !=
                             "notificaciones") {
+                          if (_prefs.estado == "Seleccione el estado") {
+                            return dialogCambiarEstado(context);
+                          }
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                               builder: (context) =>
@@ -203,14 +206,20 @@ class _MenuPageState extends State<MenuPage> {
         iconSize: 20,
         icon: Icon(Icons.arrow_drop_down, color: Colors.white),
         onChanged: (estadoActual) async {
+          String tempEstado = _prefs.estado;
           _prefs.estado = estadoActual.toString();
 
           FirebaseMessaging.instance.requestPermission(
               sound: true, badge: true, alert: true, provisional: false);
 
+          if (tempEstado != "Seleccione el estado") {
+            await PushNotificationProvider.firebaseMessaging
+                .unsubscribeFromTopic(tempEstado);
+          }
+
           //Utilizo esto para que pueda ingresarse en un topic (tag) es decir si es YUCATAN a todos los de YUCATAN les llegará la notificación
           await PushNotificationProvider.firebaseMessaging
-              .subscribeToTopic("${_prefs.estado}");
+              .subscribeToTopic(_prefs.estado);
         },
         hint: Text(
           _prefs.estado,
