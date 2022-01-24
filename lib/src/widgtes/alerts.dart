@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:salud_y_mas/preferences/preferences.dart';
 import 'package:salud_y_mas/src/pages/login_page.dart';
+import 'package:http/http.dart' as http;
 
 class Alerts {
   AppPreferences _prefs = AppPreferences();
@@ -15,7 +18,8 @@ class Alerts {
             onPressed: () {
               FirebaseMessaging.instance.unsubscribeFromTopic(_prefs.estado);
               _prefs.clear();
-              Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, 'login', (route) => false);
             },
           ),
           CupertinoDialogAction(
@@ -44,7 +48,6 @@ class Alerts {
             ));
   }
 
-
   dialogDinamico(BuildContext context, text) {
     showDialog(
         context: context,
@@ -71,18 +74,25 @@ class Alerts {
     showDialog(
         context: context,
         builder: (context) => CupertinoAlertDialog(
-          title: Text("Al actualizar tus datos tienes que ingresar nuevamente.",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.montserrat(fontSize: 12,
-                  color: Colors.blue, fontWeight: FontWeight.bold)),
-          actions: [
-            CupertinoDialogAction(
-              child: Text("Entendido"),
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).pop();
-              },
-            ),
-          ],
-        ));
+              title: Text(
+                  "Al actualizar tus datos tienes que ingresar nuevamente.",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold)),
+              actions: [
+                CupertinoDialogAction(
+                  child: Text("Entendido"),
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                ),
+              ],
+            ));
   }
+
+
+
+ 
 }
