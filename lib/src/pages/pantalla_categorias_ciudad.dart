@@ -9,6 +9,7 @@ import 'package:salud_y_mas/src/models/modeloFarmaciasDelAhorro.dart';
 import 'package:salud_y_mas/src/models/modelo_categoria.dart';
 import 'package:salud_y_mas/src/pages/pantalla_especialidades_categoria.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:salud_y_mas/src/widgtes/appBarNotificaciones.dart';
 
 class CategoriasCiudad extends StatefulWidget {
   String nombreEdo = '';
@@ -62,7 +63,11 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
   Future consultarCategorias(String actualStado, String actualCiudad) async {
     print('Esto tiene ' + actualStado + 'y ciudad ' + actualCiudad);
     myData.clear();
-    final urlApi = Uri.parse("https://www.salumas.com/Salud_Y_Mas_Api/consultas_categorias?nameEdo=" + actualStado + "&nameCd=" + actualCiudad);
+    final urlApi = Uri.parse(
+        "https://www.salumas.com/Salud_Y_Mas_Api/consultas_categorias?nameEdo=" +
+            actualStado +
+            "&nameCd=" +
+            actualCiudad);
 
     setState(() {
       this.cargandoGrid = false;
@@ -73,7 +78,12 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
     print(urlApi);
 
     for (var data in jsonBody) {
-      myData.add(new MyModel(data['idcategoria'], data['nombrecategoria'], data['descripccion'], data['imagen'].toString(), data['imagen_general'].toString()));
+      myData.add(new MyModel(
+          data['idcategoria'],
+          data['nombrecategoria'],
+          data['descripccion'],
+          data['imagen'].toString(),
+          data['imagen_general'].toString()));
     }
     myData.forEach((someData) => print('Name : ${someData.nombrecategoria}'));
     setState(() {
@@ -110,7 +120,8 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
       Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.7), BlendMode.dstATop),
+            colorFilter: new ColorFilter.mode(
+                Colors.black.withOpacity(0.7), BlendMode.dstATop),
             image: AssetImage('assets/fondoPrincipal.jpg'),
             fit: BoxFit.cover,
             //colorFilter: ColorFilter.mode(Colors.white,)
@@ -119,27 +130,9 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
       ),
       Scaffold(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            elevation: 0,
-            backgroundColor: Color(int.parse(widget.colorEdo)),
-            title: Text(
-              widget.nombreEdo,
-              style: GoogleFonts.abrilFatface(),
-            ),
-            actions: [
-              Badge(
-                position: BadgePosition.topEnd(top: 5, end: 3),
-                badgeColor: Colors.red,
-                badgeContent: Text('3', style: TextStyle(color: Colors.white)),
-                child: IconButton(
-                  icon: Icon(Icons.notifications),
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'notificaciones');
-                  },
-                ),
-              ),
-            ],
-          ),
+          appBar: PreferredSize(
+              preferredSize: Size.fromHeight(50.0),
+              child: AppBarNotificaciones(titulo: widget.nombreEdo)),
           body: Container(
               padding: EdgeInsets.all(5),
               child: ListView(
@@ -158,8 +151,6 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
   dropdownCiudades() {
     return Container(
       color: Colors.white,
-      width: 250,
-      height: 70,
       padding: EdgeInsets.only(top: 5, bottom: 5, left: 4, right: 4),
       child: DropdownButtonFormField(
         decoration: const InputDecoration(
@@ -184,7 +175,8 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
         },
         hint: Text(
           vistaCiudad,
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
+          style: TextStyle(
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
         ),
       ),
     );
@@ -207,7 +199,9 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
           items: listImagenes.map((imagen) {
             return Builder(
               builder: (BuildContext context) {
-                return Container(width: MediaQuery.of(context).size.width, child: Image.network("$imagen", fit: BoxFit.fill));
+                return Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.network("$imagen", fit: BoxFit.fill));
               },
             );
           }).toList(),
@@ -230,21 +224,28 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
             crossAxisSpacing: 5.0,
             crossAxisCount: 3,
             scrollDirection: Axis.vertical,
-            childAspectRatio: (itemWidth / itemHeight),
             controller: new ScrollController(keepScrollOffset: false),
             shrinkWrap: true,
             children: myData
                 .map((categ) => InkWell(
                       onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute<Null>(builder: (BuildContext context) {
-                          String nombreCategoria = categ.nombrecategoria.toString();
+                        Navigator.of(context).push(MaterialPageRoute<Null>(
+                            builder: (BuildContext context) {
+                          String nombreCategoria =
+                              categ.nombrecategoria.toString();
                           String idcategoria = categ.idcategoria;
                           String nombreEdo = widget.nombreEdo;
                           String nombreCd = vistaCiudad;
                           String imagenGeneral = categ.imagenGeneral.toString();
 
                           //  String idFarmacias = modeloIdFarmacias.cliente_idcliente.toString();
-                          return EspecialidadCategoria(nombreCategoria, idcategoria, nombreEdo, nombreCd, imagenGeneral, widget.colorEdo);
+                          return EspecialidadCategoria(
+                              nombreCategoria,
+                              idcategoria,
+                              nombreEdo,
+                              nombreCd,
+                              imagenGeneral,
+                              widget.colorEdo);
                         }));
                       },
                       child: Card(
@@ -259,40 +260,56 @@ class _CategoriasCiudadState extends State<CategoriasCiudad> {
                               decoration: BoxDecoration(
                                   //color: Color(int.parse(widget.colorEdo)),
                                   borderRadius: BorderRadius.circular(26),
-                                  image: DecorationImage(image: NetworkImage(urlApi + 'images/' + categ.imagen.toString()), fit: BoxFit.fill)),
+                                  image: DecorationImage(
+                                      image: NetworkImage(urlApi +
+                                          'images/' +
+                                          categ.imagen.toString()),
+                                      fit: BoxFit.fill)),
                             ),
                             SizedBox(
                               width: 2.5,
                             ),
                             Expanded(
                               child: Container(
-                                child: Container(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      if (categ.nombrecategoria == "ANÁLISIS CLINICOS")
-                                        Center(
-                                            child: Text(
-                                          "LABORATORIO DE " + categ.nombrecategoria.toString(),
-                                          style: GoogleFonts.montserrat(fontStyle: FontStyle.normal, fontSize: 9, fontWeight: FontWeight.bold),
-                                          textAlign: TextAlign.center,
-                                        ))
-                                      else if (categ.nombrecategoria == "ULTRASONIDO Y RAYOS X")
-                                        Center(
-                                            child: Text("RADIOLOGÍA",
-                                                style: GoogleFonts.montserrat(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (categ.nombrecategoria ==
+                                        "ANÁLISIS CLINICOS")
+                                      Center(
+                                          child: Text(
+                                        "LABORATORIO DE " +
+                                            categ.nombrecategoria.toString(),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.alata(
+                                            fontStyle: FontStyle.normal,
+                                            fontSize: 8,
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center,
+                                      ))
+                                    else if (categ.nombrecategoria ==
+                                        "ULTRASONIDO Y RAYOS X")
+                                      Center(
+                                          child: Text("RADIOLOGÍA",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.alata(
+                                                fontStyle: FontStyle.normal,
+                                                fontSize: 8,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center))
+                                    else
+                                      Center(
+                                          child: Text(
+                                              "${categ.nombrecategoria}",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.alata(
                                                   fontStyle: FontStyle.normal,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                textAlign: TextAlign.center))
-                                      else
-                                        Center(
-                                            child: Text(categ.nombrecategoria.toString(),
-                                                style: GoogleFonts.montserrat(fontStyle: FontStyle.normal, fontSize: 9, fontWeight: FontWeight.bold), textAlign: TextAlign.center)),
-                                    ],
-                                  ),
+                                                  fontSize: 8,
+                                                  fontWeight: FontWeight.bold),
+                                              textAlign: TextAlign.center)),
+                                  ],
                                 ),
                               ),
                             ),

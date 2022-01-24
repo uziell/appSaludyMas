@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:salud_y_mas/notification_providers/push_notification_providers.dart';
 import 'package:salud_y_mas/src/requests/notificaciones_request.dart';
 
+import 'alerts.dart';
+
 class AppBarNotificaciones extends StatefulWidget {
   final String titulo;
   const AppBarNotificaciones({Key? key, required this.titulo}) : super(key: key);
@@ -44,16 +46,17 @@ class _AppBarNotificacionesState extends State<AppBarNotificaciones> {
     return AppBar(
       title: Text(
         widget.titulo,
-        style: GoogleFonts.abrilFatface(),
+        style: GoogleFonts.abrilFatface(fontSize: 14),
       ),
       actions: [
         Badge(
           position: BadgePosition.topEnd(top: 5, end: 3),
           badgeColor: Colors.red,
+          showBadge: numeroNotificaciones > 0 ? true : false,
           badgeContent: Text('$numeroNotificaciones', style: TextStyle(color: Colors.white, fontSize: 9)),
           child: IconButton(
             icon: Icon(Icons.notifications),
-            onPressed: () {
+            onPressed: () {        
               Navigator.pushNamed(context, 'notificaciones').then((value) {
                 obtenerNumeroNotificacionesNoVistas();
               });

@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
       print("entra notificaciónes inicio");
       //si mando a llamar aca el metodo de cerrar secion si lo hace
       //pero si le paso mis argumentos no lo acepta
-      // Alerts().dialogNotificaciones(context, message);
+      // Alerts().dialogDinamico(context, 'Que onda');
     });
   }
 
@@ -73,19 +73,23 @@ class _HomePageState extends State<HomePage> {
           image: DecorationImage(
             image: AssetImage('assets/fondoPrincipal.jpg'),
             fit: BoxFit.cover,
-            colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.9), BlendMode.dstATop),
+            colorFilter: new ColorFilter.mode(
+                Colors.black.withOpacity(0.9), BlendMode.dstATop),
           ),
         ),
       ),
       Scaffold(
         drawer: MenuPage(),
-        appBar: PreferredSize(preferredSize: Size.fromHeight(50.0), child: AppBarNotificaciones(titulo: 'Salud y más')),
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(50.0),
+            child: AppBarNotificaciones(titulo: 'Salud y más')),
         backgroundColor: Colors.transparent,
         body: _cargando
             ? Container(
                 child: SingleChildScrollView(
                 child: Column(children: [
-                  Padding(padding: EdgeInsets.only(left: 38, right: 38, top: 12)),
+                  Padding(
+                      padding: EdgeInsets.only(left: 38, right: 38, top: 12)),
                   Card(
                     margin: EdgeInsets.symmetric(horizontal: 40, vertical: 0),
                     color: Colors.transparent,
@@ -96,7 +100,8 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.transparent,
                           width: 120.0,
                           height: 80.0,
-                          child: Image.asset('assets/ubicacionPantallaPrincipal.png'),
+                          child: Image.asset(
+                              'assets/ubicacionPantallaPrincipal.png'),
                         ),
                         SizedBox(
                           width: 2.5,
@@ -107,7 +112,11 @@ class _HomePageState extends State<HomePage> {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('UBICACIÓN', style: GoogleFonts.montserrat(fontSize: 24, color: Colors.blue, fontWeight: FontWeight.bold)),
+                                Text('UBICACIÓN',
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 24,
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold)),
                               ],
                             ),
                           ),
@@ -146,7 +155,9 @@ class _HomePageState extends State<HomePage> {
     final double itemWidth = size.width * 80;
     return GridView.count(
       crossAxisCount: 2,
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.all(30),
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
       scrollDirection: Axis.vertical,
       childAspectRatio: (itemWidth / itemHeight),
       controller: new ScrollController(keepScrollOffset: false),
@@ -155,45 +166,27 @@ class _HomePageState extends State<HomePage> {
           .map((e) => InkWell(
                 onTap: () {
                   //EN este navigator pasamos a la siguiente pantalla de las categorias por ciudad
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => CategoriasCiudad(e['nombre'], e['colorEdo'])));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          CategoriasCiudad(e['nombre'], e['colorEdo'])));
                 },
                 child: Card(
-                  margin: EdgeInsets.all(2),
-                  color: Colors.transparent,
-                  elevation: 0,
-                  child: Stack(
-                    children: [
-                      // Container(
-                      //     height: size.height / nombreEdo.length,
-                      //     width: 140,
-                      //     decoration: BoxDecoration(
-                      //       boxShadow: [BoxShadow(blurRadius: 0.1, spreadRadius: 0.1, offset: Offset(6, 6), color: Colors.grey.shade400)],
-                      //       //color: const Color(0xff00838f),
-                      //       // border: Border.all(color: Colors.grey.shade300, width: 2),
-                      //       borderRadius: BorderRadius.circular(26),
-                      //       // image: DecorationImage(image: NetworkImage(urlApi + 'images/' + e['imagenEstado']), fit: BoxFit.fill)),
-                      //     )),
-                      Container(
-                          height: size.height / nombreEdo.length - 15,
-                          width: 140,
-                          decoration: BoxDecoration(
-                            boxShadow: [BoxShadow(blurRadius: 0.1, spreadRadius: 0.1, offset: Offset(6, 6), color: Colors.grey.shade400)],
-                            //color: const Color(0xff00838f),
-                            // border: Border.all(color: Colors.grey.shade300, width: 2),
-                            borderRadius: BorderRadius.circular(26),
-                            // image: DecorationImage(image: NetworkImage(urlApi + 'images/' + e['imagenEstado']), fit: BoxFit.fill)),
-                          ),
-                          child: ClipRRect(
-                              borderRadius: BorderRadius.circular(26.0),
-                              child: FadeInImage(
-                                fit: BoxFit.cover,
-                                placeholder: AssetImage("assets/jar-loading.gif"),
-                                image: NetworkImage(urlApi + 'images/' + e['imagenEstado']),
-                              )))
-                      //Text(e['nombre'], style: TextStyle(color: Colors.blue),)
-                    ],
-                  ),
-                ),
+                    margin: EdgeInsets.all(2),
+                    color: Colors.transparent,
+                    elevation: 0,
+                    child: Container(
+                        height: size.height / nombreEdo.length - 15,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(26),
+                        ),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(26.0),
+                            child: FadeInImage(
+                              fit: BoxFit.cover,
+                              placeholder: AssetImage("assets/jar-loading.gif"),
+                              image: NetworkImage(
+                                  urlApi + 'images/' + e['imagenEstado']),
+                            )))),
               ))
           .toList(),
     );

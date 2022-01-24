@@ -32,24 +32,42 @@ class _MenuPageState extends State<MenuPage> {
                                 image: DecorationImage(
                               image: AssetImage('assets/fondo.jpeg'),
                               fit: BoxFit.cover,
-                              colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.3),
+                                  BlendMode.darken),
                             )),
                             alignment: Alignment.center,
-                            child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
-                              GestureDetector(
-                                child: Container(
-                                    child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(100.0),
-                                        child: FadeInImage(fit: BoxFit.cover, placeholder: AssetImage("assets/Saludymas.png"), width: 90, height: 90, image: AssetImage('assets/Saludymas.png')))),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(top: 7),
-                                child: Text(
-                                  "Bienvenido(a) ${_prefs.nombre} ${_prefs.paterno}",
-                                  style: GoogleFonts.firaSans(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
-                                ),
-                              ),
-                            ]))),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  GestureDetector(
+                                    child: Container(
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(100.0),
+                                            child: FadeInImage(
+                                                fit: BoxFit.cover,
+                                                placeholder: AssetImage(
+                                                    "assets/Saludymas.png"),
+                                                width: 90,
+                                                height: 90,
+                                                image: AssetImage(
+                                                    'assets/Saludymas.png')))),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 7),
+                                    child: Text(
+                                      _prefs.logIn
+                                          ? "Bienvenido(a) ${_prefs.nombre} ${_prefs.paterno}"
+                                          : "Invitado",
+                                      style: GoogleFonts.firaSans(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          fontSize: 16),
+                                    ),
+                                  ),
+                                ]))),
                     Container(
                         child: ListTile(
                       hoverColor: Colors.purple,
@@ -75,26 +93,33 @@ class _MenuPageState extends State<MenuPage> {
                         style: TextStyle(),
                       ),
                       onTap: () {
-                        if (ModalRoute.of(context)!.settings.name != "revistas") {
-                          Navigator.of(context).pushReplacementNamed('revistas');
+                        if (ModalRoute.of(context)!.settings.name !=
+                            "revistas") {
+                          Navigator.of(context)
+                              .pushReplacementNamed('revistas');
                         }
                       },
                     )),
-                    Container(
-                        child: ListTile(
-                      hoverColor: Colors.purple,
-                      contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      leading: Icon(Icons.account_box),
-                      title: Text(
-                        "Mi perfil",
-                        style: TextStyle(),
-                      ),
-                      onTap: () {
-                        if (ModalRoute.of(context)!.settings.name != "perfil") {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PerfilUsuario(_prefs.nombre)));
-                        }
-                      },
-                    )),
+                    _prefs.logIn
+                        ? Container(
+                            child: ListTile(
+                            hoverColor: Colors.purple,
+                            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            leading: Icon(Icons.account_box),
+                            title: Text(
+                              "Mi perfil",
+                              style: TextStyle(),
+                            ),
+                            onTap: () {
+                              if (ModalRoute.of(context)!.settings.name !=
+                                  "perfil") {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        PerfilUsuario(_prefs.nombre)));
+                              }
+                            },
+                          ))
+                        : Container(),
                     Container(
                         child: ListTile(
                       hoverColor: Colors.purple,
@@ -105,26 +130,47 @@ class _MenuPageState extends State<MenuPage> {
                         style: TextStyle(),
                       ),
                       onTap: () {
-                        if (ModalRoute.of(context)!.settings.name != "notificaciones") {
+                        if (ModalRoute.of(context)!.settings.name !=
+                            "notificaciones") {
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) => NotificacionesPage(isMenu: true),
+                              builder: (context) =>
+                                  NotificacionesPage(isMenu: true),
                             ),
                           );
                         }
                       },
                     )),
-                    ListTile(
-                      contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      leading: Icon(
-                        Icons.exit_to_app,
-                        color: Colors.brown,
-                      ),
-                      title: Text('Cerrar sesión'),
-                      onTap: () async {
-                        showDialog(context: context, builder: Alerts().dialogCerrarSesion);
-                      },
-                    )
+                    _prefs.logIn == false
+                        ? ListTile(
+                            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            leading: Icon(
+                              Icons.login,
+                              color: Colors.brown,
+                            ),
+                            title: Text('Iniciar sesión'),
+                            onTap: () async {
+                              showDialog(
+                                  context: context,
+                                  builder: Alerts().dialogCerrarSesion);
+                            },
+                          )
+                        : Container(),
+                    _prefs.logIn
+                        ? ListTile(
+                            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            leading: Icon(
+                              Icons.logout,
+                              color: Colors.brown,
+                            ),
+                            title: Text('Cerrar sesión'),
+                            onTap: () async {
+                              showDialog(
+                                  context: context,
+                                  builder: Alerts().dialogCerrarSesion);
+                            },
+                          )
+                        : Container()
                   ],
                 )),
               ])))));

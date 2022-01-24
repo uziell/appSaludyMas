@@ -21,12 +21,12 @@ class _LandingState extends State<Landing> {
   }
 
   Future<void> autentication() async {
-    if (prefs.logIn) {
+    // if (prefs.logIn) {
       //await PushNotificationProvider.initialAPP();
       Navigator.pushNamedAndRemoveUntil(context, "inicio", (Route<dynamic> route) => false);
-    } else {
-      Navigator.pushNamedAndRemoveUntil(context, "login", (Route<dynamic> route) => false);
-    }
+    // } else {
+    //   Navigator.pushNamedAndRemoveUntil(context, "login", (Route<dynamic> route) => false);
+    // }
   }
 
   @override

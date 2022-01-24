@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:salud_y_mas/src/pages/informacionClientes.dart';
 import 'package:salud_y_mas/src/pages/mostrarInformacionClinicasYHospitales.dart';
 import 'package:salud_y_mas/src/pages/pantalla_lista_medicos_especialidades.dart';
+import 'package:salud_y_mas/src/widgtes/appBarNotificaciones.dart';
 
 class EspecialidadCategoria extends StatefulWidget {
   String nombreEspecialidad = '';
@@ -99,23 +100,11 @@ class _EspecialidadCategoriaState extends State<EspecialidadCategoria> {
         ),
         Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              backgroundColor: Color(int.parse(widget.colorEdo)),
-              title: Text(widget.nombreEspecialidad, style: GoogleFonts.montserrat(color: Colors.white, fontSize: 14)),
-              actions: [
-                Badge(
-                  position: BadgePosition.topEnd(top: 5, end: 3),
-                  badgeColor: Colors.red,
-                  badgeContent: Text('3', style: TextStyle(color: Colors.white)),
-                  child: IconButton(
-                    icon: Icon(Icons.notifications),
-                    onPressed: () {
-                      Navigator.pushNamed(context, 'notificaciones');
-                    },
-                  ),
-                ),
-              ],
-            ),
+
+               appBar: PreferredSize(
+              preferredSize: Size.fromHeight(50.0),
+              child: AppBarNotificaciones(titulo: widget.nombreEspecialidad)),
+          
             body: this.cargando == true
                 ? SingleChildScrollView(
                     child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
