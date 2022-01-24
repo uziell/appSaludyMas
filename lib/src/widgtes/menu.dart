@@ -156,9 +156,7 @@ class _MenuPageState extends State<MenuPage> {
                             ),
                             title: Text('Iniciar sesión'),
                             onTap: () async {
-                              showDialog(
-                                  context: context,
-                                  builder: Alerts().dialogCerrarSesion);
+                              Navigator.popAndPushNamed(context, 'login');
                             },
                           )
                         : Container(),
