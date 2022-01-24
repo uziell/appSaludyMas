@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
+import 'package:salud_y_mas/preferences/preferences.dart';
 import 'package:salud_y_mas/src/models/notificaciones_model.dart';
 import 'package:salud_y_mas/src/requests/notificaciones_request.dart';
 import 'package:salud_y_mas/src/widgtes/menu.dart';
@@ -13,6 +14,8 @@ class NotificacionesPage extends StatefulWidget {
 }
 
 class _NotificacionesPageState extends State<NotificacionesPage> {
+
+  AppPreferences _prefs = AppPreferences();
   List<bool> isExpandedList = [];
   bool cargando = false;
   List<Notificaciones> notificacionesList = [];
@@ -46,7 +49,7 @@ class _NotificacionesPageState extends State<NotificacionesPage> {
         drawer: widget.isMenu == true ? MenuPage() : null,
         appBar: AppBar(title: Text('Notificaciones')),
         body: cargando
-            ? Container(
+            ? notificacionesList.length >0 ?  Container(
                 margin: EdgeInsets.only(top: 7),
                 child: GroupedListView<Notificaciones, dynamic>(
                     elements: notificacionesList,
@@ -88,7 +91,15 @@ class _NotificacionesPageState extends State<NotificacionesPage> {
                                       },
                                     ),
                                   ))));
-                    }))
+                    })):Container(
+                      margin: EdgeInsets.all(10),
+                      child:  Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+
+                    Image.asset('assets/lupa(1).png', alignment: Alignment.center, width: 200, height: 200),
+                    Text('NO HAY NOTIFICACIONES REGISTRADAS EN ${_prefs.estado} POR EL MOMENTO', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),)
+                    ]))
             : Center(child: CircularProgressIndicator()));
   }
 }
