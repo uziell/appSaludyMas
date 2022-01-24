@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:salud_y_mas/preferences/preferences.dart';
 import 'package:salud_y_mas/src/pages/login_page.dart';
+import 'package:salud_y_mas/src/widgtes/alerts.dart';
 import 'package:salud_y_mas/src/widgtes/appBarNotificaciones.dart';
 import 'package:salud_y_mas/src/widgtes/menu.dart';
 
@@ -20,6 +21,7 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
 
   final _formKey = GlobalKey<FormState>();
   AppPreferences _prefs = AppPreferences();
+  Alerts alerts = Alerts();
   String urlApi = 'https://www.salumas.com/Salud_Y_Mas_Api/';
   List<dynamic> listaUsuarios = [];
   bool cargando = false;
@@ -46,8 +48,10 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     consultarUsusarios(widget.nombre.toString()).then((value) {
       setState(() {
         this.cargando = true;
+        alerts.dialogoAvisoPerfil(context);
       });
     });
+
   }
 
   Future consultarUsusarios(String nombre) async {
@@ -62,6 +66,12 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
     _controllerApMaterno.text = listaUsuarios[0]["materno"];
     _controllerUsuario.text = listaUsuarios[0]['usuario'];
     _controllerPass.text = listaUsuarios[0]['pass'];
+
+   /* nombres =listaUsuarios[0]["nombre"];
+    apaterno = listaUsuarios[0]["paterno"];
+    amaterno = listaUsuarios[0]["materno"];
+    usuario = listaUsuarios[0]['usuario'];
+    pass = listaUsuarios[0]['pass'];*/
     return listaUsuarios;
   }
 
@@ -189,7 +199,6 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 bottomLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ))),
-       
         ),
       );
     });
@@ -218,7 +227,6 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 bottomLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ))),
-
         ),
       );
     });
@@ -233,7 +241,6 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
           keyboardType: TextInputType.text,
           enabled: noEnable,
           decoration: InputDecoration(
-              labelText: listaUsuarios[0]["materno"],
               fillColor: Colors.blue,
               prefixIcon: Icon(Icons.person),
               border: OutlineInputBorder(
@@ -241,9 +248,6 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 bottomLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ))),
-          onChanged: (value) {
-            amaterno = value.toString();
-          },
         ),
       );
     });
@@ -310,7 +314,6 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                 bottomLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ))),
-        
         ),
       );
     });
@@ -371,19 +374,8 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                     width: 20.0,
                   ),
                   onPressed: () async {
-                    print("tiene registrarse:  " +
-                        nombres.toString() +
-                        " " +
-                        apaterno.toString() +
-                        " " +
-                        amaterno.toString() +
-                        " " +
-                        usuario.toString() +
-                        "" +
-                        pass.toString());
 
                     //Esto es para verificar que esten bien todos tus inputs
-
                     if (_formKey.currentState!.validate()) {
                       this.setState(() {
                         this.loading = true;
@@ -394,11 +386,11 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
                         this.loading = false;
                       });
                       if (resultadoAct == "true") {
-                        Navigator.of(context).push(MaterialPageRoute<Null>(
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute<Null>(
                             builder: (BuildContext context) {
                               _prefs.clear();
                               return LoginPage();
-                            }));
+                            }),(Route<dynamic> route) => false);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text('Hubo un problema al Actualizar'),
@@ -412,15 +404,37 @@ class _PerfilUsuarioState extends State<PerfilUsuario> {
   actualizarUsuario() async{
 
     final url = Uri.parse(urlApi + 'updateUsuario');
+    //Map jsonData = {"idusuario": _prefs.id, "nombre": _controllerNombre.text, "paterno": _controllerApPaterno.text, "materno": _controllerApMaterno.text, "usuario": _controllerUsuario.text, "pass": _controllerPass.text};
+   // print(jsonData);
 
-    Map jsonData = {"idusuario": _prefs.id, "nombre": _controllerNombre.text, "paterno": _controllerApPaterno.text, "materno": _controllerApMaterno.text, "usuario": _controllerUsuario.text, "pass": _controllerPass.text};
-   
-    print(jsonData);
     var response = await http.post(url,
-        body: json.encode(jsonData));
+        body: "{" +
+            "\"idusuario\":\"" +
+            _prefs.id +
+            "\"" +
+            "," +
+            "\"nombre\":\"" +
+            _controllerNombre.text +
+            "\"" +
+            "," +
+            "\"paterno\":\"" +
+            _controllerApPaterno.text +
+            "\"" +
+            "," +
+            "\"materno\":\"" +
+            _controllerApMaterno.text +
+            "\"" +
+            "," +
+            "\"usuario\":\"" +
+            _controllerUsuario.text +
+            "\"" +
+            "," +
+            "\"pass\":\"" +
+            _controllerPass.text +
+            "\"}");
 
+     //body: json.encode(jsonData);
      resultadoAct = response.body;
-    print(response.body);
-
+     print(resultadoAct);
   }
 }

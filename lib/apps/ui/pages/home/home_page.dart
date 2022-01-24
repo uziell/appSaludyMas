@@ -67,9 +67,9 @@ class HomePageGoogle extends StatelessWidget {
                                                                 FontWeight
                                                                     .bold)),
                                                     Text(
-                                                        'Tiempo aproximado: ${controller.tiempoLabel} ${controller.tiempo >= 60 ? 'hrs' : 'min'}',
+                                                        'Tiempo aproximado: ${controller.tiempo.toStringAsFixed(2)}${controller.tiempo >= 60 ? 'hrs' : 'min'}',
                                                         style: TextStyle(
-                                                            fontSize: 16,
+                                                            fontSize: 10,
                                                             fontWeight:
                                                                 FontWeight
                                                                     .bold))

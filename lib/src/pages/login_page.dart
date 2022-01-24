@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   var datos;
   String? nombre;
   String? paterno;
+  int? idusuario;
   bool visibilty = false;
   @override
   void initState() {
@@ -208,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                     prefs.logIn = true;
 
                     print("datos");
-                    print(datos[0]);
+                    print(datos[0]['idusuario']);
                     print(datos[0]['nombre']);
                     print(datos[0]['paterno']);
                     prefs.id = datos[0]['idusuario'];
@@ -287,14 +288,16 @@ class _LoginPageState extends State<LoginPage> {
     paterno = await pref.get('paterno') as String?;
 
     if (nombre != null) {
-      MaterialPageRoute<Null>(builder: (BuildContext context) {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute<Null>
+        (builder: (BuildContext context) {
         return HomePage();
-      });
+      }
+
+      ), (Route<dynamic> route) => false);
+
+      print(nombre.toString() + " " + paterno.toString());
     }
-
-    print(nombre.toString() + " " + paterno.toString());
   }
-
   Widget createDialog(BuildContext context) => CupertinoAlertDialog(
         title: Text('USUARIO O PASSWORD INCORRECTOS'),
         actions: [
