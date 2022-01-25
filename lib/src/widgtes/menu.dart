@@ -7,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:salud_y_mas/notification_providers/push_notification_providers.dart';
 import 'package:salud_y_mas/preferences/preferences.dart';
 import 'package:salud_y_mas/src/pages/notificaciones/notificaciones_page.dart';
-import 'package:salud_y_mas/src/pages/perfil/perfilUsuario.dart';
 import 'package:http/http.dart' as http;
 import 'alerts.dart';
 
@@ -63,27 +62,23 @@ class _MenuPageState extends State<MenuPage> {
                                   Container(
                                     margin: EdgeInsets.only(top: 7),
                                     child: Text(
-                                      _prefs.logIn
-                                          ? "Bienvenido(a) ${_prefs.nombre} ${_prefs.paterno}"
-                                          : "Invitado",
+                                      "Bienvenido(a)",
                                       style: GoogleFonts.firaSans(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                           fontSize: 16),
                                     ),
                                   ),
-
-                                    Container(
+                                  Container(
                                     margin: EdgeInsets.only(top: 7),
                                     child: Text(
-                                      "Estado: ${_prefs.estado}",
+                                      "Estado: ${_prefs.estado == 'Seleccione un estado' ? 'Sin seleccionar' : _prefs.estado}",
                                       style: GoogleFonts.firaSans(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                           fontSize: 16),
                                     ),
                                   ),
-                             
                                   ElevatedButton(
                                       onPressed: () {
                                         dialogCambiarEstado(context);
@@ -122,26 +117,23 @@ class _MenuPageState extends State<MenuPage> {
                         }
                       },
                     )),
-                    _prefs.logIn
-                        ? Container(
-                            child: ListTile(
-                            hoverColor: Colors.purple,
-                            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            leading: Icon(Icons.account_box),
-                            title: Text(
-                              "Mi perfil",
-                              style: TextStyle(),
-                            ),
-                            onTap: () {
-                              if (ModalRoute.of(context)!.settings.name !=
-                                  "perfil") {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        PerfilUsuario(_prefs.nombre)));
-                              }
-                            },
-                          ))
-                        : Container(),
+                    Container(
+                        child: ListTile(
+                      hoverColor: Colors.purple,
+                      contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      leading: Icon(Icons.location_on),
+                      title: Text(
+                        "Mi ubicación",
+                        style: TextStyle(),
+                      ),
+                      onTap: () {
+                        if (ModalRoute.of(context)!.settings.name !=
+                            "ubicacion") {
+                          Navigator.of(context)
+                              .pushReplacementNamed('ubicacion');
+                        }
+                      },
+                    )),
                     Container(
                         child: ListTile(
                       hoverColor: Colors.purple,
@@ -166,34 +158,23 @@ class _MenuPageState extends State<MenuPage> {
                         }
                       },
                     )),
-                    _prefs.logIn == false
-                        ? ListTile(
-                            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            leading: Icon(
-                              Icons.login,
-                              color: Colors.brown,
-                            ),
-                            title: Text('Iniciar sesión'),
-                            onTap: () async {
-                              Navigator.popAndPushNamed(context, 'login');
-                            },
-                          )
-                        : Container(),
-                    _prefs.logIn
-                        ? ListTile(
-                            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                            leading: Icon(
-                              Icons.logout,
-                              color: Colors.brown,
-                            ),
-                            title: Text('Cerrar sesión'),
-                            onTap: () async {
-                              showDialog(
-                                  context: context,
-                                  builder: Alerts().dialogCerrarSesion);
-                            },
-                          )
-                        : Container()
+                    Container(
+                        child: ListTile(
+                      hoverColor: Colors.purple,
+                      contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      leading: Icon(Icons.settings),
+                      title: Text(
+                        "Configuración",
+                        style: TextStyle(),
+                      ),
+                      onTap: () {
+                        if (ModalRoute.of(context)!.settings.name !=
+                            "configuracion") {
+                          Navigator.of(context)
+                              .pushReplacementNamed('configuracion');
+                        }
+                      },
+                    )),
                   ],
                 )),
               ])))));
@@ -232,10 +213,9 @@ class _MenuPageState extends State<MenuPage> {
           //Utilizo esto para que pueda ingresarse en un topic (tag) es decir si es YUCATAN a todos los de YUCATAN les llegará la notificación
           await PushNotificationProvider.firebaseMessaging
               .subscribeToTopic(_prefs.estado);
-
-              setState(() {
-                
-              });
+          if (this.mounted) {
+            setState(() {});
+          }
         },
         hint: Text(
           _prefs.estado,

@@ -5,31 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:salud_y_mas/preferences/preferences.dart';
-import 'package:salud_y_mas/src/pages/login_page.dart';
 import 'package:http/http.dart' as http;
 
 class Alerts {
   AppPreferences _prefs = AppPreferences();
-  Widget dialogCerrarSesion(BuildContext context) => CupertinoAlertDialog(
-        title: Text('¿Desea cerrar sesión?'),
-        actions: [
-          CupertinoDialogAction(
-            child: Text("Ok"),
-            onPressed: () {
-              FirebaseMessaging.instance.unsubscribeFromTopic(_prefs.estado);
-              _prefs.clear();
-              Navigator.pushNamedAndRemoveUntil(
-                  context, 'login', (route) => false);
-            },
-          ),
-          CupertinoDialogAction(
-            child: Text("Cancelar"),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pop();
-            },
-          ),
-        ],
-      );
 
   dialogNotificaciones(BuildContext context, text) {
     showDialog(
@@ -91,8 +70,4 @@ class Alerts {
               ],
             ));
   }
-
-
-
- 
 }

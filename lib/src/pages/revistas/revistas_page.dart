@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:salud_y_mas/src/models/revistas_model.dart';
 import 'package:salud_y_mas/src/requests/revistas_request.dart';
+import 'package:salud_y_mas/src/widgtes/appBarNotificaciones.dart';
 import 'package:salud_y_mas/src/widgtes/menu.dart';
 
 class RevistasPage extends StatefulWidget {
@@ -40,19 +41,25 @@ class _RevistasPageState extends State<RevistasPage> {
     return Scaffold(
         backgroundColor: Colors.grey.shade300,
         drawer: MenuPage(),
-        appBar: AppBar(title: Text('Revistas')),
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(50.0),
+            child: AppBarNotificaciones(titulo: 'Revistas')),
         body: cargando
             ? Container(
                 margin: EdgeInsets.only(top: 7),
                 child: GroupedListView<Revistas, dynamic>(
                     elements: revistasList,
                     groupBy: (element) => element.estadoRevista,
-                    groupSeparatorBuilder: (dynamic estado) =>
-                        Container(margin: EdgeInsets.only(left: 12, top: 12, bottom: 8), child: Text("$estado", style: GoogleFonts.abrilFatface(fontSize: 18, fontWeight: FontWeight.bold))),
+                    groupSeparatorBuilder: (dynamic estado) => Container(
+                        margin: EdgeInsets.only(left: 12, top: 12, bottom: 8),
+                        child: Text("$estado",
+                            style: GoogleFonts.abrilFatface(
+                                fontSize: 18, fontWeight: FontWeight.bold))),
                     indexedItemBuilder: (context, dynamic revista, index) {
                       Revistas revista = revistasList[index];
                       return Container(
-                          padding: EdgeInsets.only(left: 4, right: 4, bottom: 2),
+                          padding:
+                              EdgeInsets.only(left: 4, right: 4, bottom: 2),
                           child: Card(
                               shape: BeveledRectangleBorder(
                                 borderRadius: BorderRadius.circular(6.0),
@@ -61,21 +68,31 @@ class _RevistasPageState extends State<RevistasPage> {
                               child: Container(
                                   padding: EdgeInsets.only(bottom: 5, top: 5),
                                   child: ListTile(
-                                    title: Text("REVISTAS DE ${revista.estadoRevista}"),
-                                    subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                      Text("20/01/2022 11:56 "),
-                                    ]),
+                                    title: Text(
+                                        "REVISTAS DE ${revista.estadoRevista}"),
+                                    subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("20/01/2022 11:56 "),
+                                        ]),
                                     trailing: IconButton(
-                                      icon: Icon(Icons.picture_as_pdf, color: Colors.red),
+                                      icon: Icon(Icons.picture_as_pdf,
+                                          color: Colors.red),
                                       onPressed: () async {
                                         FlutterWebBrowser.openWebPage(
                                           url: "${revista.linkRevista}",
-                                          safariVCOptions: SafariViewControllerOptions(
+                                          safariVCOptions:
+                                              SafariViewControllerOptions(
                                             barCollapsingEnabled: true,
                                             preferredBarTintColor: Colors.green,
-                                            preferredControlTintColor: Colors.amber,
-                                            dismissButtonStyle: SafariViewControllerDismissButtonStyle.close,
-                                            modalPresentationCapturesStatusBarAppearance: true,
+                                            preferredControlTintColor:
+                                                Colors.amber,
+                                            dismissButtonStyle:
+                                                SafariViewControllerDismissButtonStyle
+                                                    .close,
+                                            modalPresentationCapturesStatusBarAppearance:
+                                                true,
                                           ),
                                         );
                                       },

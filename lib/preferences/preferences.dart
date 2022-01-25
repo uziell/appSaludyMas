@@ -20,19 +20,12 @@ class AppPreferences {
 
   /// Variable para ver si esta autenticado */
 
-  bool get logIn => this.prefs!.getBool('logIn') ?? false;
-
-  set logIn(bool value) {
-    this.prefs?.setBool('logIn', value);
-  }
-
   /// Getter para obtener el usuario autenticado */
 
   String get nombre => this.prefs!.getString('nombre') ?? '';
   set nombre(String nombre) {
     this.prefs!.setString('nombre', nombre);
   }
-
 
   String get id => this.prefs!.getString('id') ?? '';
   set id(String id) {
@@ -44,10 +37,8 @@ class AppPreferences {
     this.prefs!.setString('paterno', paterno);
   }
 
-  
-
-  
-  String get estado => this.prefs!.getString('estado') ?? 'Seleccione el estado';
+  String get estado =>
+      this.prefs!.getString('estado') ?? 'Seleccione el estado';
   set estado(String estado) {
     this.prefs!.setString('estado', estado);
   }
