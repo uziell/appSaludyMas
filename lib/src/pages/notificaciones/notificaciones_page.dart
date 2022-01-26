@@ -27,12 +27,10 @@ class _NotificacionesPageState extends State<NotificacionesPage> {
 
   getNotificaciones() async {
     cargando = false;
-    List<dynamic> notificaciones =
-        await NotificacionesRequest().obtenerNotificaciones();
+    List<dynamic> notificaciones = await NotificacionesRequest().obtenerNotificaciones();
 
     print(notificaciones);
-    notificacionesList =
-        notificaciones.map((e) => Notificaciones.fromJson(e)).toList();
+    notificacionesList = notificaciones.map((e) => Notificaciones.fromJson(e)).toList();
 
     for (int i = 0; i < notificacionesList.length; i++) {
       isExpandedList.add(false);
@@ -48,9 +46,7 @@ class _NotificacionesPageState extends State<NotificacionesPage> {
     return Scaffold(
         backgroundColor: Colors.grey.shade300,
         drawer: widget.isMenu == true ? MenuPage() : null,
-        appBar: AppBar(
-            title: Text('NOTIFICACIONES DE ${_prefs.estado}',
-                style: TextStyle(fontSize: 14))),
+        appBar: AppBar(title: Text('NOTIFICACIONES DE ${_prefs.estado}', style: TextStyle(fontSize: 14))),
         body: cargando
             ? notificacionesList.length > 0
                 ? Container(
@@ -59,56 +55,36 @@ class _NotificacionesPageState extends State<NotificacionesPage> {
                         elements: notificacionesList,
                         groupBy: (element) => element.estadoNot,
                         groupSeparatorBuilder: (dynamic visto) => Container(
-                            margin:
-                                EdgeInsets.only(left: 12, top: 12, bottom: 8),
-                            child: Text(
-                                "${visto == "0" ? 'No vistas' : 'Vistas'}",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold))),
-                        indexedItemBuilder:
-                            (context, dynamic notificacion, index) {
-                          Notificaciones notificacion =
-                              notificacionesList[index];
+                            margin: EdgeInsets.only(left: 12, top: 12, bottom: 8),
+                            child: Text("${visto == "0" ? 'No vistas' : 'Vistas'}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+                        indexedItemBuilder: (context, dynamic notificacion, index) {
+                          Notificaciones notificacion = notificacionesList[index];
                           return Container(
-                              padding:
-                                  EdgeInsets.only(left: 4, right: 4, bottom: 2),
+                              padding: EdgeInsets.only(left: 4, right: 4, bottom: 2),
                               child: Card(
                                   shape: BeveledRectangleBorder(
                                     borderRadius: BorderRadius.circular(6.0),
                                   ),
                                   elevation: 5,
                                   child: Container(
-                                      padding: isExpandedList[index]
-                                          ? EdgeInsets.only(bottom: 5, top: 5)
-                                          : null,
+                                      padding: isExpandedList[index] ? EdgeInsets.only(bottom: 5, top: 5) : null,
                                       child: ListTile(
-                                        title: Text(
-                                            "${notificacion.titulo != "" ? notificacion.titulo : 'Sin titulo'}"),
-                                        subtitle: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text("20/01/2022 11:56 "),
-                                              if (isExpandedList[index]) ...[
-                                                Text(
-                                                    "${notificacion.descripcion}"),
-                                              ]
-                                            ]),
+                                        title: Text("${notificacion.titulo != "" ? notificacion.titulo : 'Sin titulo'}"),
+                                        subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                          Text("20/01/2022 11:56 "),
+                                          if (isExpandedList[index]) ...[
+                                            Text("${notificacion.descripcion}"),
+                                          ]
+                                        ]),
                                         trailing: IconButton(
-                                          icon: Icon(isExpandedList[index]
-                                              ? Icons.expand_less
-                                              : Icons.expand_more),
+                                          icon: Icon(isExpandedList[index] ? Icons.expand_less : Icons.expand_more),
                                           onPressed: () async {
                                             setState(() {
-                                              isExpandedList[index] =
-                                                  !isExpandedList[index];
+                                              isExpandedList[index] = !isExpandedList[index];
                                             });
 
                                             if (notificacion.estadoNot == "0") {
-                                              var r = await NotificacionesRequest
-                                                  .cambiarEstatusNotificacion(
-                                                      notificacion.id);
+                                              var r = await NotificacionesRequest.cambiarEstatusNotificacion(notificacion.id);
 
                                               print("cambio");
                                               print(r);
@@ -119,21 +95,12 @@ class _NotificacionesPageState extends State<NotificacionesPage> {
                         }))
                 : Container(
                     margin: EdgeInsets.all(10),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset('assets/lupa(1).png',
-                              alignment: Alignment.center,
-                              width: 200,
-                              height: 200),
-                          Container(
-                              margin: EdgeInsets.only(top: 10),
-                              child: Text(
-                                  'NO HAY NOTIFICACIONES REGISTRADAS EN ${_prefs.estado} POR EL MOMENTO',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey.shade700)))
-                        ]))
+                    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Image.asset('assets/lupa(1).png', alignment: Alignment.center, width: 200, height: 200),
+                      Container(
+                          margin: EdgeInsets.only(top: 10),
+                          child: Text('NO HAY NOTIFICACIONES REGISTRADAS EN ${_prefs.estado} POR EL MOMENTO', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey.shade700)))
+                    ]))
             : Center(child: CircularProgressIndicator()));
   }
 }

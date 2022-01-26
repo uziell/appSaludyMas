@@ -37,10 +37,15 @@ class AppPreferences {
     this.prefs!.setString('paterno', paterno);
   }
 
-  String get estado =>
-      this.prefs!.getString('estado') ?? 'Seleccione el estado';
+  String get estado => this.prefs!.getString('estado') ?? 'Seleccione el estado';
   set estado(String estado) {
     this.prefs!.setString('estado', estado);
+  }
+
+  bool get isNotificacion => this.prefs!.getBool('isNotificacion') ?? false;
+
+  set isNotificacion(bool isNotificacion) {
+    this.prefs!.setBool('isNotificacion', isNotificacion);
   }
 
   //Metodo para limpiar todas las preferencias

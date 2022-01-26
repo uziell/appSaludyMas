@@ -1,14 +1,11 @@
 import 'dart:convert';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:salud_y_mas/notification_providers/push_notification_providers.dart';
 import 'package:salud_y_mas/preferences/preferences.dart';
 import 'package:salud_y_mas/src/pages/notificaciones/notificaciones_page.dart';
 import 'package:http/http.dart' as http;
-import 'alerts.dart';
 
 class MenuPage extends StatefulWidget {
   @override
@@ -36,55 +33,36 @@ class _MenuPageState extends State<MenuPage> {
                                 image: DecorationImage(
                               image: AssetImage('assets/fondo.jpeg'),
                               fit: BoxFit.cover,
-                              colorFilter: ColorFilter.mode(
-                                  Colors.black.withOpacity(0.3),
-                                  BlendMode.darken),
+                              colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
                             )),
                             alignment: Alignment.center,
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    child: Container(
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100.0),
-                                            child: FadeInImage(
-                                                fit: BoxFit.cover,
-                                                placeholder: AssetImage(
-                                                    "assets/Saludymas.png"),
-                                                width: 90,
-                                                height: 90,
-                                                image: AssetImage(
-                                                    'assets/Saludymas.png')))),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 7),
-                                    child: Text(
-                                      "Bienvenido(a)",
-                                      style: GoogleFonts.firaSans(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize: 16),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 7),
-                                    child: Text(
-                                      "Estado: ${_prefs.estado == 'Seleccione un estado' ? 'Sin seleccionar' : _prefs.estado}",
-                                      style: GoogleFonts.firaSans(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                          fontSize: 16),
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                      onPressed: () {
-                                        dialogCambiarEstado(context);
-                                      },
-                                      child: Text('Cambiar estado'))
-                                ]))),
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: [
+                              GestureDetector(
+                                child: Container(
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(100.0),
+                                        child: FadeInImage(fit: BoxFit.cover, placeholder: AssetImage("assets/Saludymas.png"), width: 90, height: 90, image: AssetImage('assets/Saludymas.png')))),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 7),
+                                child: Text(
+                                  "Bienvenido(a)",
+                                  style: GoogleFonts.firaSans(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 7),
+                                child: Text(
+                                  "Estado: ${_prefs.estado == 'Seleccione un estado' ? 'Sin seleccionar' : _prefs.estado}",
+                                  style: GoogleFonts.firaSans(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 16),
+                                ),
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    dialogCambiarEstado(context);
+                                  },
+                                  child: Text('Cambiar estado'))
+                            ]))),
                     Container(
                         child: ListTile(
                       hoverColor: Colors.purple,
@@ -110,10 +88,8 @@ class _MenuPageState extends State<MenuPage> {
                         style: TextStyle(),
                       ),
                       onTap: () {
-                        if (ModalRoute.of(context)!.settings.name !=
-                            "revistas") {
-                          Navigator.of(context)
-                              .pushReplacementNamed('revistas');
+                        if (ModalRoute.of(context)!.settings.name != "revistas") {
+                          Navigator.of(context).pushReplacementNamed('revistas');
                         }
                       },
                     )),
@@ -127,10 +103,8 @@ class _MenuPageState extends State<MenuPage> {
                         style: TextStyle(),
                       ),
                       onTap: () {
-                        if (ModalRoute.of(context)!.settings.name !=
-                            "ubicacion") {
-                          Navigator.of(context)
-                              .pushReplacementNamed('ubicacion');
+                        if (ModalRoute.of(context)!.settings.name != "ubicacion") {
+                          Navigator.of(context).pushReplacementNamed('ubicacion');
                         }
                       },
                     )),
@@ -144,15 +118,13 @@ class _MenuPageState extends State<MenuPage> {
                         style: TextStyle(),
                       ),
                       onTap: () {
-                        if (ModalRoute.of(context)!.settings.name !=
-                            "notificaciones") {
+                        if (ModalRoute.of(context)!.settings.name != "notificaciones") {
                           if (_prefs.estado == "Seleccione el estado") {
                             return dialogCambiarEstado(context);
                           }
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  NotificacionesPage(isMenu: true),
+                              builder: (context) => NotificacionesPage(isMenu: true),
                             ),
                           );
                         }
@@ -168,10 +140,8 @@ class _MenuPageState extends State<MenuPage> {
                         style: TextStyle(),
                       ),
                       onTap: () {
-                        if (ModalRoute.of(context)!.settings.name !=
-                            "configuracion") {
-                          Navigator.of(context)
-                              .pushReplacementNamed('configuracion');
+                        if (ModalRoute.of(context)!.settings.name != "configuracion") {
+                          Navigator.of(context).pushReplacementNamed('configuracion');
                         }
                       },
                     )),
@@ -202,25 +172,21 @@ class _MenuPageState extends State<MenuPage> {
           String tempEstado = _prefs.estado;
           _prefs.estado = estadoActual.toString();
 
-          FirebaseMessaging.instance.requestPermission(
-              sound: true, badge: true, alert: true, provisional: false);
+          FirebaseMessaging.instance.requestPermission(sound: true, badge: true, alert: true, provisional: false);
 
           if (tempEstado != "Seleccione el estado") {
-            await PushNotificationProvider.firebaseMessaging
-                .unsubscribeFromTopic(tempEstado);
+            await PushNotificationProvider.firebaseMessaging.unsubscribeFromTopic(tempEstado);
           }
 
           //Utilizo esto para que pueda ingresarse en un topic (tag) es decir si es YUCATAN a todos los de YUCATAN les llegará la notificación
-          await PushNotificationProvider.firebaseMessaging
-              .subscribeToTopic(_prefs.estado);
+          await PushNotificationProvider.firebaseMessaging.subscribeToTopic(_prefs.estado);
           if (this.mounted) {
             setState(() {});
           }
         },
         hint: Text(
           _prefs.estado,
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
         ),
       ),
     );
@@ -240,10 +206,7 @@ class _MenuPageState extends State<MenuPage> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text("Seleccione el estado en el que se encuentra",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.montserrat(
-                      fontSize: 12, fontWeight: FontWeight.bold)),
+              title: Text("Seleccione el estado en el que se encuentra", textAlign: TextAlign.center, style: GoogleFonts.montserrat(fontSize: 12, fontWeight: FontWeight.bold)),
               content: dropdownEstados(nombreEdo),
               actions: [
                 TextButton(
