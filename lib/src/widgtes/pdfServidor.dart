@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
+
 import 'package:salud_y_mas/preferences/preferences.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:square_percent_indicater/square_percent_indicater.dart';
@@ -32,7 +32,24 @@ class _ViewPDFServidorState extends State<ViewPDFServidor> {
         appBar: AppBar(title: widget.title ?? const Text("Revista")),
         body: PDF().cachedFromUrl(
           'https://www.salumas.com/Salud_Y_Mas_Api/${widget.uri}',
-          placeholder: (progress) => Center(child: CircularPercentIndicator(radius: 60.0, lineWidth: 5.0, percent: progress, center: new Text("$progress%"), progressColor: Colors.green)),
+          placeholder: (progress) => Center(
+              child: SquarePercentIndicator(
+            width: 140,
+            height: 140,
+            startAngle: StartAngle.bottomRight,
+            reverse: true,
+            borderRadius: 12,
+            shadowWidth: 1.5,
+            progressWidth: 5,
+            shadowColor: Colors.grey,
+            progressColor: Colors.blue,
+            progress: progress / 100,
+            child: Center(
+                child: Text(
+              "$progress %",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            )),
+          )),
           errorWidget: (error) => Center(child: Text(error.toString())),
         ));
   }

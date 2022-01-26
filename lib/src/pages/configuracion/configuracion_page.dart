@@ -34,12 +34,14 @@ class _ConfiguracionPageState extends State<ConfiguracionPage> {
                 dialogCambiarEstado(context);
               },
             ),
-            Divider(
-              thickness: 1.5,
-              height: 18,
+            SizedBox(
+              height: 10,
             ),
             ListTile(
-                leading: Icon(Icons.notifications),
+                leading: Icon(
+                  Icons.notifications,
+                  color: Colors.orange,
+                ),
                 title: Text('Notificaciones', style: TextStyle(fontWeight: FontWeight.bold)),
                 subtitle: Text('Si desactiva las notificaciones, no le llegarán hasta que vuelva activarlo'),
                 trailing: Switch(

@@ -20,10 +20,10 @@ class _RevistasEstadoPageState extends State<RevistasEstadoPage> {
         appBar: PreferredSize(preferredSize: Size.fromHeight(50.0), child: AppBarNotificaciones(titulo: 'Revistas')),
         body: GridView.builder(
             padding: EdgeInsets.all(20),
-            itemCount: widget.revistaList!.length + 9,
+            itemCount: widget.revistaList!.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 3.0, mainAxisSpacing: 5.0, childAspectRatio: 0.85),
             itemBuilder: (context, index) {
-              Revistas revista = widget.revistaList![0];
+              Revistas revista = widget.revistaList![index];
 
               return Card(
                 elevation: 5,
@@ -37,8 +37,9 @@ class _RevistasEstadoPageState extends State<RevistasEstadoPage> {
                             type: PageTransitionType.rightToLeft,
                           ));
                         },
-                        child: Image.network(
-                          "https://www.salumas.com/Salud_Y_Mas_Api/${revista.linkPortada}",
+                        child: FadeInImage(
+                          image: NetworkImage("https://www.salumas.com/Salud_Y_Mas_Api/${revista.linkPortada}"),
+                          placeholder: AssetImage("assets/jar-loading.gif"),
                           fit: BoxFit.fill,
                         ))
                     : Image.asset('assets/noimage.jpg'),
