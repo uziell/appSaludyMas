@@ -43,10 +43,11 @@ class HomeController extends ChangeNotifier {
   double _tiempo = 0;
   double get tiempo => _tiempo;
 
-  String _tiempoLabel  = "";
+  String _tiempoLabel = "";
   String get tiempoLabel => _tiempoLabel;
 
-  HomeController(String? latitudDestino, String? longitudDestino, ModeloDireccion? direccion) {
+  HomeController(String? latitudDestino, String? longitudDestino,
+      ModeloDireccion? direccion) {
     _init(latitudDestino, longitudDestino, direccion);
   }
 
@@ -57,7 +58,8 @@ class HomeController extends ChangeNotifier {
     _gpsEnable = await Geolocator.isLocationServiceEnabled();
     _loading = false;
     notifyListeners();
-    _gpssubscription = Geolocator.getServiceStatusStream().listen((status) async {
+    _gpssubscription =
+        Geolocator.getServiceStatusStream().listen((status) async {
       _gpsEnable = status == ServiceStatus.enabled;
       if (_gpsEnable) {
         _initLocationUpdate(latitudDestino, longitudDestino, direccion);
@@ -78,11 +80,12 @@ class HomeController extends ChangeNotifier {
     }
   }
 
-  Future<void> _initLocationUpdate(latitudDestino, longitudDestino, direccion) async {
+  Future<void> _initLocationUpdate(
+      latitudDestino, longitudDestino, direccion) async {
     bool resultPermisos = await this.verificarPermisos();
 
     if (!resultPermisos) {
-      permission.Permission.location.request();
+      await permission.Permission.location.request();
       return;
     }
     bool _initialized = false;
@@ -115,34 +118,39 @@ class HomeController extends ChangeNotifier {
     }
   }
 
-  void _setMyPositionMarker(Position position, latitudDestino, longitudDestino, ModeloDireccion? direccion) async {
+  void _setMyPositionMarker(Position position, latitudDestino, longitudDestino,
+      ModeloDireccion? direccion) async {
     double rotation = 0;
     if (_lastPosition != null) {
-      rotation = Geolocator.bearingBetween(_lastPosition!.latitude, _lastPosition!.longitude, position.latitude, position.longitude);
+      rotation = Geolocator.bearingBetween(_lastPosition!.latitude,
+          _lastPosition!.longitude, position.latitude, position.longitude);
     }
     print("position");
     print(position);
     const MarkerId markerId = MarkerId('my-position');
     final marker = Marker(
         markerId: markerId,
-        position: LatLng(double.parse(latitudDestino), double.parse(longitudDestino)),
+        position:
+            LatLng(double.parse(latitudDestino), double.parse(longitudDestino)),
         anchor: const Offset(0.5, 0.5),
         rotation: rotation,
-        infoWindow: InfoWindow(title: 'Dirección', snippet: '${direccion?.direccion}'));
+        infoWindow:
+            InfoWindow(title: 'Dirección', snippet: '${direccion?.direccion}'));
     _markers[markerId] = marker;
     _lastPosition = position;
 
     // _distancia = Geolocator.distanceBetween(position.latitude, position.longitude, double.parse(latitudDestino), double.parse(longitudDestino));
     // _distancia = calcularDistancia(position.latitude, position.longitude, double.parse(latitudDestino), double.parse(longitudDestino));
 
-    var objDis = await obtenerDistanciaTiempoMapbox(position.latitude, position.longitude, double.parse(latitudDestino), double.parse(longitudDestino));
-
+    var objDis = await obtenerDistanciaTiempoMapbox(
+        position.latitude,
+        position.longitude,
+        double.parse(latitudDestino),
+        double.parse(longitudDestino));
 
     print("distance");
     _distancia = objDis['routes'][0]['distance'] / 1000;
     _tiempo = objDis['routes'][0]['duration'] / 60;
-
-  
 
     print("geometry");
     print(objDis['routes'][0]['geometry']['coordinates']);
@@ -153,11 +161,9 @@ class HomeController extends ChangeNotifier {
       _tiempo = _tiempo / 60;
     }
 
-    List<String> _tiempoTemp =_tiempo.toStringAsFixed(2).split('.');
+    List<String> _tiempoTemp = _tiempo.toStringAsFixed(2).split('.');
 
-    _tiempoLabel ="${_tiempoTemp[0]}:${_tiempoTemp[1]}";
-
-  
+    _tiempoLabel = "${_tiempoTemp[0]}:${_tiempoTemp[1]}";
 
     List<LatLng> puntos = [];
 
@@ -171,12 +177,14 @@ class HomeController extends ChangeNotifier {
       print("${latitud[0]}");
       print("${longitud[1]}");
 
-      puntos.add(LatLng(double.parse(latitud[0].toString()), double.parse(longitud[1].toString())));
+      puntos.add(LatLng(double.parse(latitud[0].toString()),
+          double.parse(longitud[1].toString())));
     }
     onTap(position, latitudDestino, longitudDestino, puntos);
   }
 
-  obtenerDistanciaTiempoMapbox(latitud, longitud, latitudDestino, longitudDestino) async {
+  obtenerDistanciaTiempoMapbox(
+      latitud, longitud, latitudDestino, longitudDestino) async {
     final urlApi = Uri.parse(
         "https://api.mapbox.com/directions/v5/mapbox/driving/$longitud,$latitud;$longitudDestino,$latitudDestino?geometries=geojson&access_token=pk.eyJ1IjoidXppZWxsIiwiYSI6ImNreGdzdTBrNjAxMzUydm84cGVuYjhsdTIifQ.NV5w6a3syc4AwKQ-V4FKDQ");
     var response = await http.get(urlApi);
@@ -188,7 +196,9 @@ class HomeController extends ChangeNotifier {
   double calcularDistancia(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295;
     var c = cos;
-    var a = 0.5 - c((lat2 - lat1) * p) / 2 + c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
     return 12742 * asin(sqrt(a));
   }
 
@@ -209,7 +219,8 @@ class HomeController extends ChangeNotifier {
     _polylineId = DateTime.now().microsecondsSinceEpoch.toString();
   }
 
-  void onTap(Position position, String latitudDestino, String longitudDestino, List<LatLng> puntos) async {
+  void onTap(Position position, String latitudDestino, String longitudDestino,
+      List<LatLng> puntos) async {
     final PolylineId polylineId = PolylineId(_polylineId);
     late Polyline polyline;
     if (_polylies.containsKey(polylineId)) {

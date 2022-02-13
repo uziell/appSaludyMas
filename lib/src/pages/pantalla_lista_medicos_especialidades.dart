@@ -104,7 +104,7 @@ class _MedicosEspecialidadState extends State<MedicosEspecialidad> {
                     child: Row(
                       children: [
                         if (medicos['imagenName'] == null || medicos['imagenName'].toString().isEmpty)
-                          Container(width: 60.0, height: 70.0, child: Image.network(urlApi + 'images/default.png'))
+                          Container(width: 60.0, height: 70.0, child: Image.network(urlApi + 'images/doctor.png'))
                         else
                           Container(
                             width: 60.0,
